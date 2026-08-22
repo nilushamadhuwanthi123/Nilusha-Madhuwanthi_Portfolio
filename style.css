@@ -359,7 +359,18 @@ nav{
   margin-bottom:8px;
 }
 .recruiter-role{ color:var(--silver); font-size:.92rem; margin-bottom:6px; }
-.recruiter-sub{ color:var(--silver-muted); font-size:.86rem; margin-bottom:20px; }
+.recruiter-sub{ color:var(--silver-muted); font-size:.86rem; margin-bottom:16px; }
+.recruiter-stats{
+  display:flex;
+  gap:22px;
+  padding:14px 0;
+  margin-bottom:20px;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.recruiter-stats div{ display:flex; flex-direction:column; }
+.recruiter-stats b{ font-family:var(--font-head); font-size:1.3rem; color:var(--gold-bright); }
+.recruiter-stats span{ font-size:.72rem; color:var(--silver-muted); text-transform:uppercase; letter-spacing:.03em; }
 .recruiter-skills{
   display:flex; flex-wrap:wrap; gap:8px;
   margin-bottom:24px;
