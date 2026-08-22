@@ -599,6 +599,19 @@ nav{
   color:var(--olive-soft);
   letter-spacing:.02em;
 }
+.orbit-info.pinned{ pointer-events:auto; }
+.orbit-info-cta{
+  display:inline-block;
+  margin-top:10px;
+  font-size:.76rem;
+  letter-spacing:.02em;
+  color:var(--gold-bright);
+  border:1px solid rgba(201,168,92,.4);
+  border-radius:999px;
+  padding:5px 13px;
+  transition:background .2s ease, border-color .2s ease;
+}
+.orbit-info-cta:hover{ background:rgba(201,168,92,.14); border-color:var(--gold-bright); }
 @media (max-width:760px){
   .orbit-info{ display:none; }
 }

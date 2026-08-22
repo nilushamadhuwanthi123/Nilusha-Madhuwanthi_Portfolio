@@ -368,6 +368,12 @@
   const infoName = document.getElementById('orbit-info-name');
   const infoDesc = document.getElementById('orbit-info-desc');
   const infoProjects = document.getElementById('orbit-info-projects');
+  const infoExplore = document.getElementById('orbit-info-explore');
+  if (infoExplore) {
+    infoExplore.addEventListener('click', () => {
+      if (infoCard) infoCard.classList.remove('show', 'pinned');
+    });
+  }
 
   canvas.addEventListener('mousemove', (e) => {
     ndc.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -418,12 +424,31 @@
       -(e.clientY / window.innerHeight) * 2 + 1
     );
     raycaster.setFromCamera(clickNdc, camera);
+
+    const nodeHit = raycaster.intersectObjects(allNodeMeshes, false);
+    if (nodeHit.length) {
+      const group = nodeHit[0].object.userData.parentGroup;
+      const data = SKILL_INFO[group.userData.name];
+      if (infoName) infoName.textContent = group.userData.name;
+      if (infoDesc) infoDesc.textContent = data ? data.desc : '';
+      if (infoProjects) infoProjects.textContent = data ? `Used in: ${data.projects}` : '';
+      if (infoExplore) infoExplore.hidden = !data;
+      if (infoCard) {
+        infoCard.style.left = `${e.clientX + 18}px`;
+        infoCard.style.top = `${e.clientY + 18}px`;
+        infoCard.hidden = false;
+        infoCard.classList.add('show', 'pinned');
+      }
+      return;
+    }
+
     const markerHit = raycaster.intersectObjects(markerMeshes, false);
     if (markerHit.length) {
       const d = markerHit[0].object.userData;
       if (infoName) infoName.textContent = d.markerName;
       if (infoDesc) infoDesc.textContent = d.markerDesc;
       if (infoProjects) infoProjects.textContent = '';
+      if (infoExplore) infoExplore.hidden = true;
       if (infoCard) {
         infoCard.style.left = `${e.clientX + 18}px`;
         infoCard.style.top = `${e.clientY + 18}px`;
@@ -530,6 +555,7 @@
         if (infoName) infoName.textContent = hoveredGroup.userData.name;
         if (infoDesc) infoDesc.textContent = data ? data.desc : '';
         if (infoProjects) infoProjects.textContent = data ? `Used in: ${data.projects}` : '';
+        if (infoExplore) infoExplore.hidden = true;
         infoCard.hidden = false;
         infoCard.classList.remove('pinned');
         infoCard.classList.add('show');
