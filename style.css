@@ -1148,24 +1148,48 @@ html[data-motion="reduced"] .ai-orb-status::after, html[data-motion="off"] .ai-o
 }
 
 /* ---------- appearance settings ---------- */
+.appearance-toggle-wrap{
+  position:fixed; left:24px; bottom:24px; z-index:180;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+}
 .appearance-toggle{
-  position:fixed; left:26px; bottom:26px; z-index:180;
-  width:46px; height:46px; border-radius:50%;
+  position:relative;
+  width:50px; height:50px; border-radius:50%;
   display:flex; align-items:center; justify-content:center;
-  background:rgba(25,28,22,.72);
-  border:1px solid var(--border);
+  background:rgba(30,34,25,.88);
+  border:1px solid rgba(201,168,92,.4);
   backdrop-filter:blur(10px);
-  color:var(--silver);
-  font-size:1.05rem;
+  box-shadow:0 10px 26px -8px rgba(0,0,0,.55), 0 0 0 1px rgba(201,168,92,.08);
+  color:var(--gold-bright);
+  font-size:1.2rem;
   cursor:pointer;
   transition:box-shadow .2s ease, border-color .2s ease, transform .15s ease, color .2s ease;
 }
-.appearance-toggle:hover{ border-color:var(--olive-soft); color:var(--gold-bright); box-shadow:0 0 0 6px rgba(137,148,102,.12); }
+.appearance-toggle::before{
+  content:'';
+  position:absolute; inset:-5px;
+  border-radius:50%;
+  border:1px solid rgba(201,168,92,.22);
+  animation:core-pulse 3.4s ease-out infinite;
+  pointer-events:none;
+}
+.appearance-toggle:hover{ border-color:var(--gold-bright); color:var(--ivory); box-shadow:0 0 0 6px rgba(201,168,92,.16); }
 .appearance-toggle:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+.appearance-toggle-label{
+  font-size:.62rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--silver-muted);
+  background:rgba(16,18,15,.6);
+  padding:2px 8px;
+  border-radius:999px;
+  pointer-events:none;
+}
 html[data-motion="reduced"] .appearance-toggle, html[data-motion="off"] .appearance-toggle{ transition:none; }
+html[data-motion="reduced"] .appearance-toggle::before, html[data-motion="off"] .appearance-toggle::before{ animation:none; opacity:.4; }
 
 .appearance-panel{
-  position:fixed; left:26px; bottom:82px; z-index:180;
+  position:fixed; left:24px; bottom:104px; z-index:180;
   width:272px;
   background:rgba(21,23,18,.92);
   border:1px solid var(--border);
