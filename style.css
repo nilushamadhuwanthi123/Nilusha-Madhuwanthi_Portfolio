@@ -20,6 +20,26 @@
   --font-body:'Inter', system-ui, sans-serif;
 
   --text-scale:1;
+
+  /* ---- theme-aware glass/tint surfaces: every floating panel and subtle
+     overlay below uses these instead of a hardcoded dark rgba, so it stays
+     legible when the page background flips light (Light theme) ---- */
+  --glass-42:rgba(16,18,15,.42);
+  --glass-60:rgba(16,18,15,.6);
+  --glass-78:rgba(16,18,15,.78);
+  --glass-88:rgba(30,34,25,.88);
+  --glass-92:rgba(21,23,18,.92);
+  --glass-94:rgba(21,23,18,.94);
+  --glass-94b:rgba(25,28,22,.94);
+  --glass-96:rgba(16,18,15,.96);
+  --glass-97:rgba(21,23,18,.97);
+  --tint-1:rgba(255,255,255,.02);
+  --tint-2:rgba(255,255,255,.03);
+  --tint-3:rgba(255,255,255,.04);
+  --tint-4:rgba(255,255,255,.05);
+  --tint-5:rgba(255,255,255,.06);
+  --shadow-ambient:rgba(0,0,0,.5);
+  --shadow-ambient-strong:rgba(0,0,0,.65);
 }
 
 /* ---------- theme system (additive — "current" above stays the default) ---------- */
@@ -38,6 +58,26 @@ html[data-theme="light"]{
   --silver:#3C4130;
   --silver-muted:#5C6350;
   --border:#DAD5C4;
+
+  /* light theme gets its own glass system: light translucent surfaces with
+     dark tints for hairlines/depth, instead of inheriting the dark-glass
+     values above (which made panels unreadable — dark text on dark glass) */
+  --glass-42:rgba(255,255,255,.55);
+  --glass-60:rgba(255,255,255,.7);
+  --glass-78:rgba(255,255,255,.85);
+  --glass-88:rgba(255,255,255,.9);
+  --glass-92:rgba(255,255,255,.93);
+  --glass-94:rgba(255,255,255,.95);
+  --glass-94b:rgba(255,255,255,.95);
+  --glass-96:rgba(255,255,255,.97);
+  --glass-97:rgba(255,255,255,.98);
+  --tint-1:rgba(0,0,0,.025);
+  --tint-2:rgba(0,0,0,.035);
+  --tint-3:rgba(0,0,0,.045);
+  --tint-4:rgba(0,0,0,.06);
+  --tint-5:rgba(0,0,0,.08);
+  --shadow-ambient:rgba(60,55,40,.16);
+  --shadow-ambient-strong:rgba(60,55,40,.24);
 }
 html[data-theme="eye-comfort"]{
   --bg:#211D14;
@@ -100,7 +140,7 @@ a{color:inherit; text-decoration:none;}
   bottom:48px;
   transform:translate(-50%, 12px);
   z-index:120;
-  background:rgba(25,28,22,.94);
+  background:var(--glass-94b);
   border:1px solid var(--border);
   color:var(--gold-bright);
   font-family:var(--font-head);
@@ -181,15 +221,15 @@ nav{
   gap:12px;
   border-radius:999px;
   border:1px solid rgba(48,53,42,.7);
-  background:rgba(16,18,15,.42);
+  background:var(--glass-42);
   backdrop-filter:blur(14px);
-  box-shadow:0 1px 0 0 rgba(255,255,255,.03) inset, 0 18px 40px -22px rgba(0,0,0,.5);
+  box-shadow:0 1px 0 0 var(--tint-2) inset, 0 18px 40px -22px var(--shadow-ambient);
   transition:background-color .3s ease, border-color .3s ease, box-shadow .3s ease, backdrop-filter .3s ease;
 }
 header.scrolled nav{
-  background:rgba(16,18,15,.78);
+  background:var(--glass-78);
   border-color:var(--border);
-  box-shadow:0 1px 0 0 rgba(255,255,255,.04) inset, 0 22px 48px -20px rgba(0,0,0,.65);
+  box-shadow:0 1px 0 0 var(--tint-3) inset, 0 22px 48px -20px var(--shadow-ambient-strong);
 }
 html[data-motion="reduced"] nav, html[data-motion="off"] nav{ transition:none; }
 
@@ -295,7 +335,7 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   font-family:var(--font-body);
   font-size:.78rem;
   color:var(--silver);
-  background:rgba(255,255,255,.03);
+  background:var(--tint-2);
   border:1px solid var(--border);
   border-radius:999px;
   padding:8px 14px;
@@ -305,7 +345,7 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
 .nav-cmdk kbd{
   font-family:var(--font-head);
   font-size:.68rem;
-  background:rgba(255,255,255,.06);
+  background:var(--tint-5);
   border:1px solid var(--border);
   border-radius:4px;
   padding:1px 5px;
@@ -423,7 +463,7 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   display:flex; justify-content:space-between; align-items:center;
   padding:13px 18px;
   cursor:pointer;
-  border-bottom:1px solid rgba(255,255,255,.03);
+  border-bottom:1px solid var(--tint-2);
 }
 .cmdk-item span{color:var(--ivory); font-size:.92rem;}
 .cmdk-item small{color:var(--silver-muted); font-size:.72rem;}
@@ -458,7 +498,7 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   border:1px solid var(--border);
   border-radius:20px;
   padding:36px 32px;
-  box-shadow:0 40px 90px -24px rgba(0,0,0,.65);
+  box-shadow:0 40px 90px -24px var(--shadow-ambient-strong);
   transform:scale(.96);
   transition:transform .2s ease;
 }
@@ -500,7 +540,7 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
 .recruiter-skills span{
   font-size:.76rem;
   color:var(--ivory);
-  background:rgba(255,255,255,.04);
+  background:var(--tint-3);
   border:1px solid var(--border);
   border-radius:999px;
   padding:5px 12px;
@@ -619,7 +659,7 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   font-size:.82rem;
   font-weight:600;
   color:var(--silver);
-  background:rgba(255,255,255,.03);
+  background:var(--tint-2);
   border:1px solid var(--border);
   border-radius:100px;
   padding:8px 18px;
@@ -641,7 +681,7 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   z-index:60;
   max-width:230px;
   padding:14px 16px;
-  background:rgba(25,28,22,.92);
+  background:var(--glass-94b);
   border:1px solid var(--border);
   border-radius:12px;
   backdrop-filter:blur(10px);
@@ -710,7 +750,7 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
 .btn-ghost{
   border-color:var(--border);
   color:var(--ivory);
-  background:rgba(255,255,255,.02);
+  background:var(--tint-1);
 }
 .btn-ghost:hover{
   border-color:var(--olive-soft);
@@ -920,7 +960,7 @@ html[data-motion="reduced"] .ai-orb-ring, html[data-motion="off"] .ai-orb-ring{ 
   position:relative;
   width:52px; height:60px;
   color:var(--ivory);
-  filter:drop-shadow(0 6px 16px rgba(0,0,0,.5));
+  filter:drop-shadow(0 6px 16px var(--shadow-ambient));
   animation:ai-float 5s ease-in-out infinite;
   transition:filter .2s ease, transform .2s ease;
 }
@@ -967,7 +1007,7 @@ html[data-motion="reduced"] .ai-orb-status::after, html[data-motion="off"] .ai-o
   display:flex;
   align-items:flex-start;
   gap:6px;
-  background:rgba(21,23,18,.94);
+  background:var(--glass-94);
   border:1px solid var(--border);
   border-radius:12px 12px 4px 12px;
   padding:9px 8px 9px 12px;
@@ -997,11 +1037,11 @@ html[data-motion="reduced"] .ai-orb-status::after, html[data-motion="off"] .ai-o
   max-height:70vh;
   display:flex;
   flex-direction:column;
-  background:rgba(16,18,15,.96);
+  background:var(--glass-96);
   border:1px solid var(--border);
   border-radius:18px;
   backdrop-filter:blur(14px);
-  box-shadow:0 24px 60px -16px rgba(0,0,0,.65);
+  box-shadow:0 24px 60px -16px var(--shadow-ambient-strong);
   opacity:0;
   transform:translateY(12px) scale(.97);
   pointer-events:none;
@@ -1053,7 +1093,7 @@ html[data-motion="reduced"] .ai-orb-status::after, html[data-motion="off"] .ai-o
 }
 .ai-msg.bot{
   align-self:flex-start;
-  background:rgba(255,255,255,.05);
+  background:var(--tint-4);
   color:var(--silver);
   border:1px solid var(--border);
 }
@@ -1095,7 +1135,7 @@ html[data-motion="reduced"] .ai-orb-status::after, html[data-motion="off"] .ai-o
 .ai-chip{
   font-size:.74rem;
   color:var(--silver);
-  background:rgba(255,255,255,.04);
+  background:var(--tint-3);
   border:1px solid var(--border);
   border-radius:999px;
   padding:5px 11px;
@@ -1112,7 +1152,7 @@ html[data-motion="reduced"] .ai-orb-status::after, html[data-motion="off"] .ai-o
 }
 .ai-input-row input{
   flex:1;
-  background:rgba(255,255,255,.04);
+  background:var(--tint-3);
   border:1px solid var(--border);
   border-radius:999px;
   padding:9px 14px;
@@ -1156,7 +1196,7 @@ html[data-motion="reduced"] .ai-orb-status::after, html[data-motion="off"] .ai-o
   position:relative;
   width:50px; height:50px; border-radius:50%;
   display:flex; align-items:center; justify-content:center;
-  background:rgba(30,34,25,.88);
+  background:var(--glass-88);
   border:1px solid rgba(201,168,92,.4);
   backdrop-filter:blur(10px);
   box-shadow:0 10px 26px -8px rgba(0,0,0,.55), 0 0 0 1px rgba(201,168,92,.08);
@@ -1180,7 +1220,7 @@ html[data-motion="reduced"] .ai-orb-status::after, html[data-motion="off"] .ai-o
   letter-spacing:.08em;
   text-transform:uppercase;
   color:var(--silver-muted);
-  background:rgba(16,18,15,.6);
+  background:var(--glass-60);
   padding:2px 8px;
   border-radius:999px;
   pointer-events:none;
@@ -1191,7 +1231,7 @@ html[data-motion="reduced"] .appearance-toggle::before, html[data-motion="off"] 
 .appearance-panel{
   position:fixed; left:24px; bottom:104px; z-index:180;
   width:272px;
-  background:rgba(21,23,18,.92);
+  background:var(--glass-92);
   border:1px solid var(--border);
   border-radius:16px;
   backdrop-filter:blur(16px);
@@ -1439,7 +1479,7 @@ html[data-motion="reduced"] .appearance-toggle::before, html[data-motion="off"] 
   z-index:120;
   width:320px;
   max-width:calc(100vw - 32px);
-  background:rgba(21,23,18,.97);
+  background:var(--glass-97);
   border:1px solid var(--olive-soft);
   border-radius:16px;
   padding:20px 20px 18px;
@@ -1543,7 +1583,7 @@ html[data-motion="reduced"] .appearance-toggle::before, html[data-motion="off"] 
 .spine-item .project-card{
   backdrop-filter:blur(10px);
   -webkit-backdrop-filter:blur(10px);
-  background:rgba(255,255,255,.03);
+  background:var(--tint-2);
 }
 .spine-item.spine-featured .project-card{
   border-color:rgba(201,168,117,.4);
@@ -1739,7 +1779,7 @@ html[data-motion="reduced"] .core-wave, html[data-motion="off"] .core-wave{ anim
   text-align:left;
 }
 .channel-card{
-  background:rgba(255,255,255,.02);
+  background:var(--tint-1);
   border:1px solid var(--border);
   border-radius:16px;
   padding:18px;
@@ -1867,7 +1907,7 @@ footer .social a:hover{
     left:16px; right:16px;
     max-height:0;
     overflow:hidden;
-    background:rgba(16,18,15,.98);
+    background:var(--glass-97);
     backdrop-filter:blur(14px);
     border:1px solid var(--border);
     border-radius:18px;
