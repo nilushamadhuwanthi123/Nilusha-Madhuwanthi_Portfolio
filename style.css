@@ -133,12 +133,50 @@ nav{
 }
 
 .logo{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
   font-family:var(--font-head);
   font-weight:600;
   font-size:1.05rem;
   letter-spacing:.02em;
 }
-.logo span{color:var(--gold);}
+.logo-mark{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:32px; height:32px;
+  border-radius:50%;
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:0;
+  color:var(--gold-bright);
+  background:rgba(201,168,92,.1);
+  border:1px solid rgba(201,168,92,.4);
+}
+.logo-mark::after{
+  content:'';
+  position:absolute;
+  inset:-4px;
+  border-radius:50%;
+  border:1px solid rgba(201,168,92,.18);
+}
+.logo-word{
+  color:var(--ivory);
+  font-size:.98rem;
+  letter-spacing:.06em;
+}
+.logo-word::after{ content:''; }
+
+.niluverse-tag{
+  font-size:.72rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--gold-bright);
+  margin-bottom:14px;
+  opacity:.85;
+}
 
 .nav-links{
   display:flex;
