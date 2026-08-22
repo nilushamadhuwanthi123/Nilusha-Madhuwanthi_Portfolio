@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nilusha Madhuwanthi — Full-Stack Engineer</title>
+<meta name="description" content="Portfolio of Nilusha Madhuwanthi — Software Engineering undergraduate at SLIIT, full-stack developer, 7+ live shipped projects." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2310120F'/%3E%3Ctext x='50%25' y='58%25' font-size='52' text-anchor='middle' fill='%23C9A85C' font-family='monospace'%3EN%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="grain"></div>
+
+<header>
+  <nav>
+    <a href="#" class="logo">nilusha<span>.dev</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Let's talk</a>
+  </nav>
+</header>
+
+<main class="container">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="eyebrow"><span class="dot"></span> Open to internships &amp; junior full-stack roles</div>
+    <h1>Nilusha Madhuwanthi builds<br/><span class="accent">real, working software.</span></h1>
+    <div class="hero-role">I'm a <span id="role-text"></span><span class="cursor">|</span></div>
+    <p class="lede">Software Engineering undergraduate at SLIIT, currently running two internships at once —
+      EgoTechWorld and CodeAlpha. I'd rather ship something small and real than plan something big and theoretical.</p>
+
+    <div class="hero-actions">
+      <a href="#work" class="btn btn-primary">View my work ↓</a>
+      <a href="https://github.com/nilushamadhuwanthi123" target="_blank" rel="noopener" class="btn btn-ghost">GitHub Profile</a>
+      <a href="https://www.linkedin.com/in/nilushamadhuwanthi" target="_blank" rel="noopener" class="btn btn-ghost">LinkedIn</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat"><b>17</b><span>Repositories shipped</span></div>
+      <div class="stat"><b>7</b><span>Live deployed apps</span></div>
+      <div class="stat"><b>2</b><span>Concurrent internships</span></div>
+      <div class="stat"><b>3</b><span>Codveda levels completed</span></div>
+    </div>
+
+    <div class="scroll-cue"><span class="line"></span> Scroll</div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section class="section reveal" id="about">
+    <div class="section-head">
+      <span class="tag">01 — About</span>
+      <h2>Engineering discipline, practiced in public.</h2>
+    </div>
+    <div class="about-grid">
+      <div>
+        <p>I'm an undergraduate at <b>SLIIT</b> who treats every personal repo as a place to practice real
+          engineering discipline — not just make something that works once. Most of my featured projects are
+          deliberately <b>framework-free</b>: before I let React or Next.js abstract something away, I build it in
+          plain JavaScript first, so I understand exactly what I'm trading for convenience.</p>
+        <p>Right now that means juggling a full course load with <b>two internships at once</b> — a Software
+          Engineering role at EgoTechWorld and a Frontend Development role at CodeAlpha — plus three completed
+          levels of a development internship at Codveda. Seven of my personal projects are live and deployed, not
+          just source sitting in a repo.</p>
+        <p>Security and correctness aren't an afterthought: bcrypt hashing, CSRF tokens, prepared statements and
+          row-locked database transactions show up throughout my work, including in a full banking-system rebuild
+          with ACID-safe money movement.</p>
+      </div>
+      <ul class="principles">
+        <li><b>No eval()</b>Every expression, calculator and parser I write is routed through a real parsing library or my own logic — never a raw eval.</li>
+        <li><b>No framework I don't understand</b>Vanilla JS first, framework second — so the abstraction is a choice, not a crutch.</li>
+        <li><b>No shortcuts on a11y</b>Keyboard navigation and screen-reader support are part of the build, not a pass at the end.</li>
+        <li><b>Ship it live</b>A project isn't done until it's deployed somewhere a stranger can actually open it.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= SKILLS ================= -->
+  <section class="section reveal" id="skills">
+    <div class="section-head">
+      <span class="tag">02 — Skills</span>
+      <h2>The stack I build with.</h2>
+      <p class="sub">Languages, frameworks and tools I use day to day across frontend, backend and mobile.</p>
+    </div>
+
+    <div class="skill-groups">
+      <div>
+        <div class="skill-group-label">Languages</div>
+        <div class="skills-grid">
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=js" alt="JavaScript"/><span>JavaScript</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=ts" alt="TypeScript"/><span>TypeScript</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=java" alt="Java"/><span>Java</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=kotlin" alt="Kotlin"/><span>Kotlin</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=php" alt="PHP"/><span>PHP</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=python" alt="Python"/><span>Python</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=html" alt="HTML"/><span>HTML5</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=css" alt="CSS"/><span>CSS3</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="skill-group-label">Frameworks &amp; Design</div>
+        <div class="skills-grid">
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=react" alt="React"/><span>React</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=tailwind" alt="Tailwind"/><span>Tailwind</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=bootstrap" alt="Bootstrap"/><span>Bootstrap</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=figma" alt="Figma"/><span>Figma</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="skill-group-label">Backend &amp; Data</div>
+        <div class="skills-grid">
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=nodejs" alt="Node.js"/><span>Node.js</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=express" alt="Express"/><span>Express</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=spring" alt="Spring"/><span>Spring</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=mysql" alt="MySQL"/><span>MySQL</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=mongodb" alt="MongoDB"/><span>MongoDB</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=firebase" alt="Firebase"/><span>Firebase</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="skill-group-label">Tools &amp; Platforms</div>
+        <div class="skills-grid">
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=androidstudio" alt="Android Studio"/><span>Android Studio</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=git" alt="Git"/><span>Git</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=github" alt="GitHub"/><span>GitHub</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=vscode" alt="VS Code"/><span>VS Code</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=idea" alt="IntelliJ"/><span>IntelliJ IDEA</span></div>
+          <div class="skill-card"><img src="https://skillicons.dev/icons?i=postman" alt="Postman"/><span>Postman</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EXPERIENCE ================= -->
+  <section class="section reveal" id="experience">
+    <div class="section-head">
+      <span class="tag">03 — Experience</span>
+      <h2>Where the work actually happened.</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="when">Ongoing — through Jan / Feb 2027</div>
+        <h3>Software Engineering Intern <small>@ EgoTechWorld</small></h3>
+        <p>Full-stack development work alongside a full-time degree — six months in and still running.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="when">Ongoing — through Sep 2026</div>
+        <h3>Frontend Development Intern <small>@ CodeAlpha</small></h3>
+        <p>Shipped three framework-free, PWA-installable frontend projects: a mathematics workspace (NEXORA), an
+          offline-capable music player (WAVEORA) and an accessibility-first image gallery (MIREVA) — all deployed live.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="when">Completed — 3 levels</div>
+        <h3>Development Intern <small>@ Codveda</small></h3>
+        <p>Progressed through three levels of hands-on development tasks, producing a task manager, a bug tracker and
+          a React + Vite personal finance dashboard — all deployed live.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= WORK ================= -->
+  <section class="section reveal" id="work">
+    <div class="section-head">
+      <span class="tag">04 — Selected Work</span>
+      <h2>Seven live projects. Not just source code.</h2>
+      <p class="sub">Every card below links to a real, running deployment — click through.</p>
+    </div>
+
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-top"><span class="project-emoji">🧮</span><span class="live-dot"><i></i>Live</span></div>
+        <h3>NEXORA — Mathematics Workspace</h3>
+        <p>Graphing, step-by-step equation solving, matrices, statistics and unit conversion in one installable PWA. Every expression routed through math.js — eval() appears nowhere.</p>
+        <div class="stack-pills"><span>Vanilla JS</span><span>Canvas</span><span>math.js</span><span>PWA</span></div>
+        <div class="project-links">
+          <a href="https://nexora-calculator-nilusha.vercel.app" target="_blank" rel="noopener">Live demo ↗</a>
+          <a href="https://github.com/nilushamadhuwanthi123/CodeAlpha_Calculator" target="_blank" rel="noopener">Repo ↗</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top"><span class="project-emoji">🎵</span><span class="live-dot"><i></i>Live</span></div>
+        <h3>WAVEORA — Offline Music Player</h3>
+        <p>A Web Audio API engine with a live visualiser, IndexedDB-backed library, queue, playlists and listening stats. Fully usable with no connection once loaded.</p>
+        <div class="stack-pills"><span>Vanilla JS</span><span>Web Audio API</span><span>IndexedDB</span><span>PWA</span></div>
+        <div class="project-links">
+          <a href="https://waveora-musicplayer-nilusha.vercel.app" target="_blank" rel="noopener">Live demo ↗</a>
+          <a href="https://github.com/nilushamadhuwanthi123/CodeAlpha_MusicPlayer" target="_blank" rel="noopener">Repo ↗</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top"><span class="project-emoji">🖼️</span><span class="live-dot"><i></i>Live</span></div>
+        <h3>MIREVA — Visual Gallery Workspace</h3>
+        <p>Masonry &amp; grid layouts, a cinematic lightbox, colour explorer, collections and a lightweight editor — built to be fully keyboard- and screen-reader-operable.</p>
+        <div class="stack-pills"><span>Vanilla JS</span><span>Canvas</span><span>A11y</span><span>PWA</span></div>
+        <div class="project-links">
+          <a href="https://mireva-imagegallery-nilusha.vercel.app" target="_blank" rel="noopener">Live demo ↗</a>
+          <a href="https://github.com/nilushamadhuwanthi123/CodeAlpha_ImageGallery" target="_blank" rel="noopener">Repo ↗</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top"><span class="project-emoji">🏦</span><span class="live-dot"><i></i>Live</span></div>
+        <h3>NexaBank — Online Banking Platform</h3>
+        <p>Real account balances, instant transfers and ACID-safe money movement — every transaction runs inside a row-locked DB transaction. Bcrypt auth, CSRF everywhere, full admin console.</p>
+        <div class="stack-pills"><span>PHP</span><span>MySQL</span><span>Docker</span><span>Chart.js</span></div>
+        <div class="project-links">
+          <a href="https://nexabank-web-production.up.railway.app" target="_blank" rel="noopener">Live demo ↗</a>
+          <a href="https://github.com/nilushamadhuwanthi123/NexaBank---Online-Banking-System" target="_blank" rel="noopener">Repo ↗</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top"><span class="project-emoji">💰</span><span class="live-dot"><i></i>Live</span></div>
+        <h3>FinTrack — Personal Finance Tracker</h3>
+        <p>Budgets, categorized transactions and spending trends in a React + Vite dashboard, built to make a full month of cash flow legible at a glance.</p>
+        <div class="stack-pills"><span>React</span><span>Vite</span><span>Chart.js</span></div>
+        <div class="project-links">
+          <a href="https://fintrack-nilusha.vercel.app" target="_blank" rel="noopener">Live demo ↗</a>
+          <a href="https://github.com/nilushamadhuwanthi123/FinTrack-Finace-Tarcker-app_Codveda_Level-02_task3" target="_blank" rel="noopener">Repo ↗</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top"><span class="project-emoji">✅</span><span class="live-dot"><i></i>Live</span></div>
+        <h3>FlowBoard — To-Do List App</h3>
+        <p>A clean task manager with boards, priorities and due dates — built to make daily task triage fast rather than fussy.</p>
+        <div class="stack-pills"><span>HTML5</span><span>CSS3</span><span>JavaScript</span></div>
+        <div class="project-links">
+          <a href="https://flowboard-todo-nilusha.vercel.app" target="_blank" rel="noopener">Live demo ↗</a>
+          <a href="https://github.com/nilushamadhuwanthi123/FlowBoard-TO-DO-List-App_Codveda_Level-02_task2" target="_blank" rel="noopener">Repo ↗</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top"><span class="project-emoji">🐞</span><span class="live-dot"><i></i>Live</span></div>
+        <h3>FixFinder — Bug Tracker</h3>
+        <p>A lightweight issue tracker for logging, categorizing and resolving bugs across a project, start to finish.</p>
+        <div class="stack-pills"><span>HTML5</span><span>CSS3</span><span>JavaScript</span></div>
+        <div class="project-links">
+          <a href="https://fixfinder-nilusha.vercel.app" target="_blank" rel="noopener">Live demo ↗</a>
+          <a href="https://github.com/nilushamadhuwanthi123/FixFinder_Codveda_Level1" target="_blank" rel="noopener">Repo ↗</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center; margin-top:48px;">
+      <a href="https://github.com/nilushamadhuwanthi123?tab=repositories" target="_blank" rel="noopener" class="btn btn-ghost">Browse all 17 repositories ↗</a>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section class="section reveal" id="contact">
+    <div class="contact-box">
+      <span class="tag">05 — Contact</span>
+      <h2>Let's build something real together.</h2>
+      <p class="sub">Open to internships, junior full-stack roles, and anything worth building properly.</p>
+      <div class="contact-actions">
+        <a href="mailto:nilushamadhuwanthi02@gmail.com" class="btn btn-primary">Email me</a>
+        <a href="https://github.com/nilushamadhuwanthi123" target="_blank" rel="noopener" class="btn btn-ghost">GitHub</a>
+        <a href="https://www.linkedin.com/in/nilushamadhuwanthi" target="_blank" rel="noopener" class="btn btn-ghost">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="social">
+    <a href="https://github.com/nilushamadhuwanthi123" target="_blank" rel="noopener" aria-label="GitHub">GH</a>
+    <a href="https://www.linkedin.com/in/nilushamadhuwanthi" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
+    <a href="mailto:nilushamadhuwanthi02@gmail.com" aria-label="Email">@</a>
+  </div>
+  <div>© <span id="year"></span> Nilusha Madhuwanthi. Built from scratch, shipped live.</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
