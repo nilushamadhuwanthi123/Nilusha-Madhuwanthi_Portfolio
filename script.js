@@ -12,7 +12,11 @@
   const scene = new THREE.Scene();
   const isMobile = window.innerWidth < 760;
   const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 200);
-  camera.position.set(0, 2.2, isMobile ? 15 : 11.5);
+  // desktop: shift the camera left (without re-aiming it) so the whole scene —
+  // Earth, orbit rings, tech nodes — renders visually shifted to the right half
+  // of the viewport, out from under the hero text column. Mobile keeps it
+  // centered since text stacks above the visual there, not beside it.
+  camera.position.set(isMobile ? 0 : -3.4, 2.2, isMobile ? 15 : 11.5);
 
   const gold = 0xc9a85c;
   const goldBright = 0xe0c477;
