@@ -490,6 +490,141 @@
   });
 })();
 
+/* ---------- command palette (Ctrl/Cmd+K) ---------- */
+(function commandPalette() {
+  const overlay = document.getElementById('cmdk-overlay');
+  const input = document.getElementById('cmdk-input');
+  const list = document.getElementById('cmdk-list');
+  if (!overlay || !input || !list) return;
+
+  function buildCommands() {
+    const cmds = [];
+    document.querySelectorAll('main section[id]').forEach((sec) => {
+      const heading = sec.querySelector('h2');
+      cmds.push({
+        label: heading ? heading.textContent.trim() : sec.id,
+        hint: 'Section',
+        action: () => sec.scrollIntoView({ behavior: 'smooth' }),
+      });
+    });
+    document.querySelectorAll('.project-card').forEach((card) => {
+      const h3 = card.querySelector('h3');
+      const link = card.querySelector('.project-links a');
+      if (!h3) return;
+      const name = h3.textContent.trim();
+      cmds.push({
+        label: name,
+        hint: 'Project — scroll to card',
+        action: () => {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.classList.add('cmdk-flash');
+          setTimeout(() => card.classList.remove('cmdk-flash'), 900);
+        },
+      });
+      if (link) {
+        cmds.push({
+          label: `Open ${name} live demo`,
+          hint: 'External link',
+          action: () => window.open(link.href, '_blank', 'noopener'),
+        });
+      }
+    });
+    cmds.push(
+      { label: 'GitHub profile', hint: 'External link', action: () => window.open('https://github.com/nilushamadhuwanthi123', '_blank', 'noopener') },
+      { label: 'LinkedIn profile', hint: 'External link', action: () => window.open('https://www.linkedin.com/in/nilushamadhuwanthi', '_blank', 'noopener') },
+      { label: '60-second recruiter view', hint: 'Overlay', action: () => { const btn = document.getElementById('recruiter-toggle'); if (btn) btn.click(); } }
+    );
+    ['frontend', 'fullstack', 'uiux'].forEach((m) => {
+      cmds.push({
+        label: `Skill orbit — ${m === 'uiux' ? 'UI / UX' : m === 'fullstack' ? 'Full Stack' : 'Frontend'} mode`,
+        hint: 'Developer mode',
+        action: () => { const btn = document.querySelector(`.mode-btn[data-mode="${m}"]`); if (btn) btn.click(); },
+      });
+    });
+    return cmds;
+  }
+
+  let commands = [];
+  let activeIndex = 0;
+  let filtered = [];
+
+  function render(query) {
+    const q = query.trim().toLowerCase();
+    filtered = q ? commands.filter((c) => c.label.toLowerCase().includes(q)) : commands;
+    list.innerHTML = '';
+    filtered.slice(0, 8).forEach((c, i) => {
+      const li = document.createElement('li');
+      li.className = 'cmdk-item' + (i === activeIndex ? ' active' : '');
+      li.innerHTML = `<span>${c.label}</span><small>${c.hint}</small>`;
+      li.addEventListener('mouseenter', () => { activeIndex = i; render(input.value); });
+      li.addEventListener('click', () => { c.action(); close(); });
+      list.appendChild(li);
+    });
+    if (!filtered.length) {
+      const li = document.createElement('li');
+      li.className = 'cmdk-empty';
+      li.textContent = 'No matches';
+      list.appendChild(li);
+    }
+  }
+
+  function open() {
+    commands = buildCommands();
+    activeIndex = 0;
+    overlay.hidden = false;
+    requestAnimationFrame(() => overlay.classList.add('show'));
+    input.value = '';
+    render('');
+    setTimeout(() => input.focus(), 30);
+  }
+  function close() {
+    overlay.classList.remove('show');
+    setTimeout(() => { overlay.hidden = true; }, 150);
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      overlay.hidden ? open() : close();
+    }
+    if (e.key === 'Escape' && !overlay.hidden) close();
+  });
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+  input.addEventListener('input', () => { activeIndex = 0; render(input.value); });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); activeIndex = Math.min(activeIndex + 1, Math.min(filtered.length, 8) - 1); render(input.value); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); activeIndex = Math.max(activeIndex - 1, 0); render(input.value); }
+    if (e.key === 'Enter') { e.preventDefault(); const c = filtered[activeIndex]; if (c) { c.action(); close(); } }
+  });
+  document.querySelectorAll('[data-cmdk-open]').forEach((btn) => btn.addEventListener('click', open));
+})();
+
+/* ---------- recruiter 60-second mode ---------- */
+(function recruiterMode() {
+  const toggle = document.getElementById('recruiter-toggle');
+  const overlay = document.getElementById('recruiter-overlay');
+  const closeBtn = document.getElementById('recruiter-close');
+  if (!toggle || !overlay) return;
+  function open() { overlay.hidden = false; requestAnimationFrame(() => overlay.classList.add('show')); }
+  function close() { overlay.classList.remove('show'); setTimeout(() => { overlay.hidden = true; }, 200); }
+  toggle.addEventListener('click', open);
+  if (closeBtn) closeBtn.addEventListener('click', close);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !overlay.hidden) close(); });
+})();
+
+/* ---------- mouse-reactive nebula ---------- */
+(function nebulaParallax() {
+  const nebula = document.querySelector('.nebula');
+  if (!nebula || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  window.addEventListener('mousemove', (e) => {
+    const nx = (e.clientX / window.innerWidth - 0.5) * 2;
+    const ny = (e.clientY / window.innerHeight - 0.5) * 2;
+    nebula.style.setProperty('--nx', `${nx * 14}px`);
+    nebula.style.setProperty('--ny', `${ny * 14}px`);
+  });
+})();
+
 /* ---------- mobile nav toggle ---------- */
 (function mobileNav() {
   const toggle = document.querySelector('.nav-toggle');

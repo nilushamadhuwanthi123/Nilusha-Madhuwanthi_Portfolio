@@ -25,6 +25,45 @@
   <span id="orbit-info-projects"></span>
 </div>
 
+<div class="cmdk-overlay" id="cmdk-overlay" hidden>
+  <div class="cmdk-box">
+    <div class="cmdk-input-row">
+      <span class="cmdk-icon">⌘</span>
+      <input type="text" id="cmdk-input" placeholder="Jump to a section, project, or link…" autocomplete="off" />
+      <kbd>esc</kbd>
+    </div>
+    <ul class="cmdk-list" id="cmdk-list"></ul>
+  </div>
+</div>
+
+<div class="recruiter-overlay" id="recruiter-overlay" hidden>
+  <div class="recruiter-card">
+    <button class="recruiter-close" id="recruiter-close" aria-label="Close">✕</button>
+    <span class="recruiter-tag">⚡ 60-second view</span>
+    <h2>Nilusha Madhuwanthi</h2>
+    <p class="recruiter-role">Full Stack Engineer Intern @ EgoTechWorld · Frontend Developer Intern @ CodeAlpha Technologies</p>
+    <p class="recruiter-sub">Software Engineering undergraduate at SLIIT — 9 live deployed apps, not just source sitting in a repo.</p>
+    <div class="recruiter-skills">
+      <span>React</span><span>Node.js</span><span>Express</span><span>MongoDB</span><span>MySQL</span><span>JavaScript</span><span>TypeScript</span><span>PHP</span>
+    </div>
+    <div class="recruiter-flagships">
+      <a href="https://nexabank-web-production.up.railway.app" target="_blank" rel="noopener">
+        <b>NexaBank ↗</b><span>Online banking — Docker, MySQL, ACID-safe transfers</span>
+      </a>
+      <a href="https://medicare-nilusha.vercel.app" target="_blank" rel="noopener">
+        <b>MediCare ↗</b><span>Hospital management — React, Node.js, MongoDB</span>
+      </a>
+      <a href="https://orvexa-production-1b61.up.railway.app" target="_blank" rel="noopener">
+        <b>Orvexa ↗</b><span>Productivity platform — React, Node.js, Socket.IO</span>
+      </a>
+    </div>
+    <div class="recruiter-cta">
+      <a href="https://github.com/nilushamadhuwanthi123" target="_blank" rel="noopener" class="btn btn-primary">GitHub</a>
+      <a href="https://www.linkedin.com/in/nilushamadhuwanthi" target="_blank" rel="noopener" class="btn btn-ghost">LinkedIn</a>
+    </div>
+  </div>
+</div>
+
 <header>
   <nav>
     <a href="#" class="logo">nilusha<span>.dev</span></a>
@@ -35,6 +74,8 @@
       <li><a href="#work">Work</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <button class="nav-cmdk" data-cmdk-open type="button"><kbd>⌘</kbd><kbd>K</kbd> Search</button>
+    <button class="nav-recruiter" id="recruiter-toggle" type="button">⚡ 60s view</button>
     <a href="#contact" class="nav-cta">Let's talk</a>
   </nav>
 </header>
