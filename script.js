@@ -617,7 +617,7 @@
     camera.position.y += (2.2 - mouseY * parallaxY - camera.position.y) * 0.02;
     const targetZ = (isMobile ? 15 : 11.5) + scrollProgress * (isMobile ? 4 : 5);
     camera.position.z += (targetZ - camera.position.z) * 0.05;
-    canvas.style.opacity = String(1 - scrollProgress * 0.96);
+    canvas.style.opacity = scrollProgress >= 1 ? '0' : String(1 - scrollProgress * 0.96);
     camera.lookAt(lookTargetX, 0, 0);
 
     renderer.render(scene, camera);
