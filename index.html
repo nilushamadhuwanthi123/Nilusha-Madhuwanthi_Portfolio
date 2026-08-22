@@ -684,6 +684,36 @@
   </form>
 </div>
 
+<!-- ================= APPEARANCE SETTINGS ================= -->
+<button class="appearance-toggle" id="appearance-toggle" aria-haspopup="dialog" aria-expanded="false" aria-label="Appearance settings" type="button">◐</button>
+<div class="appearance-panel" id="appearance-panel" role="dialog" aria-label="Appearance settings" hidden>
+  <h4>Theme</h4>
+  <div class="appearance-group" id="theme-group" role="radiogroup" aria-label="Theme">
+    <button class="appearance-opt" type="button" role="radio" data-theme-opt="current"><span class="dot" aria-hidden="true"></span>Current (default)</button>
+    <button class="appearance-opt" type="button" role="radio" data-theme-opt="dark"><span class="dot" aria-hidden="true"></span>Dark</button>
+    <button class="appearance-opt" type="button" role="radio" data-theme-opt="light"><span class="dot" aria-hidden="true"></span>Light</button>
+    <button class="appearance-opt" type="button" role="radio" data-theme-opt="eye-comfort"><span class="dot" aria-hidden="true"></span>Eye Comfort</button>
+    <button class="appearance-opt" type="button" role="radio" data-theme-opt="system"><span class="dot" aria-hidden="true"></span>System</button>
+  </div>
+  <h4>Motion</h4>
+  <div class="appearance-group" id="motion-group" role="radiogroup" aria-label="Motion">
+    <button class="appearance-opt" type="button" role="radio" data-motion-opt="full"><span class="dot" aria-hidden="true"></span>Full Motion</button>
+    <button class="appearance-opt" type="button" role="radio" data-motion-opt="reduced"><span class="dot" aria-hidden="true"></span>Reduced Motion</button>
+    <button class="appearance-opt" type="button" role="radio" data-motion-opt="off"><span class="dot" aria-hidden="true"></span>No Motion</button>
+  </div>
+  <h4>Text Size</h4>
+  <div class="appearance-group" id="text-group" role="radiogroup" aria-label="Text size">
+    <button class="appearance-opt" type="button" role="radio" data-text-opt="small"><span class="dot" aria-hidden="true"></span>Small</button>
+    <button class="appearance-opt" type="button" role="radio" data-text-opt="default"><span class="dot" aria-hidden="true"></span>Default</button>
+    <button class="appearance-opt" type="button" role="radio" data-text-opt="large"><span class="dot" aria-hidden="true"></span>Large</button>
+  </div>
+  <h4>Contrast</h4>
+  <div class="appearance-group" id="contrast-group" role="radiogroup" aria-label="High contrast">
+    <button class="appearance-opt" type="button" role="radio" data-contrast-opt="off"><span class="dot" aria-hidden="true"></span>Standard</button>
+    <button class="appearance-opt" type="button" role="radio" data-contrast-opt="on"><span class="dot" aria-hidden="true"></span>High Contrast</button>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="script.js"></script>
 </body>

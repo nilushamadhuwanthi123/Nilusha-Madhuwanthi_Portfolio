@@ -1,21 +1,64 @@
 /* ================= Nilusha Madhuwanthi — Portfolio ================= */
 
 :root{
+  /* ---- brand accent: constant across every theme, never overridden ---- */
   --olive-deep:#4F5835;
   --olive-primary:#687344;
   --olive-soft:#899466;
+  --gold:#C9A85C;
+  --gold-bright:#E0C477;
+
+  /* ---- CURRENT / DEFAULT surface palette (unchanged from the original design) ---- */
   --bg:#10120F;
   --card:#191C16;
   --ivory:#F4F1E8;
   --silver:#C4C7C2;
   --silver-muted:#8F948C;
-  --gold:#C9A85C;
-  --gold-bright:#E0C477;
   --border:#30352A;
 
   --font-head:'Space Grotesk', 'JetBrains Mono', monospace;
   --font-body:'Inter', system-ui, sans-serif;
+
+  --text-scale:1;
 }
+
+/* ---------- theme system (additive — "current" above stays the default) ---------- */
+html[data-theme="dark"]{
+  --bg:#0B0C09;
+  --card:#15170F;
+  --ivory:#F6F3E9;
+  --silver:#CBCEC6;
+  --silver-muted:#9A9E93;
+  --border:#2A2E22;
+}
+html[data-theme="light"]{
+  --bg:#F4F1E8;
+  --card:#FFFFFF;
+  --ivory:#20241A;
+  --silver:#3C4130;
+  --silver-muted:#5C6350;
+  --border:#DAD5C4;
+}
+html[data-theme="eye-comfort"]{
+  --bg:#211D14;
+  --card:#2A2519;
+  --ivory:#EFE6D3;
+  --silver:#CBBFA0;
+  --silver-muted:#A8987C;
+  --border:#3A331F;
+}
+html{ font-size:calc(100% * var(--text-scale)); }
+html.text-small{ --text-scale:0.9; }
+html.text-large{ --text-scale:1.14; }
+html.high-contrast{ --border:#5C6350; }
+html.high-contrast[data-theme="light"]{ --border:#9AA088; --silver-muted:#3C4130; }
+html[data-motion="reduced"] *, html[data-motion="off"] *{
+  animation-duration:.001ms !important;
+  animation-iteration-count:1 !important;
+  transition-duration:.001ms !important;
+  scroll-behavior:auto !important;
+}
+body{ transition:background-color .25s ease, color .25s ease; }
 
 *{box-sizing:border-box; margin:0; padding:0;}
 
@@ -995,6 +1038,53 @@ nav{
   }
   .ai-orb{ right:16px; bottom:16px; }
 }
+
+/* ---------- appearance settings ---------- */
+.appearance-toggle{
+  position:fixed; left:26px; bottom:26px; z-index:180;
+  width:46px; height:46px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(25,28,22,.72);
+  border:1px solid var(--border);
+  backdrop-filter:blur(10px);
+  color:var(--silver);
+  font-size:1.05rem;
+  cursor:pointer;
+  transition:box-shadow .2s ease, border-color .2s ease, transform .15s ease, color .2s ease;
+}
+.appearance-toggle:hover{ border-color:var(--olive-soft); color:var(--gold-bright); box-shadow:0 0 0 6px rgba(137,148,102,.12); }
+.appearance-toggle:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+html[data-motion="reduced"] .appearance-toggle, html[data-motion="off"] .appearance-toggle{ transition:none; }
+
+.appearance-panel{
+  position:fixed; left:26px; bottom:82px; z-index:180;
+  width:272px;
+  background:rgba(21,23,18,.92);
+  border:1px solid var(--border);
+  border-radius:16px;
+  backdrop-filter:blur(16px);
+  box-shadow:0 30px 70px -20px rgba(0,0,0,.6);
+  padding:16px;
+  opacity:0; transform:translateY(8px) scale(.98);
+  pointer-events:none;
+  transition:opacity .18s ease, transform .18s ease;
+}
+.appearance-panel[hidden]{ display:none; }
+.appearance-panel.show{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+.appearance-panel h4{ font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--silver-muted); margin:14px 0 8px; }
+.appearance-panel h4:first-child{ margin-top:0; }
+.appearance-group{ display:flex; flex-direction:column; gap:4px; }
+.appearance-opt{
+  display:flex; align-items:center; gap:8px;
+  padding:7px 9px; border-radius:9px;
+  font-size:.82rem; color:var(--silver);
+  background:transparent; border:1px solid transparent;
+  cursor:pointer; text-align:left; width:100%;
+}
+.appearance-opt:hover{ background:rgba(137,148,102,.1); }
+.appearance-opt[aria-checked="true"]{ background:rgba(201,168,92,.12); border-color:rgba(201,168,92,.35); color:var(--ivory); }
+.appearance-opt .dot{ width:7px; height:7px; border-radius:50%; border:1px solid var(--silver-muted); flex-shrink:0; }
+.appearance-opt[aria-checked="true"] .dot{ background:var(--gold-bright); border-color:var(--gold-bright); box-shadow:0 0 6px rgba(224,196,119,.7); }
 
 /* ---------- education ---------- */
 .edu-path{

@@ -526,7 +526,11 @@
   updateScrollProgress();
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const motionScale = reducedMotion ? 0 : 1;
+  let motionScale = reducedMotion ? 0 : 1;
+  const storedMotionPref = (() => { try { return localStorage.getItem('motionPreference'); } catch (e) { return null; } })();
+  if (storedMotionPref === 'reduced' || storedMotionPref === 'off') motionScale = 0;
+  else if (storedMotionPref === 'full') motionScale = 1;
+  window.__setMotionScale = (v) => { motionScale = v; };
 
   let t = 0;
   function animate() {
@@ -1142,6 +1146,74 @@
     input.value = '';
     respond(q);
   });
+})();
+
+/* ---------- appearance settings (theme / motion / text size / contrast) ---------- */
+(function appearanceSettings() {
+  const toggle = document.getElementById('appearance-toggle');
+  const panel = document.getElementById('appearance-panel');
+  if (!toggle || !panel) return;
+
+  const html = document.documentElement;
+  const store = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+  const load = (k, fallback) => { try { return localStorage.getItem(k) || fallback; } catch (e) { return fallback; } };
+
+  let theme = load('themePreference', 'current');
+  let motion = load('motionPreference', 'full');
+  let text = load('textSizePreference', 'default');
+  let contrast = load('highContrastPreference', 'off');
+
+  const media = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function applyTheme() {
+    let resolved = theme;
+    if (theme === 'system') resolved = media.matches ? 'dark' : 'light';
+    if (resolved === 'current') html.removeAttribute('data-theme');
+    else html.setAttribute('data-theme', resolved);
+  }
+  function applyMotion() {
+    if (motion === 'full') html.removeAttribute('data-motion');
+    else html.setAttribute('data-motion', motion);
+    if (window.__setMotionScale) window.__setMotionScale(motion === 'full' ? 1 : 0);
+  }
+  function applyText() {
+    html.classList.remove('text-small', 'text-large');
+    if (text === 'small') html.classList.add('text-small');
+    if (text === 'large') html.classList.add('text-large');
+  }
+  function applyContrast() {
+    html.classList.toggle('high-contrast', contrast === 'on');
+  }
+  function syncRadios() {
+    document.querySelectorAll('[data-theme-opt]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.themeOpt === theme)));
+    document.querySelectorAll('[data-motion-opt]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.motionOpt === motion)));
+    document.querySelectorAll('[data-text-opt]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.textOpt === text)));
+    document.querySelectorAll('[data-contrast-opt]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.contrastOpt === contrast)));
+  }
+  function applyAll() { applyTheme(); applyMotion(); applyText(); applyContrast(); syncRadios(); }
+  applyAll();
+  media.addEventListener('change', () => { if (theme === 'system') applyTheme(); });
+
+  document.querySelectorAll('[data-theme-opt]').forEach((b) => b.addEventListener('click', () => { theme = b.dataset.themeOpt; store('themePreference', theme); applyAll(); }));
+  document.querySelectorAll('[data-motion-opt]').forEach((b) => b.addEventListener('click', () => { motion = b.dataset.motionOpt; store('motionPreference', motion); applyAll(); }));
+  document.querySelectorAll('[data-text-opt]').forEach((b) => b.addEventListener('click', () => { text = b.dataset.textOpt; store('textSizePreference', text); applyAll(); }));
+  document.querySelectorAll('[data-contrast-opt]').forEach((b) => b.addEventListener('click', () => { contrast = b.dataset.contrastOpt; store('highContrastPreference', contrast); applyAll(); }));
+
+  function openPanel() {
+    panel.hidden = false;
+    requestAnimationFrame(() => panel.classList.add('show'));
+    toggle.setAttribute('aria-expanded', 'true');
+  }
+  function closePanel() {
+    panel.classList.remove('show');
+    toggle.setAttribute('aria-expanded', 'false');
+    setTimeout(() => { panel.hidden = true; }, 180);
+  }
+  toggle.addEventListener('click', () => { panel.classList.contains('show') ? closePanel() : openPanel(); });
+  document.addEventListener('click', (e) => {
+    if (panel.classList.contains('show') && !panel.contains(e.target) && e.target !== toggle && !toggle.contains(e.target)) closePanel();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel.classList.contains('show')) closePanel(); });
 })();
 
 /* ---------- education journey expand/collapse ---------- */
