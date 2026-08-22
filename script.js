@@ -12,11 +12,15 @@
   const scene = new THREE.Scene();
   const isMobile = window.innerWidth < 760;
   const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 200);
-  // desktop: shift the camera left (without re-aiming it) so the whole scene —
-  // Earth, orbit rings, tech nodes — renders visually shifted to the right half
-  // of the viewport, out from under the hero text column. Mobile keeps it
-  // centered since text stacks above the visual there, not beside it.
-  camera.position.set(isMobile ? 0 : -3.4, 2.2, isMobile ? 15 : 11.5);
+  // desktop: pan the camera so the Earth/orbit scene renders shifted into the
+  // right half of the viewport, out from under the hero text column. This has
+  // to be done via BOTH the position (camBaseX) and the lookAt target
+  // (lookTargetX) below in animate() — lookAt alone re-centers the object
+  // regardless of position, and position alone gets erased every frame by the
+  // mouse-parallax ease. Mobile keeps it centered (text stacks above it there).
+  const camBaseX = isMobile ? 0 : -3.6;
+  const lookTargetX = isMobile ? 0 : -3.4;
+  camera.position.set(camBaseX, 2.2, isMobile ? 15 : 11.5);
 
   const gold = 0xc9a85c;
   const goldBright = 0xe0c477;
@@ -579,12 +583,12 @@
 
     const parallax = reducedMotion ? 0 : 1.6;
     const parallaxY = reducedMotion ? 0 : 1.1;
-    camera.position.x += (mouseX * parallax - camera.position.x) * 0.02;
+    camera.position.x += (camBaseX + mouseX * parallax - camera.position.x) * 0.02;
     camera.position.y += (2.2 - mouseY * parallaxY - camera.position.y) * 0.02;
     const targetZ = (isMobile ? 15 : 11.5) + scrollProgress * (isMobile ? 4 : 5);
     camera.position.z += (targetZ - camera.position.z) * 0.05;
     canvas.style.opacity = String(1 - scrollProgress * 0.35);
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(lookTargetX, 0, 0);
 
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
