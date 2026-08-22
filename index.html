@@ -113,10 +113,6 @@
         <div class="hero-photo-ring"></div>
         <img class="hero-photo" src="assets/profile.jpg" alt="Nilusha Madhuwanthi" />
       </div>
-      <button class="hero-appearance-toggle" id="appearance-toggle" aria-haspopup="dialog" aria-expanded="false" aria-label="Appearance settings" type="button">
-        <span>◐</span>
-        <small>Appearance</small>
-      </button>
     </div>
     <div class="niluverse-tag">✦ Enter Niluverse</div>
     <div class="eyebrow"><span class="dot"></span> Open to internships &amp; junior full-stack roles</div>
@@ -490,10 +486,10 @@
     </div>
     <div class="building-card reveal">
       <div class="building-top">
-        <span class="building-status"><i></i>In progress</span>
+        <span class="building-status" style="color:#7FBF6A; border-color:rgba(127,191,106,.35);"><i style="background:#7FBF6A; box-shadow:0 0 6px #7FBF6A;"></i>Completed</span>
         <h3>Bakery Management System</h3>
       </div>
-      <p>A bakery operations system currently in active development at EgoTechWorld — the live app and a separate tutorial build are both deployed and evolving.</p>
+      <p>A bakery operations system built during my internship at EgoTechWorld — the live app and a separate tutorial build are both deployed.</p>
       <div class="project-links">
         <a href="https://bakery-system-hazel.vercel.app/login" target="_blank" rel="noopener">Live App ↗</a>
         <a href="https://totorial-bakery-system.vercel.app/" target="_blank" rel="noopener">Tutorial Build ↗</a>
@@ -704,7 +700,11 @@
   </form>
 </div>
 
-<!-- ================= APPEARANCE SETTINGS (trigger now lives in the navbar) ================= -->
+<!-- ================= APPEARANCE SETTINGS (floating, bottom-left, always visible) ================= -->
+<button class="appearance-fab" id="appearance-toggle" aria-haspopup="dialog" aria-expanded="false" aria-label="Appearance settings" type="button">
+  <span>◐</span>
+  <small>Appearance</small>
+</button>
 <div class="appearance-panel" id="appearance-panel" role="dialog" aria-label="Appearance settings" hidden>
   <h4>Theme</h4>
   <div class="appearance-group" id="theme-group" role="radiogroup" aria-label="Theme">
