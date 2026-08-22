@@ -925,3 +925,20 @@
   const el = document.getElementById('year');
   if (el) el.textContent = new Date().getFullYear();
 })();
+
+/* ---------- education journey expand/collapse ---------- */
+(function eduJourney() {
+  const toggles = document.querySelectorAll('.edu-toggle');
+  if (!toggles.length) return;
+
+  toggles.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const detailId = btn.getAttribute('aria-controls');
+      const detail = document.getElementById(detailId);
+      if (!detail) return;
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      detail.classList.toggle('open', !isOpen);
+    });
+  });
+})();
