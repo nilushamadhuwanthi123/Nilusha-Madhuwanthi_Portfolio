@@ -1860,6 +1860,17 @@ html[data-motion="reduced"] .nav-appearance::before, html[data-motion="off"] .na
   border-radius:999px;
 }
 .live-dot i{width:6px; height:6px; border-radius:50%; background:#7FBF6A; box-shadow:0 0 6px #7FBF6A;}
+.repo-badge{
+  display:inline-flex;
+  align-items:center;
+  font-size:.72rem;
+  color:var(--silver-muted);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  border:1px solid var(--border);
+  padding:4px 10px;
+  border-radius:999px;
+}
 
 .project-card h3{
   font-family:var(--font-head);
@@ -2146,6 +2157,36 @@ footer .social a:hover{
   position:relative;
   width:180px; height:180px;
   margin-bottom:32px;
+}
+.hero-appearance-toggle{
+  position:absolute;
+  top:-6px; right:-6px;
+  z-index:3;
+  width:38px; height:38px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--card);
+  border:1px solid rgba(201,168,92,.5);
+  color:var(--gold-bright);
+  font-size:1.05rem;
+  cursor:pointer;
+  box-shadow:0 8px 24px -10px rgba(0,0,0,.5);
+  transition:all .25s ease;
+}
+.hero-appearance-toggle::before{
+  content:'';
+  position:absolute; inset:-5px;
+  border-radius:50%;
+  border:1px solid rgba(201,168,92,.35);
+  animation:core-pulse 3s ease-out infinite;
+}
+.hero-appearance-toggle:hover, .hero-appearance-toggle[aria-expanded="true"]{
+  border-color:var(--gold);
+  transform:scale(1.08);
+  box-shadow:0 10px 28px -8px rgba(201,168,92,.5);
+}
+@media (max-width:600px){
+  .hero-appearance-toggle{ width:32px; height:32px; font-size:.92rem; top:-4px; right:-4px; }
 }
 .hero-photo{
   width:180px; height:180px;
