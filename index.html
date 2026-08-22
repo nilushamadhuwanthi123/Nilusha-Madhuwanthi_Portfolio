@@ -662,17 +662,30 @@
   <div>© <span id="year"></span> Nilusha Madhuwanthi. Built from scratch, shipped live.</div>
 </footer>
 
-<!-- ================= AI ASSISTANT ================= -->
-<button class="ai-orb" id="ai-orb" aria-haspopup="dialog" aria-expanded="false" aria-label="Ask Nilusha — AI portfolio assistant" type="button">
+<!-- ================= NILU AI — ASTRONAUT COMPANION ================= -->
+<div class="ai-nudge" id="ai-nudge" role="status" aria-live="polite">Ask <b>Nilu AI</b> about my projects</div>
+<button class="ai-orb" id="ai-orb" aria-haspopup="dialog" aria-expanded="false" aria-label="Open Nilu AI Assistant" type="button">
   <span class="ai-orb-ring" aria-hidden="true"></span>
-  <span class="ai-orb-icon" aria-hidden="true">✦</span>
+  <span class="ai-orb-icon" aria-hidden="true">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="24" cy="27" rx="12" ry="14" fill="currentColor" opacity=".14"/>
+      <path d="M24 6c-6 0-9 5-9 11 0 7 4 13 9 13s9-6 9-13c0-6-3-11-9-11z" fill="currentColor" opacity=".22"/>
+      <circle cx="24" cy="19" r="9" fill="currentColor" opacity=".9"/>
+      <circle cx="24" cy="19.5" r="6.4" fill="#10120F"/>
+      <circle cx="26" cy="18" r="2.1" fill="currentColor"/>
+      <path d="M14 24c-3 1-4 3-4 6s2 5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M34 24c3 1 4 3 4 6s-2 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M17 30c0 7 2.5 12 7 12s7-5 7-12" stroke="currentColor" stroke-width="2" opacity=".55"/>
+    </svg>
+  </span>
+  <span class="ai-orb-status" aria-hidden="true"></span>
 </button>
 
-<div class="ai-panel" id="ai-panel" role="dialog" aria-modal="false" aria-label="Ask Nilusha — AI portfolio assistant" hidden>
+<div class="ai-panel" id="ai-panel" role="dialog" aria-modal="false" aria-label="Nilu AI — your guide through NILUVERSE" hidden>
   <div class="ai-panel-head">
     <div>
-      <h4>Ask Nilusha</h4>
-      <span>AI Portfolio Assistant</span>
+      <h4>Nilu AI</h4>
+      <span>Your guide through NILUVERSE</span>
     </div>
     <button class="ai-close" id="ai-close" aria-label="Close assistant" type="button">✕</button>
   </div>

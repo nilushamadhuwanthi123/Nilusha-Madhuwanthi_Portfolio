@@ -1159,12 +1159,28 @@
       addMessage('bot', "Hi! I'm Nilu AI. Ask me about Nilusha's skills, projects, experience or journey.");
       renderChips();
     }
+    hideNudge();
     setTimeout(() => input.focus(), 200);
   }
   function closePanel() {
     panel.classList.remove('show');
     orb.setAttribute('aria-expanded', 'false');
     setTimeout(() => { panel.hidden = true; }, 200);
+  }
+
+  // ---- one-time "Ask Nilu AI" nudge label, shown once per browser (localStorage), never re-shown after interaction ----
+  const nudge = document.getElementById('ai-nudge');
+  function hideNudge() {
+    if (nudge) nudge.classList.remove('show');
+    try { localStorage.setItem('niluAiIntroSeen', '1'); } catch (e) {}
+  }
+  if (nudge && !reducedMotion) {
+    let seen = false;
+    try { seen = localStorage.getItem('niluAiIntroSeen') === '1'; } catch (e) {}
+    if (!seen) {
+      setTimeout(() => { if (!opened) nudge.classList.add('show'); }, 2600);
+      setTimeout(() => { if (!opened) hideNudge(); }, 8000);
+    }
   }
 
   orb.addEventListener('click', () => {

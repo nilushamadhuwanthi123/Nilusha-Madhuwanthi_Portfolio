@@ -886,17 +886,23 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   position:fixed;
   right:24px; bottom:24px;
   z-index:70;
-  width:56px; height:56px;
+  width:60px; height:60px;
   border-radius:50%;
   display:flex; align-items:center; justify-content:center;
-  background:rgba(25,28,22,.92);
+  background:radial-gradient(circle at 32% 28%, rgba(137,148,102,.35), rgba(25,28,22,.94) 65%);
   border:1px solid rgba(201,168,92,.4);
   backdrop-filter:blur(10px);
   box-shadow:0 12px 30px -10px rgba(0,0,0,.6);
   cursor:pointer;
   transition:transform .2s ease, border-color .2s ease;
+  animation:ai-float 5s ease-in-out infinite;
 }
-.ai-orb:hover{ transform:translateY(-2px); border-color:var(--gold-bright); }
+.ai-orb:hover{ transform:translateY(-4px); border-color:var(--gold-bright); }
+html[data-motion="reduced"] .ai-orb, html[data-motion="off"] .ai-orb{ animation:none; }
+@keyframes ai-float{
+  0%, 100%{ transform:translateY(0) rotate(0deg); }
+  50%{ transform:translateY(-5px) rotate(-2deg); }
+}
 .ai-orb-ring{
   position:absolute;
   inset:-6px;
@@ -907,11 +913,51 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
 @media (prefers-reduced-motion: reduce){
   .ai-orb-ring{ animation:none; }
 }
+html[data-motion="reduced"] .ai-orb-ring, html[data-motion="off"] .ai-orb-ring{ animation:none; }
 @keyframes ai-pulse{
   0%, 100%{ transform:scale(1); opacity:.7; }
   50%{ transform:scale(1.15); opacity:.15; }
 }
-.ai-orb-icon{ font-size:1.3rem; color:var(--gold-bright); }
+.ai-orb-icon{ width:26px; height:26px; color:var(--ivory); }
+.ai-orb-icon svg{ width:100%; height:100%; display:block; }
+.ai-orb-status{
+  position:absolute;
+  left:-2px; bottom:-2px;
+  width:14px; height:14px;
+  border-radius:50%;
+  background:var(--card);
+  border:2px solid var(--card);
+  display:flex; align-items:center; justify-content:center;
+}
+.ai-orb-status::after{
+  content:'';
+  width:7px; height:7px;
+  border-radius:50%;
+  background:#8FD16A;
+  box-shadow:0 0 6px rgba(143,209,106,.9);
+  animation:ai-status-pulse 2s ease-in-out infinite;
+}
+html[data-motion="reduced"] .ai-orb-status::after, html[data-motion="off"] .ai-orb-status::after{ animation:none; }
+@keyframes ai-status-pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.4; } }
+
+.ai-nudge{
+  position:fixed;
+  right:24px; bottom:92px;
+  z-index:69;
+  max-width:190px;
+  background:rgba(21,23,18,.94);
+  border:1px solid var(--border);
+  border-radius:12px 12px 4px 12px;
+  padding:9px 12px;
+  font-size:.78rem;
+  color:var(--silver);
+  box-shadow:0 16px 34px -14px rgba(0,0,0,.6);
+  opacity:0; transform:translateY(6px);
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+}
+.ai-nudge.show{ opacity:1; transform:translateY(0); }
+.ai-nudge b{ color:var(--gold-bright); }
 
 .ai-panel{
   position:fixed;
