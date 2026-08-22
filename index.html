@@ -662,6 +662,28 @@
   <div>© <span id="year"></span> Nilusha Madhuwanthi. Built from scratch, shipped live.</div>
 </footer>
 
+<!-- ================= AI ASSISTANT ================= -->
+<button class="ai-orb" id="ai-orb" aria-haspopup="dialog" aria-expanded="false" aria-label="Ask Nilusha — AI portfolio assistant" type="button">
+  <span class="ai-orb-ring" aria-hidden="true"></span>
+  <span class="ai-orb-icon" aria-hidden="true">✦</span>
+</button>
+
+<div class="ai-panel" id="ai-panel" role="dialog" aria-modal="false" aria-label="Ask Nilusha — AI portfolio assistant" hidden>
+  <div class="ai-panel-head">
+    <div>
+      <h4>Ask Nilusha</h4>
+      <span>AI Portfolio Assistant</span>
+    </div>
+    <button class="ai-close" id="ai-close" aria-label="Close assistant" type="button">✕</button>
+  </div>
+  <div class="ai-messages" id="ai-messages"></div>
+  <div class="ai-chips" id="ai-chips"></div>
+  <form class="ai-input-row" id="ai-form">
+    <input type="text" id="ai-input" placeholder="Ask about skills, projects, experience…" autocomplete="off" />
+    <button type="submit" aria-label="Send">↑</button>
+  </form>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="script.js"></script>
 </body>

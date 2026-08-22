@@ -952,6 +952,195 @@
   if (el) el.textContent = new Date().getFullYear();
 })();
 
+/* ---------- Ask Nilusha: local AI-style portfolio assistant ---------- */
+/* No external API — answers are matched by keyword against real portfolio
+   data only, so nothing here is ever invented. */
+(function askNilusha() {
+  const orb = document.getElementById('ai-orb');
+  const panel = document.getElementById('ai-panel');
+  const closeBtn = document.getElementById('ai-close');
+  const messages = document.getElementById('ai-messages');
+  const chipsWrap = document.getElementById('ai-chips');
+  const form = document.getElementById('ai-form');
+  const input = document.getElementById('ai-input');
+  if (!orb || !panel || !messages || !form || !input) return;
+
+  const LINKS = {
+    github: 'https://github.com/nilushamadhuwanthi123',
+    linkedin: 'https://www.linkedin.com/in/nilushamadhuwanthi',
+    resume: 'assets/resume.pdf',
+    email: 'mailto:nilushamadhuwanthi02@gmail.com',
+  };
+
+  // Real facts pulled from this same portfolio's own content — kept in one
+  // place so answers can never drift from what's actually on the page.
+  const FAQ = [
+    {
+      test: /react.*project|project.*react/i,
+      answer: 'React is used in MediCare (Hospital Management), Orvexa (Operations & Productivity) and FinTrack (Personal Finance Tracker).',
+      links: [{ label: 'View Projects', href: '#work' }],
+    },
+    {
+      test: /mongo.*project|project.*mongo/i,
+      answer: 'MongoDB is used in MediCare and Orvexa — both React + Node.js + Express apps with real CRUD and auth.',
+      links: [{ label: 'View Projects', href: '#work' }],
+    },
+    {
+      test: /frontend|\breact\b|javascript|typescript|\bhtml\b|\bcss\b|figma|tailwind|bootstrap/i,
+      answer: 'Frontend: React, JavaScript, TypeScript, HTML5, CSS3, Tailwind, Bootstrap and Figma for UI design.',
+      links: [{ label: 'See Skills', href: '#skills' }],
+    },
+    {
+      test: /full.?stack|backend|node|express|mongodb|mysql|database/i,
+      answer: 'Full-stack: Node.js, Express and Spring on the backend, with MySQL and MongoDB for data, plus Firebase for smaller apps.',
+      links: [{ label: 'See Skills', href: '#skills' }],
+    },
+    {
+      test: /project|built|portfolio.*work|nexora|waveora|mireva|nexabank|fintrack|medicare|orvexa|flowboard|fixfinder/i,
+      answer: 'Nine live, deployed projects — NEXORA (math workspace), WAVEORA (music player), MIREVA (image gallery), NexaBank (banking platform), FinTrack, MediCare, Orvexa, FlowBoard and FixFinder. Every card links to a real working demo.',
+      links: [{ label: 'Explore Projects', href: '#work' }],
+    },
+    {
+      test: /intern|experience|egotechworld|codealpha|codveda|work(ed)?\s*at/i,
+      answer: 'Two internships running at once: Full Stack Engineer Intern at EgoTechWorld, and Frontend Developer Intern at CodeAlpha Technologies. Also completed 3 levels as a Web Developer Intern at Codveda Technologies.',
+      links: [{ label: 'See Experience', href: '#experience' }],
+    },
+    {
+      test: /study|university|education|sliit|degree|british/i,
+      answer: 'Currently a BSc (Hons) Information Technology student at SLIIT (Nov 2024 – Present, Malabe). Also completed a Diploma of Art Direction at British Way English Academy and a Certificate Course in English at British Council.',
+      links: [{ label: 'See Education', href: '#education' }],
+    },
+    {
+      test: /certificat|badge|credential|course/i,
+      answer: 'Real, verifiable credentials: 11 Simplilearn courses, 25+ MongoDB skill badges, and a Government of Sri Lanka IT exam certificate. Every card links to its live credential page.',
+      links: [{ label: 'See Certificates', href: '#certificates' }],
+    },
+    {
+      test: /contact|reach|email|hire|talk|opportunit/i,
+      answer: "Best reached by email, or through LinkedIn/GitHub below — currently open to internships and junior full-stack roles.",
+      links: [
+        { label: 'Email', href: LINKS.email },
+        { label: 'LinkedIn', href: LINKS.linkedin, external: true },
+      ],
+    },
+    {
+      test: /github/i,
+      answer: 'All source code is public on GitHub — 17+ repositories, feature-branch workflow, real commit history.',
+      links: [{ label: 'Open GitHub', href: LINKS.github, external: true }],
+    },
+    {
+      test: /linkedin/i,
+      answer: "Here's the LinkedIn profile — courses, certifications and professional updates live there.",
+      links: [{ label: 'Open LinkedIn', href: LINKS.linkedin, external: true }],
+    },
+    {
+      test: /resume|cv|download/i,
+      answer: 'The resume is available to view or download directly.',
+      links: [{ label: 'View Resume', href: LINKS.resume, external: true }],
+    },
+  ];
+
+  function findAnswer(query) {
+    const hit = FAQ.find((f) => f.test.test(query));
+    if (hit) return hit;
+    return {
+      answer: "I don't have that information in my portfolio yet — feel free to email Nilusha directly.",
+      links: [{ label: 'Email', href: LINKS.email }],
+    };
+  }
+
+  const QUICK_ACTIONS = [
+    'Explore Projects', 'Frontend Skills', 'Internship Experience',
+    'Education', 'GitHub', 'LinkedIn', 'Resume',
+  ];
+
+  function addMessage(role, text, links) {
+    const el = document.createElement('div');
+    el.className = `ai-msg ${role}`;
+    el.textContent = text;
+    if (links && links.length) {
+      links.forEach((l) => {
+        const a = document.createElement('a');
+        a.href = l.href;
+        a.className = 'ai-link';
+        a.textContent = l.label;
+        if (l.external) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+        el.appendChild(a);
+      });
+    }
+    messages.appendChild(el);
+    messages.scrollTop = messages.scrollHeight;
+    return el;
+  }
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function respond(query) {
+    addMessage('user', query);
+    const thinking = document.createElement('div');
+    thinking.className = 'ai-msg bot ai-thinking';
+    thinking.innerHTML = '<span></span><span></span><span></span>';
+    messages.appendChild(thinking);
+    messages.scrollTop = messages.scrollHeight;
+    const delay = reducedMotion ? 0 : 420;
+    setTimeout(() => {
+      thinking.remove();
+      const result = findAnswer(query);
+      addMessage('bot', result.answer, result.links);
+    }, delay);
+  }
+
+  function renderChips() {
+    chipsWrap.innerHTML = '';
+    QUICK_ACTIONS.forEach((label) => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'ai-chip';
+      chip.textContent = label;
+      chip.addEventListener('click', () => respond(label));
+      chipsWrap.appendChild(chip);
+    });
+  }
+
+  let opened = false;
+  function openPanel() {
+    panel.hidden = false;
+    requestAnimationFrame(() => panel.classList.add('show'));
+    orb.setAttribute('aria-expanded', 'true');
+    if (!opened) {
+      opened = true;
+      addMessage('bot', "Hi! I'm Nilu AI. Ask me about Nilusha's skills, projects, experience or journey.");
+      renderChips();
+    }
+    setTimeout(() => input.focus(), 200);
+  }
+  function closePanel() {
+    panel.classList.remove('show');
+    orb.setAttribute('aria-expanded', 'false');
+    setTimeout(() => { panel.hidden = true; }, 200);
+  }
+
+  orb.addEventListener('click', () => {
+    panel.classList.contains('show') ? closePanel() : openPanel();
+  });
+  closeBtn.addEventListener('click', closePanel);
+  document.addEventListener('click', (e) => {
+    if (panel.classList.contains('show') && !panel.contains(e.target) && e.target !== orb && !orb.contains(e.target)) {
+      closePanel();
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && panel.classList.contains('show')) closePanel();
+  });
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = input.value.trim();
+    if (!q) return;
+    input.value = '';
+    respond(q);
+  });
+})();
+
 /* ---------- education journey expand/collapse ---------- */
 (function eduJourney() {
   const toggles = document.querySelectorAll('.edu-toggle');
