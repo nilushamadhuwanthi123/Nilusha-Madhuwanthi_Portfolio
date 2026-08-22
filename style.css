@@ -209,16 +209,26 @@ nav{
 .nav-recruiter{
   color:var(--gold-bright);
   border-color:rgba(201,168,92,.35);
+  white-space:nowrap;
+  flex-shrink:0;
 }
 .nav-recruiter:hover{
   background:rgba(201,168,92,.1);
   border-color:var(--gold);
 }
-@media (max-width:1140px){
-  .nav-cmdk span, .nav-cmdk kbd:last-of-type{ display:none; }
+.nav-cmdk{ flex-shrink:0; }
+.nav-cta{ flex-shrink:0; white-space:nowrap; }
+.logo{ flex-shrink:0; }
+.nav-links a{ flex-shrink:0; }
+
+@media (max-width:1240px){
+  .nav-cmdk-label, .nav-cmdk kbd:last-of-type{ display:none; }
+}
+@media (max-width:1040px){
+  .nav-recruiter{ display:none; }
 }
 @media (max-width:920px){
-  .nav-cmdk span, .nav-cmdk kbd:last-of-type{ display:none; }
+  .nav-cmdk-label, .nav-cmdk kbd:last-of-type{ display:none; }
   .nav-recruiter{ display:none; }
 }
 
