@@ -16,7 +16,14 @@
 <body>
 
 <canvas id="bg-canvas"></canvas>
+  <div class="nebula"></div>
 <div class="grain"></div>
+
+<div class="orbit-info" id="orbit-info" hidden>
+  <h4 id="orbit-info-name"></h4>
+  <p id="orbit-info-desc"></p>
+  <span id="orbit-info-projects"></span>
+</div>
 
 <header>
   <nav>
@@ -47,9 +54,16 @@
       EgoTechWorld and CodeAlpha Technologies. I'd rather ship something small and real than plan something big and theoretical.</p>
 
     <div class="hero-actions">
-      <a href="#work" class="btn btn-primary">View my work ↓</a>
-      <a href="https://github.com/nilushamadhuwanthi123" target="_blank" rel="noopener" class="btn btn-ghost">GitHub Profile</a>
+      <a href="#work" class="btn btn-primary">Explore my work ↓</a>
+      <a href="https://github.com/nilushamadhuwanthi123" target="_blank" rel="noopener" class="btn btn-ghost">GitHub</a>
       <a href="https://www.linkedin.com/in/nilushamadhuwanthi" target="_blank" rel="noopener" class="btn btn-ghost">LinkedIn</a>
+    </div>
+
+    <div class="mode-switch" role="tablist" aria-label="Explore skills by developer mode">
+      <span class="mode-label">Developer mode</span>
+      <button class="mode-btn" data-mode="frontend" type="button">Frontend</button>
+      <button class="mode-btn" data-mode="fullstack" type="button">Full Stack</button>
+      <button class="mode-btn" data-mode="uiux" type="button">UI / UX</button>
     </div>
 
     <div class="hero-stats">
