@@ -838,7 +838,10 @@
       const li = document.createElement('li');
       li.className = 'cmdk-item' + (i === activeIndex ? ' active' : '');
       li.innerHTML = `<span>${c.label}</span><small>${c.hint}</small>`;
-      li.addEventListener('mouseenter', () => { activeIndex = i; render(input.value); });
+      li.addEventListener('mouseenter', () => {
+        activeIndex = i;
+        list.querySelectorAll('.cmdk-item').forEach((el, idx) => el.classList.toggle('active', idx === i));
+      });
       li.addEventListener('click', () => { c.action(); close(); });
       list.appendChild(li);
     });
