@@ -58,22 +58,181 @@
   const nearStars = new THREE.Points(nearGeo, nearMat);
   scene.add(nearStars);
 
-  // ---- the core: a glowing energy sphere at the center ----
-  const core = new THREE.Group();
-  const coreCore = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(1.05, 2),
-    new THREE.MeshBasicMaterial({ color: gold, wireframe: true, transparent: true, opacity: 0.85 })
+  // ================= EARTH: the portfolio's signature visual =================
+  // A stylized, on-brand globe (olive continents, gold city-lights, no external
+  // image fetches) rather than a generic blue-marble template.
+  const EARTH_RADIUS = 1.5;
+
+  function buildEarthTextures() {
+    const w = isMobile ? 512 : 1024;
+    const h = w / 2;
+    // rough continent footprints (normalized 0..1) — enough to read as a globe
+    const CONTINENTS = [
+      { cx: 0.48, cy: 0.42, r: 0.09 }, { cx: 0.52, cy: 0.5, r: 0.07 }, { cx: 0.47, cy: 0.58, r: 0.06 },
+      { cx: 0.58, cy: 0.26, r: 0.12 }, { cx: 0.7, cy: 0.28, r: 0.14 }, { cx: 0.82, cy: 0.3, r: 0.09 },
+      { cx: 0.18, cy: 0.26, r: 0.1 }, { cx: 0.15, cy: 0.4, r: 0.07 },
+      { cx: 0.22, cy: 0.58, r: 0.06 }, { cx: 0.2, cy: 0.68, r: 0.05 },
+      { cx: 0.83, cy: 0.66, r: 0.055 },
+      { cx: 0.63, cy: 0.16, r: 0.045 }, // Sri Lanka region, faint
+    ];
+
+    // --- day map: ocean + continents ---
+    const dayCvs = document.createElement('canvas'); dayCvs.width = w; dayCvs.height = h;
+    const dctx = dayCvs.getContext('2d');
+    const ocean = dctx.createLinearGradient(0, 0, 0, h);
+    ocean.addColorStop(0, '#12140f'); ocean.addColorStop(0.5, '#191c16'); ocean.addColorStop(1, '#12140f');
+    dctx.fillStyle = ocean; dctx.fillRect(0, 0, w, h);
+    CONTINENTS.forEach((c) => {
+      [-1, 0, 1].forEach((dx) => {
+        const grad = dctx.createRadialGradient((c.cx + dx) * w, c.cy * h, 0, (c.cx + dx) * w, c.cy * h, c.r * w);
+        grad.addColorStop(0, '#6f7f47'); grad.addColorStop(0.55, '#4f5835'); grad.addColorStop(1, 'rgba(79,88,53,0)');
+        dctx.fillStyle = grad;
+        dctx.beginPath(); dctx.arc((c.cx + dx) * w, c.cy * h, c.r * w, 0, Math.PI * 2); dctx.fill();
+      });
+    });
+
+    // --- night map: emissive gold city-lights, black everywhere else ---
+    const nightCvs = document.createElement('canvas'); nightCvs.width = w; nightCvs.height = h;
+    const nctx = nightCvs.getContext('2d');
+    nctx.fillStyle = '#000'; nctx.fillRect(0, 0, w, h);
+    CONTINENTS.forEach((c) => {
+      const dots = isMobile ? 10 : 22;
+      for (let i = 0; i < dots; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const rad = Math.random() * c.r * w * 0.75;
+        const x = c.cx * w + Math.cos(ang) * rad;
+        const y = c.cy * h + Math.sin(ang) * rad * 0.6;
+        nctx.fillStyle = `rgba(224,196,119,${0.35 + Math.random() * 0.55})`;
+        nctx.beginPath(); nctx.arc(x, y, 0.9, 0, Math.PI * 2); nctx.fill();
+      }
+    });
+
+    // --- bump map: soft terrain noise ---
+    const bumpCvs = document.createElement('canvas'); bumpCvs.width = w; bumpCvs.height = h;
+    const bctx = bumpCvs.getContext('2d');
+    bctx.fillStyle = '#808080'; bctx.fillRect(0, 0, w, h);
+    for (let i = 0; i < w * h * 0.02; i++) {
+      const x = Math.random() * w, y = Math.random() * h, v = 90 + Math.random() * 76;
+      bctx.fillStyle = `rgb(${v},${v},${v})`;
+      bctx.fillRect(x, y, 2, 2);
+    }
+
+    // --- cloud map: soft alpha blobs ---
+    const cloudCvs = document.createElement('canvas'); cloudCvs.width = w; cloudCvs.height = h;
+    const cctx = cloudCvs.getContext('2d');
+    cctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < (isMobile ? 22 : 42); i++) {
+      const x = Math.random() * w, y = Math.random() * h * 0.85 + h * 0.075;
+      const r = 18 + Math.random() * 46;
+      const grad = cctx.createRadialGradient(x, y, 0, x, y, r);
+      grad.addColorStop(0, 'rgba(244,241,232,0.55)');
+      grad.addColorStop(1, 'rgba(244,241,232,0)');
+      cctx.fillStyle = grad;
+      cctx.beginPath(); cctx.arc(x, y, r, 0, Math.PI * 2); cctx.fill();
+    }
+
+    const dayTex = new THREE.CanvasTexture(dayCvs);
+    const nightTex = new THREE.CanvasTexture(nightCvs);
+    const bumpTex = new THREE.CanvasTexture(bumpCvs);
+    const cloudTex = new THREE.CanvasTexture(cloudCvs);
+    [dayTex, nightTex, bumpTex, cloudTex].forEach((t) => { t.needsUpdate = true; });
+    return { dayTex, nightTex, bumpTex, cloudTex };
+  }
+
+  const { dayTex, nightTex, bumpTex, cloudTex } = buildEarthTextures();
+  const earthSegments = isMobile ? 36 : 64;
+
+  const earthGroup = new THREE.Group();
+  earthGroup.rotation.x = 0.41; // axial tilt, like the real thing
+  scene.add(earthGroup);
+
+  const earthMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(EARTH_RADIUS, earthSegments, earthSegments),
+    new THREE.MeshPhongMaterial({
+      map: dayTex,
+      bumpMap: bumpTex,
+      bumpScale: 0.02,
+      emissiveMap: nightTex,
+      emissive: new THREE.Color(goldBright),
+      emissiveIntensity: 0.55,
+      shininess: 5,
+      specular: new THREE.Color(0x30352a),
+    })
   );
-  const coreGlowInner = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(1.35, 1),
-    new THREE.MeshBasicMaterial({ color: goldBright, wireframe: true, transparent: true, opacity: 0.18 })
+  earthGroup.add(earthMesh);
+
+  const cloudMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(EARTH_RADIUS * 1.012, earthSegments, earthSegments),
+    new THREE.MeshPhongMaterial({
+      map: cloudTex, alphaMap: cloudTex, color: 0xf4f1e8,
+      transparent: true, opacity: 0.4, depthWrite: false,
+    })
   );
-  const coreGlowOuter = new THREE.Mesh(
-    new THREE.SphereGeometry(1.9, 24, 24),
-    new THREE.MeshBasicMaterial({ color: gold, transparent: true, opacity: 0.045 })
+  earthGroup.add(cloudMesh);
+
+  // fresnel-rim atmosphere glow — olive/gold, not electric blue
+  const atmosphereMat = new THREE.ShaderMaterial({
+    uniforms: { glowColor: { value: new THREE.Color(0x899466) } },
+    vertexShader: `
+      varying vec3 vNormal;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vNormal;
+      uniform vec3 glowColor;
+      void main() {
+        float intensity = pow(0.68 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
+        gl_FragColor = vec4(glowColor, clamp(intensity, 0.0, 1.0) * 0.55);
+      }
+    `,
+    side: THREE.BackSide,
+    blending: THREE.AdditiveBlending,
+    transparent: true,
+    depthWrite: false,
+  });
+  const atmosphereMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(EARTH_RADIUS * 1.14, earthSegments, earthSegments),
+    atmosphereMat
   );
-  core.add(coreGlowOuter, coreGlowInner, coreCore);
-  scene.add(core);
+  earthGroup.add(atmosphereMesh);
+
+  // ---- lighting: a slow-moving "sun" creates the day/night terminator ----
+  const ambientLight = new THREE.AmbientLight(0x30352a, 0.9);
+  scene.add(ambientLight);
+  const sunLight = new THREE.DirectionalLight(0xf4f1e8, 1.15);
+  sunLight.position.set(6, 2, 4);
+  scene.add(sunLight);
+
+  // ---- personal markers: real cities, honestly labeled ----
+  function latLonToVec3(lat, lon, radius) {
+    const phi = (90 - lat) * (Math.PI / 180);
+    const theta = (lon + 180) * (Math.PI / 180);
+    return new THREE.Vector3(
+      -radius * Math.sin(phi) * Math.cos(theta),
+      radius * Math.cos(phi),
+      radius * Math.sin(phi) * Math.sin(theta)
+    );
+  }
+  const MARKERS = [
+    { name: 'Tangalle, Sri Lanka', desc: 'Where I call home.', lat: 6.0235, lon: 80.7929 },
+    { name: 'SLIIT — Malabe', desc: 'BSc (Hons) Information Technology, 2025 – Present.', lat: 6.9147, lon: 79.9733 },
+  ];
+  const markerMeshes = [];
+  MARKERS.forEach((m) => {
+    const pos = latLonToVec3(m.lat, m.lon, EARTH_RADIUS * 1.01);
+    const dot = new THREE.Mesh(
+      new THREE.SphereGeometry(0.028, 10, 10),
+      new THREE.MeshBasicMaterial({ color: goldBright })
+    );
+    dot.position.copy(pos);
+    dot.userData.markerName = m.name;
+    dot.userData.markerDesc = m.desc;
+    earthGroup.add(dot);
+    markerMeshes.push(dot);
+  });
 
   // ---- orbit guide rings (faint circles) ----
   function makeOrbitRing(radius, tilt, color, opacity) {
@@ -212,6 +371,74 @@
   });
   canvas.addEventListener('mouseleave', () => { ndc.set(2, 2); });
 
+  // ---- drag to rotate the Earth (mouse + touch) ----
+  let dragging = false, dragStartX = 0, dragStartY = 0, dragMoved = 0, lastDragX = 0;
+  let manualSpin = 0; // extra rotation applied by the user, decays back into auto-rotation
+  canvas.addEventListener('pointerdown', (e) => {
+    dragging = true; dragMoved = 0;
+    dragStartX = lastDragX = e.clientX; dragStartY = e.clientY;
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - lastDragX;
+    dragMoved += Math.abs(e.clientX - dragStartX) + Math.abs(e.clientY - dragStartY);
+    earthGroup.rotation.y += dx * 0.006;
+    manualSpin = dx * 0.006;
+    lastDragX = e.clientX;
+  });
+  window.addEventListener('pointerup', (e) => {
+    if (!dragging) return;
+    dragging = false;
+    // treat a near-stationary press as a click (marker / easter-egg), not a drag
+    if (dragMoved < 6) handleEarthClick(e);
+  });
+
+  // ---- click: markers show info, clicking Earth 3x is a small easter egg ----
+  let earthClickCount = 0, earthClickTimer = null;
+  const toast = document.createElement('div');
+  toast.className = 'earth-toast';
+  document.body.appendChild(toast);
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toast.classList.remove('show'), 2600);
+  }
+  function handleEarthClick(e) {
+    const clickNdc = new THREE.Vector2(
+      (e.clientX / window.innerWidth) * 2 - 1,
+      -(e.clientY / window.innerHeight) * 2 + 1
+    );
+    raycaster.setFromCamera(clickNdc, camera);
+    const markerHit = raycaster.intersectObjects(markerMeshes, false);
+    if (markerHit.length) {
+      const d = markerHit[0].object.userData;
+      if (infoName) infoName.textContent = d.markerName;
+      if (infoDesc) infoDesc.textContent = d.markerDesc;
+      if (infoProjects) infoProjects.textContent = '';
+      if (infoCard) {
+        infoCard.style.left = `${e.clientX + 18}px`;
+        infoCard.style.top = `${e.clientY + 18}px`;
+        infoCard.hidden = false;
+        infoCard.classList.add('show', 'pinned');
+      }
+      return;
+    }
+    if (infoCard && infoCard.classList.contains('pinned')) {
+      infoCard.classList.remove('show', 'pinned');
+    }
+    const earthHit = raycaster.intersectObject(earthMesh, false);
+    if (earthHit.length) {
+      earthClickCount += 1;
+      clearTimeout(earthClickTimer);
+      earthClickTimer = setTimeout(() => { earthClickCount = 0; }, 4000);
+      if (earthClickCount >= 3) {
+        earthClickCount = 0;
+        showToast(Math.random() > 0.5 ? 'Built with curiosity.' : 'Keep exploring.');
+      }
+    }
+  }
+
   // ---- skill mode switcher: dim nodes outside the active mode ----
   const MODE_CATEGORIES = {
     frontend: ['frontend'],
@@ -245,7 +472,9 @@
     scene.add(line);
     shootingStars.push({ line, pos: start, dir, life: 0 });
   }
-  setInterval(spawnShootingStar, 3800);
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    setInterval(spawnShootingStar, 3800);
+  }
 
   let mouseX = 0, mouseY = 0;
   window.addEventListener('mousemove', (e) => {
@@ -253,18 +482,33 @@
     mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
   });
 
+  // ---- scroll: the Earth eases back slightly as the visitor leaves the hero ----
+  const heroEl = document.querySelector('.hero');
+  let scrollProgress = 0;
+  function updateScrollProgress() {
+    const heroHeight = heroEl ? heroEl.offsetHeight : window.innerHeight;
+    scrollProgress = Math.min(1, Math.max(0, window.scrollY / (heroHeight * 0.9)));
+  }
+  window.addEventListener('scroll', updateScrollProgress, { passive: true });
+  updateScrollProgress();
+
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const motionScale = reducedMotion ? 0.12 : 1;
+  const motionScale = reducedMotion ? 0 : 1;
 
   let t = 0;
   function animate() {
     t += 0.008 * motionScale;
 
-    core.rotation.y += 0.0022 * motionScale;
-    core.rotation.x += 0.0009 * motionScale;
-    const pulse = 1 + Math.sin(t * 1.4) * 0.035;
-    coreCore.scale.setScalar(pulse);
-    coreGlowOuter.scale.setScalar(pulse);
+    // Earth: slow auto-rotation (paused while the user is actively dragging)
+    if (!dragging) {
+      earthGroup.rotation.y += 0.0011 * motionScale;
+    }
+    manualSpin *= 0.9; // let a drag flick decay smoothly
+    cloudMesh.rotation.y += 0.00045 * motionScale;
+
+    // sun sweeps slowly around the Earth — the moving day/night terminator
+    const sunAngle = t * 0.06;
+    sunLight.position.set(Math.cos(sunAngle) * 6, 2, Math.sin(sunAngle) * 6);
 
     // raycast for hover (skipped while reduced motion is on — still fine, purely visual)
     raycaster.setFromCamera(ndc, camera);
@@ -279,8 +523,9 @@
         if (infoDesc) infoDesc.textContent = data ? data.desc : '';
         if (infoProjects) infoProjects.textContent = data ? `Used in: ${data.projects}` : '';
         infoCard.hidden = false;
+        infoCard.classList.remove('pinned');
         infoCard.classList.add('show');
-      } else if (infoCard) {
+      } else if (infoCard && !infoCard.classList.contains('pinned')) {
         infoCard.classList.remove('show');
       }
     }
@@ -328,10 +573,13 @@
       }
     }
 
-    const parallax = reducedMotion ? 0.3 : 1.6;
-    const parallaxY = reducedMotion ? 0.2 : 1.1;
+    const parallax = reducedMotion ? 0 : 1.6;
+    const parallaxY = reducedMotion ? 0 : 1.1;
     camera.position.x += (mouseX * parallax - camera.position.x) * 0.02;
     camera.position.y += (2.2 - mouseY * parallaxY - camera.position.y) * 0.02;
+    const targetZ = (isMobile ? 15 : 11.5) + scrollProgress * (isMobile ? 4 : 5);
+    camera.position.z += (targetZ - camera.position.z) * 0.05;
+    canvas.style.opacity = String(1 - scrollProgress * 0.35);
     camera.lookAt(0, 0, 0);
 
     renderer.render(scene, camera);
