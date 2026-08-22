@@ -1278,6 +1278,121 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel.classList.contains('show')) closePanel(); });
 })();
 
+/* ---------- certificates: knowledge tree ---------- */
+/* Every credential below is real and already lived in the flat certificate
+   grid — this just re-groups the same titles/links/dates into branches. */
+(function knowledgeTree() {
+  const branchesEl = document.getElementById('tree-branches');
+  const searchEl = document.getElementById('tree-search');
+  const countEl = document.getElementById('tree-count');
+  const detailEl = document.getElementById('cert-detail');
+  const detailBody = document.getElementById('cert-detail-body');
+  const detailClose = document.getElementById('cert-detail-close');
+  if (!branchesEl) return;
+
+  const BRANCHES = [
+    {
+      key: 'databases', label: '🗄️ Databases',
+      certs: [
+        { title: '25+ MongoDB Skill Badges', meta: 'Aggregation, indexes, schema design, replication, Atlas, drivers for Java/Python/C# — MongoDB, issued 2026', href: 'https://www.linkedin.com/in/nilushamadhuwanthi/details/certifications/', linkLabel: 'View all on LinkedIn ↗' },
+        { title: 'Get Started with SQL Analytics and BI on Databricks', meta: 'Simplilearn · Issued Aug 2026 · ID 10582122', href: 'https://simpli-web.app.link/e/E3yPsnaeu5b', linkLabel: 'Show credential ↗' },
+      ],
+    },
+    {
+      key: 'data-ai', label: '📊 Data & AI',
+      certs: [
+        { title: 'Getting Started with Machine Learning Algorithms', meta: 'Simplilearn · Issued Aug 2026 · ID 10588114', href: 'https://simpli-web.app.link/e/WMrMjS7jw5b', linkLabel: 'Show credential ↗' },
+        { title: 'Statistics for Data Science', meta: 'Simplilearn · Issued Aug 2026 · ID 10582085', href: 'https://simpli-web.app.link/e/TofmzIpdu5b', linkLabel: 'Show credential ↗' },
+        { title: 'Machine Learning Using Python', meta: 'Simplilearn · Issued Aug 2026 · ID 10579949', href: 'https://simpli-web.app.link/e/sZBjl4cdt5b', linkLabel: 'Show credential ↗' },
+        { title: 'Get Started with Databricks for Data Engineering', meta: 'Simplilearn · Issued Aug 2026 · ID 10571869', href: 'https://simpli-web.app.link/e/xYLLwCAAq5b', linkLabel: 'Show credential ↗' },
+      ],
+    },
+    {
+      key: 'programming', label: '💻 Programming',
+      certs: [
+        { title: 'Programming with Python 3.X', meta: 'Simplilearn · Issued Aug 2026 · ID 10578349', href: 'https://simpli-web.app.link/e/gEqsavoOs5b', linkLabel: 'Show credential ↗' },
+      ],
+    },
+    {
+      key: 'web', label: '🌐 Web',
+      certs: [
+        { title: 'Python Django 101', meta: 'Simplilearn · Issued Aug 2026 · ID 10580059', href: 'https://simpli-web.app.link/e/F12uCjQgt5b', linkLabel: 'Show credential ↗' },
+      ],
+    },
+    {
+      key: 'mobile', label: '📱 Mobile',
+      certs: [
+        { title: 'Introduction to Flutter', meta: 'Simplilearn · Issued Aug 2026 · ID 10581422', href: 'https://simpli-web.app.link/e/SpKQWt73t5b', linkLabel: 'Show credential ↗' },
+      ],
+    },
+    {
+      key: 'security', label: '🔒 Security',
+      certs: [
+        { title: "Ethical Hacking 101: Beginner's Guide", meta: 'Simplilearn · Issued Aug 2026 · ID 10571497', href: 'https://simpli-web.app.link/e/dLLz3yhtq5b', linkLabel: 'Show credential ↗' },
+      ],
+    },
+    {
+      key: 'tools', label: '🛠️ Tools & Other',
+      certs: [
+        { title: 'Digital Marketing Strategy', meta: 'Simplilearn · Issued Aug 2026', href: 'https://simpli-web.app.link/e/ZERVr4xdu5b', linkLabel: 'Show credential ↗' },
+        { title: 'Blockchain Developer Training', meta: 'Simplilearn · Issued Aug 2026 · ID 10571450', href: 'https://simpli-web.app.link/e/BZ3guU08p5b', linkLabel: 'Show credential ↗' },
+        { title: 'General Information Technology Examination', meta: 'Government of Sri Lanka · Issued Jan 2023 · Distinction Pass · ID 6385842', href: 'https://www.linkedin.com/in/nilushamadhuwanthi/overlay/Certifications/1800409841/treasury/?profileId=ACoAAGDb7JQBlTKAwtKGPxY16z3kQa6SI22MmLA', linkLabel: 'Show credential ↗' },
+      ],
+    },
+  ];
+
+  const totalCount = BRANCHES.reduce((n, b) => n + b.certs.length, 0);
+  if (countEl) countEl.textContent = `${totalCount} certificates across ${BRANCHES.length} branches`;
+
+  BRANCHES.forEach((branch) => {
+    const branchEl = document.createElement('div');
+    branchEl.className = 'tree-branch';
+    branchEl.dataset.branch = branch.key;
+
+    const head = document.createElement('div');
+    head.className = 'tree-branch-head';
+    head.innerHTML = `${branch.label} <span class="count">(${branch.certs.length})</span>`;
+    branchEl.appendChild(head);
+
+    const leaves = document.createElement('div');
+    leaves.className = 'tree-leaves';
+    branch.certs.forEach((cert) => {
+      const leaf = document.createElement('button');
+      leaf.type = 'button';
+      leaf.className = 'tree-leaf';
+      leaf.dataset.search = (cert.title + ' ' + cert.meta).toLowerCase();
+      leaf.innerHTML = `<b>${cert.title}</b><span>${cert.meta}</span>`;
+      leaf.addEventListener('click', () => {
+        if (!detailEl || !detailBody) return;
+        detailBody.innerHTML = `<h4>${cert.title}</h4><p>${cert.meta}</p><a href="${cert.href}" target="_blank" rel="noopener">${cert.linkLabel}</a>`;
+        detailEl.hidden = false;
+      });
+      leaves.appendChild(leaf);
+    });
+    branchEl.appendChild(leaves);
+    branchesEl.appendChild(branchEl);
+  });
+
+  if (detailClose) detailClose.addEventListener('click', () => { detailEl.hidden = true; });
+
+  if (searchEl) {
+    searchEl.addEventListener('input', () => {
+      const q = searchEl.value.trim().toLowerCase();
+      let visible = 0;
+      document.querySelectorAll('.tree-branch').forEach((branchEl) => {
+        let branchVisible = 0;
+        branchEl.querySelectorAll('.tree-leaf').forEach((leaf) => {
+          const match = !q || leaf.dataset.search.includes(q);
+          leaf.classList.toggle('tree-leaf-hidden', !match);
+          if (match) { branchVisible++; visible++; }
+        });
+        branchEl.classList.toggle('tree-branch-empty', branchVisible === 0);
+      });
+      if (countEl) countEl.textContent = q ? `${visible} of ${totalCount} match "${searchEl.value.trim()}"` : `${totalCount} certificates across ${BRANCHES.length} branches`;
+    });
+  }
+})();
+
 /* ---------- education journey expand/collapse ---------- */
 (function eduJourney() {
   const toggles = document.querySelectorAll('.edu-toggle');
