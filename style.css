@@ -2388,14 +2388,13 @@ footer .social a:hover{
   position:fixed;
   left:16px; bottom:16px;
   z-index:181;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:3px;
-  width:56px; height:56px;
-  border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
+  width:52px; height:52px;
+  border-radius:50%;
   background:var(--card);
   border:1px solid rgba(201,168,92,.5);
   color:var(--gold-bright);
-  font-size:1.05rem;
+  font-size:1.25rem;
   cursor:pointer;
   box-shadow:0 8px 24px -10px rgba(0,0,0,.6);
   transition:all .25s ease;
@@ -2404,26 +2403,18 @@ footer .social a:hover{
 .appearance-fab::before{
   content:'';
   position:absolute; inset:-5px;
-  border-radius:20px;
+  border-radius:50%;
   border:1px solid rgba(201,168,92,.35);
   animation:core-pulse 3s ease-out infinite;
 }
-.appearance-fab small{
-  font-family:var(--font-head);
-  font-size:.5rem;
-  letter-spacing:.03em;
-  color:var(--silver-muted);
-  text-transform:uppercase;
-}
 .appearance-fab:hover, .appearance-fab[aria-expanded="true"]{
   border-color:var(--gold);
-  transform:translateY(-3px);
+  transform:translateY(-3px) scale(1.05);
   box-shadow:0 10px 28px -8px rgba(201,168,92,.5);
 }
 @media (max-width:600px){
   .hero-photo-row{ gap:12px; }
-  .appearance-fab{ width:48px; height:48px; font-size:.92rem; border-radius:13px; left:12px; bottom:12px; }
-  .appearance-fab small{ font-size:.42rem; }
+  .appearance-fab{ width:46px; height:46px; font-size:1.1rem; left:12px; bottom:12px; }
 }
 .hero-photo{
   width:180px; height:180px;

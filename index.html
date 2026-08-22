@@ -468,6 +468,20 @@
         </div>
       </div>
     </div>
+    <div class="fb-compare-bar" id="fb-compare-bar" hidden>
+      <span id="fb-compare-status">Pick a 2nd project to compare</span>
+      <div class="fb-compare-bar-actions">
+        <button type="button" id="fb-compare-go" class="btn btn-primary" disabled>Compare ⇄</button>
+        <button type="button" id="fb-compare-clear" class="btn btn-ghost">Clear</button>
+      </div>
+    </div>
+    <div class="fb-modal" id="fb-compare-modal" hidden role="dialog" aria-label="Compare projects">
+      <div class="fb-modal-backdrop" id="fb-compare-backdrop"></div>
+      <div class="fb-modal-card fb-compare-card">
+        <button class="fb-modal-close" id="fb-compare-close" aria-label="Close" type="button">✕</button>
+        <div id="fb-compare-body"></div>
+      </div>
+    </div>
 
     <div class="spine-outro">
       <p class="spine-outro-note">More projects are being built.</p>
@@ -701,9 +715,8 @@
 </div>
 
 <!-- ================= APPEARANCE SETTINGS (floating, bottom-left, always visible) ================= -->
-<button class="appearance-fab" id="appearance-toggle" aria-haspopup="dialog" aria-expanded="false" aria-label="Appearance settings" type="button">
+<button class="appearance-fab" id="appearance-toggle" aria-haspopup="dialog" aria-expanded="false" aria-label="Appearance settings" title="Appearance settings" type="button">
   <span>◐</span>
-  <small>Appearance</small>
 </button>
 <div class="appearance-panel" id="appearance-panel" role="dialog" aria-label="Appearance settings" hidden>
   <h4>Theme</h4>
