@@ -895,13 +895,11 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   box-shadow:0 12px 30px -10px rgba(0,0,0,.6);
   cursor:pointer;
   transition:transform .2s ease, border-color .2s ease;
-  animation:ai-float 5s ease-in-out infinite;
 }
-.ai-orb:hover, .ai-orb:focus-visible{ transform:translateY(-4px); border-color:var(--gold-bright); animation-play-state:paused; }
-html[data-motion="reduced"] .ai-orb, html[data-motion="off"] .ai-orb{ animation:none; }
+.ai-orb:hover, .ai-orb:focus-visible{ transform:translateY(-4px); border-color:var(--gold-bright); }
 @keyframes ai-float{
   0%, 100%{ transform:translateY(0) rotate(0deg); }
-  50%{ transform:translateY(-5px) rotate(-2deg); }
+  50%{ transform:translateY(-3px) rotate(-2deg); }
 }
 .ai-orb-ring{
   position:absolute;
@@ -918,8 +916,9 @@ html[data-motion="reduced"] .ai-orb-ring, html[data-motion="off"] .ai-orb-ring{ 
   0%, 100%{ transform:scale(1); opacity:.7; }
   50%{ transform:scale(1.15); opacity:.15; }
 }
-.ai-orb-icon{ width:26px; height:26px; color:var(--ivory); }
+.ai-orb-icon{ width:26px; height:26px; color:var(--ivory); animation:ai-float 5s ease-in-out infinite; }
 .ai-orb-icon svg{ width:100%; height:100%; display:block; }
+html[data-motion="reduced"] .ai-orb-icon, html[data-motion="off"] .ai-orb-icon{ animation:none; }
 .ai-orb-status{
   position:absolute;
   left:-2px; bottom:-2px;
