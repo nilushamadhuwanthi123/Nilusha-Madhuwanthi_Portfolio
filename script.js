@@ -1210,6 +1210,61 @@
   });
 })();
 
+/* ---------- cinematic intro (temporary layer only — the default Hero
+   underneath is never touched, this just covers it briefly on first visit) ---------- */
+(function niluverseIntro() {
+  const overlay = document.getElementById('intro-overlay');
+  const skipBtn = document.getElementById('intro-skip');
+  const replayBtn = document.getElementById('replay-intro-btn');
+  if (!overlay) return;
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let motionPref = 'full';
+  try { motionPref = localStorage.getItem('motionPreference') || 'full'; } catch (e) {}
+  const skipAnimation = reducedMotion || motionPref !== 'full';
+
+  function seen() {
+    try { return localStorage.getItem('introCompleted') === '1'; } catch (e) { return false; }
+  }
+  function markSeen() {
+    try { localStorage.setItem('introCompleted', '1'); } catch (e) {}
+  }
+
+  let hideTimer = null;
+  let removeTimer = null;
+  function finishIntro() {
+    clearTimeout(hideTimer);
+    clearTimeout(removeTimer);
+    overlay.classList.add('intro-out');
+    markSeen();
+    setTimeout(() => { overlay.hidden = true; }, 750);
+  }
+  function playIntro() {
+    overlay.hidden = false;
+    overlay.classList.remove('intro-out');
+    if (skipAnimation) {
+      // still a brief, respectful pause so it doesn't feel like a glitch —
+      // no motion, just a short honest beat before revealing the Hero
+      hideTimer = setTimeout(finishIntro, 500);
+    } else {
+      hideTimer = setTimeout(finishIntro, 3200);
+    }
+  }
+
+  if (skipBtn) skipBtn.addEventListener('click', finishIntro);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !overlay.hidden) finishIntro();
+  });
+  if (replayBtn) {
+    replayBtn.addEventListener('click', () => {
+      try { localStorage.removeItem('introCompleted'); } catch (e) {}
+      playIntro();
+    });
+  }
+
+  if (!seen()) playIntro();
+})();
+
 /* ---------- appearance settings (theme / motion / text size / contrast) ---------- */
 (function appearanceSettings() {
   const toggle = document.getElementById('appearance-toggle');

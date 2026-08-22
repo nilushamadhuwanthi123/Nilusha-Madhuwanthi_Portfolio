@@ -15,6 +15,16 @@
 </head>
 <body>
 
+<div class="intro-overlay" id="intro-overlay" role="dialog" aria-label="NILUVERSE intro" hidden>
+  <div class="intro-stars" aria-hidden="true"></div>
+  <div class="intro-content">
+    <div class="intro-mark">NM</div>
+    <div class="intro-word">NILUVERSE</div>
+    <div class="intro-tag">Entering Nilusha's digital universe…</div>
+  </div>
+  <button class="intro-skip" id="intro-skip" type="button">Skip Intro →</button>
+</div>
+
 <canvas id="bg-canvas"></canvas>
   <div class="nebula"></div>
 <div class="grain"></div>
@@ -740,6 +750,8 @@
     <button class="appearance-opt" type="button" role="radio" data-contrast-opt="off"><span class="dot" aria-hidden="true"></span>Standard</button>
     <button class="appearance-opt" type="button" role="radio" data-contrast-opt="on"><span class="dot" aria-hidden="true"></span>High Contrast</button>
   </div>
+  <h4>Intro</h4>
+  <button class="appearance-opt" type="button" id="replay-intro-btn"><span class="dot" aria-hidden="true"></span>Replay Intro</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
