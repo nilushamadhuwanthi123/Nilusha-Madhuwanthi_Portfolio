@@ -120,13 +120,15 @@
   tick();
 })();
 
-/* ---------- reveal on scroll ---------- */
+/* ---------- reveal on scroll (staggered, multi-direction) ---------- */
 (function reveal() {
-  const els = document.querySelectorAll('.reveal');
+  const els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting) {
+          const i = Array.from(e.target.parentElement.children).indexOf(e.target);
+          e.target.style.transitionDelay = `${Math.min(i, 6) * 70}ms`;
           e.target.classList.add('in');
           io.unobserve(e.target);
         }
@@ -135,6 +137,72 @@
     { threshold: 0.15 }
   );
   els.forEach((el) => io.observe(el));
+})();
+
+/* ---------- custom cursor ---------- */
+(function cursor() {
+  if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
+  const dot = document.createElement('div');
+  dot.className = 'cx-dot';
+  const ring = document.createElement('div');
+  ring.className = 'cx-ring';
+  document.body.append(dot, ring);
+
+  let rx = 0, ry = 0, tx = 0, ty = 0;
+  window.addEventListener('mousemove', (e) => {
+    dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%,-50%)`;
+    tx = e.clientX; ty = e.clientY;
+  });
+  (function loop() {
+    rx += (tx - rx) * 0.18;
+    ry += (ty - ry) * 0.18;
+    ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  })();
+
+  document.querySelectorAll('a, button, .btn, .skill-card, .project-card, .approach-card').forEach((el) => {
+    el.addEventListener('mouseenter', () => ring.classList.add('grow'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('grow'));
+  });
+})();
+
+/* ---------- magnetic buttons ---------- */
+(function magnetic() {
+  if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
+  document.querySelectorAll('.btn, .nav-cta').forEach((btn) => {
+    btn.addEventListener('mousemove', (e) => {
+      const r = btn.getBoundingClientRect();
+      const mx = e.clientX - r.left - r.width / 2;
+      const my = e.clientY - r.top - r.height / 2;
+      btn.style.transform = `translate(${mx * 0.18}px, ${my * 0.35}px)`;
+    });
+    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+  });
+})();
+
+/* ---------- counting stats ---------- */
+(function countStats() {
+  const stats = document.querySelectorAll('.hero-stats .stat b');
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        const target = parseInt(el.textContent, 10);
+        let n = 0;
+        const step = Math.max(1, Math.round(target / 30));
+        const tick = () => {
+          n = Math.min(target, n + step);
+          el.textContent = n;
+          if (n < target) requestAnimationFrame(tick);
+        };
+        tick();
+        io.unobserve(el);
+      });
+    },
+    { threshold: 0.5 }
+  );
+  stats.forEach((el) => io.observe(el));
 })();
 
 /* ---------- project card cursor glow ---------- */

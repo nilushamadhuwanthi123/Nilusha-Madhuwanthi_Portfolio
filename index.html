@@ -36,6 +36,10 @@
 
   <!-- ================= HERO ================= -->
   <section class="hero">
+    <div class="hero-photo-wrap">
+      <div class="hero-photo-ring"></div>
+      <img class="hero-photo" src="assets/profile.jpg" alt="Nilusha Madhuwanthi" />
+    </div>
     <div class="eyebrow"><span class="dot"></span> Open to internships &amp; junior full-stack roles</div>
     <h1>Nilusha Madhuwanthi builds<br/><span class="accent">real, working software.</span></h1>
     <div class="hero-role">I'm a <span id="role-text"></span><span class="cursor">|</span></div>
@@ -57,6 +61,13 @@
 
     <div class="scroll-cue"><span class="line"></span> Scroll</div>
   </section>
+
+  <div class="marquee-wrap">
+    <div class="marquee">
+      <span><b>JavaScript</b> · TypeScript · Java · Kotlin · PHP · Python · React · Node.js · Express · MySQL · MongoDB · Firebase · Docker · Git</span>
+      <span><b>JavaScript</b> · TypeScript · Java · Kotlin · PHP · Python · React · Node.js · Express · MySQL · MongoDB · Firebase · Docker · Git</span>
+    </div>
+  </div>
 
   <!-- ================= ABOUT ================= -->
   <section class="section reveal" id="about">
@@ -87,10 +98,72 @@
     </div>
   </section>
 
+  <!-- ================= APPROACH ================= -->
+  <section class="section">
+    <div class="section-head reveal">
+      <span class="tag">02 — How I build</span>
+      <h2>Full-stack, end to end.</h2>
+      <p class="sub">Every project touches the whole stack — I don't hand off between "frontend me" and "backend me."</p>
+    </div>
+    <div class="approach-grid">
+      <div class="approach-card reveal">
+        <div class="num">01</div>
+        <h3>Design the interface</h3>
+        <p>Figma-first for anything user-facing, then hand-built HTML/CSS or React — accessible by default, not retrofitted.</p>
+      </div>
+      <div class="approach-card reveal">
+        <div class="num">02</div>
+        <h3>Model the data</h3>
+        <p>Relational schemas with real foreign keys and row-locking for money-sensitive apps; MongoDB when the shape is genuinely document-like.</p>
+      </div>
+      <div class="approach-card reveal">
+        <div class="num">03</div>
+        <h3>Build the API</h3>
+        <p>Express / PHP services with auth, validation and rate-limiting from day one — not bolted on before launch.</p>
+      </div>
+      <div class="approach-card reveal">
+        <div class="num">04</div>
+        <h3>Ship it live</h3>
+        <p>Deployed on Vercel, Railway or a Docker container with a managed database — a stranger can open it and it works.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CODE ================= -->
+  <section class="section reveal-scale" id="code">
+    <div class="section-head">
+      <span class="tag">03 — A sample of the style</span>
+      <h2>No eval(). No shortcuts.</h2>
+      <p class="sub">A real fragment from NexaBank — every money-moving operation runs inside a locked transaction.</p>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span></span><span></span><span></span><span class="path">BankService.php</span></div>
+      <pre><span class="c">// transfer() — row-locked, all-or-nothing</span>
+<span class="k">public function</span> <span class="f">transfer</span>(<span class="k">$fromId</span>, <span class="k">$toId</span>, <span class="k">$amount</span>) {
+    <span class="k">$this</span>->pdo->beginTransaction();
+    <span class="k">try</span> {
+        <span class="k">$from</span> = <span class="k">$this</span>->lockAccount(<span class="k">$fromId</span>);
+        <span class="k">$to</span>   = <span class="k">$this</span>->lockAccount(<span class="k">$toId</span>);
+
+        <span class="k">if</span> (<span class="k">$from</span>[<span class="s">'balance'</span>] &lt; <span class="k">$amount</span>) {
+            <span class="k">throw new</span> <span class="f">InsufficientFundsException</span>();
+        }
+
+        <span class="k">$this</span>->debit(<span class="k">$fromId</span>, <span class="k">$amount</span>);
+        <span class="k">$this</span>->credit(<span class="k">$toId</span>, <span class="k">$amount</span>);
+        <span class="k">$this</span>->pdo->commit();
+    } <span class="k">catch</span> (Throwable <span class="k">$e</span>) {
+        <span class="k">$this</span>->pdo->rollBack();
+        <span class="k">throw</span> <span class="k">$e</span>;
+    }
+}</pre>
+    </div>
+  </section>
+
   <!-- ================= SKILLS ================= -->
   <section class="section reveal" id="skills">
     <div class="section-head">
-      <span class="tag">02 — Skills</span>
+      <span class="tag">04 — Skills</span>
       <h2>The stack I build with.</h2>
       <p class="sub">Languages, frameworks and tools I use day to day across frontend, backend and mobile.</p>
     </div>
@@ -146,7 +219,7 @@
   <!-- ================= EXPERIENCE ================= -->
   <section class="section reveal" id="experience">
     <div class="section-head">
-      <span class="tag">03 — Experience</span>
+      <span class="tag">05 — Experience</span>
       <h2>Where the work actually happened.</h2>
     </div>
     <div class="timeline">
@@ -173,7 +246,7 @@
   <!-- ================= WORK ================= -->
   <section class="section reveal" id="work">
     <div class="section-head">
-      <span class="tag">04 — Selected Work</span>
+      <span class="tag">06 — Selected Work</span>
       <h2>Seven live projects. Not just source code.</h2>
       <p class="sub">Every card below links to a real, running deployment — click through.</p>
     </div>
@@ -267,7 +340,7 @@
   <!-- ================= CONTACT ================= -->
   <section class="section reveal" id="contact">
     <div class="contact-box">
-      <span class="tag">05 — Contact</span>
+      <span class="tag">07 — Contact</span>
       <h2>Let's build something real together.</h2>
       <p class="sub">Open to internships, junior full-stack roles, and anything worth building properly.</p>
       <div class="contact-actions">
