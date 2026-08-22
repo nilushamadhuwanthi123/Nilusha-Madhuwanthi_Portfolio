@@ -660,7 +660,6 @@
   const roles = [
     'Full-Stack Engineer',
     'Full Stack Engineer Intern @ EgoTechWorld',
-    'Frontend Developer Intern @ CodeAlpha Technologies',
     'Web Developer Intern @ Codveda Technologies',
     'Building things without eval()',
   ];
