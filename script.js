@@ -1453,8 +1453,6 @@
   const chipsWrap = document.getElementById('purpose-chips');
   const form = document.getElementById('contact-form');
   const status = document.getElementById('form-status');
-  const copyBtn = document.getElementById('copy-email');
-
   let purpose = '';
   if (chipsWrap) {
     chipsWrap.querySelectorAll('.purpose-chip').forEach((chip) => {
@@ -1471,9 +1469,10 @@
     });
   }
 
-  if (copyBtn) {
-    copyBtn.addEventListener('click', async () => {
-      const text = copyBtn.dataset.copy;
+  document.querySelectorAll('.channel-copy').forEach((btn) => {
+    const original = btn.textContent;
+    btn.addEventListener('click', async () => {
+      const text = btn.dataset.copy;
       try {
         await navigator.clipboard.writeText(text);
       } catch (e) {
@@ -1485,11 +1484,11 @@
         try { document.execCommand('copy'); } catch (e2) {}
         document.body.removeChild(tmp);
       }
-      copyBtn.textContent = 'Copied ✓';
-      copyBtn.classList.add('copied');
-      setTimeout(() => { copyBtn.textContent = 'Copy'; copyBtn.classList.remove('copied'); }, 1800);
+      btn.textContent = 'Copied ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1800);
     });
-  }
+  });
 
   if (form && status) {
     form.addEventListener('submit', (e) => {

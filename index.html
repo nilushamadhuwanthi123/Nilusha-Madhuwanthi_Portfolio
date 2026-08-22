@@ -596,6 +596,100 @@
     </div>
   </section>
 
+  <!-- ================= CURRENTLY BUILDING ================= -->
+  <section class="section reveal" id="currently-building">
+    <div class="section-head">
+      <span class="tag">06.5 — Currently building</span>
+      <h2>What I'm shipping right now.</h2>
+      <p class="sub">Live, in-progress work — not a finished case study yet.</p>
+    </div>
+    <div class="building-card reveal">
+      <div class="building-top">
+        <span class="building-status"><i></i>In progress</span>
+        <h3>Bakery Management System</h3>
+      </div>
+      <p>A bakery operations system currently in active development at EgoTechWorld — the live app and a separate tutorial build are both deployed and evolving.</p>
+      <div class="project-links">
+        <a href="https://bakery-system-hazel.vercel.app/login" target="_blank" rel="noopener">Live App ↗</a>
+        <a href="https://totorial-bakery-system.vercel.app/" target="_blank" rel="noopener">Tutorial Build ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DEBUGGING STORIES ================= -->
+  <section class="section reveal" id="debugging-stories">
+    <div class="section-head">
+      <span class="tag">06.6 — Debugging stories</span>
+      <h2>Real bugs, real fixes.</h2>
+      <p class="sub">Two issues found and fixed directly on this portfolio's own codebase.</p>
+    </div>
+    <div class="debug-grid">
+      <div class="debug-card reveal">
+        <h3>Mobile page cut off the "Let's Talk" button</h3>
+        <div class="debug-row"><b>Problem</b><span>Horizontal scroll on phones and tablets pushed the nav CTA off-screen.</span></div>
+        <div class="debug-row"><b>Investigation</b><span>Ran a Playwright sweep across six device widths, then a DOM scan flagging every element wider than the viewport.</span></div>
+        <div class="debug-row"><b>Root cause</b><span>Only &lt;body&gt; had overflow-x:hidden — &lt;html&gt; didn't, so the tech marquee and decorative background shapes still expanded the document's scrollable width.</span></div>
+        <div class="debug-row"><b>Fix</b><span>Added overflow-x:hidden and max-width:100vw to &lt;html&gt; as well.</span></div>
+        <div class="debug-row"><b>Result</b><span>Zero horizontal scroll confirmed from 375px to 1366px, 0 console errors.</span></div>
+      </div>
+      <div class="debug-card reveal">
+        <h3>Light mode made panels unreadable</h3>
+        <div class="debug-row"><b>Problem</b><span>The nav, AI panel and certificate popups stayed visually dark while their text flipped to a dark color in Light mode.</span></div>
+        <div class="debug-row"><b>Investigation</b><span>Audited every panel background declaration across the stylesheet.</span></div>
+        <div class="debug-row"><b>Root cause</b><span>Around two dozen hardcoded dark rgba() backgrounds that never adapted to the active theme.</span></div>
+        <div class="debug-row"><b>Fix</b><span>Introduced theme-aware CSS custom properties for glass/tint surfaces and swapped every hardcoded value for one.</span></div>
+        <div class="debug-row"><b>Result</b><span>Verified legible, correctly-tinted panels in Dark, Light and Eye Comfort modes.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= WHY WORK WITH ME ================= -->
+  <section class="section reveal" id="why-me">
+    <div class="section-head">
+      <span class="tag">06.7 — Why work with me</span>
+      <h2>Not just claims — evidence.</h2>
+      <p class="sub">Every strength below is backed by a real, live project.</p>
+    </div>
+    <div class="whyme-grid">
+      <div class="whyme-card reveal">
+        <h3>Frontend development</h3>
+        <p>React dashboards (MediCare, Orvexa, FinTrack) and hand-built vanilla-JS PWAs (NEXORA, WAVEORA, MIREVA) — accessible and responsive by default.</p>
+      </div>
+      <div class="whyme-card reveal">
+        <h3>Full-stack ownership</h3>
+        <p>PHP + MySQL with row-locked transactions on NexaBank; MERN with Socket.IO real-time collaboration on Orvexa — I build and ship both ends.</p>
+      </div>
+      <div class="whyme-card reveal">
+        <h3>Real debugging</h3>
+        <p>The two fixes on the left happened on this exact site. See <a href="#debugging-stories">Debugging Stories</a>.</p>
+      </div>
+      <div class="whyme-card reveal">
+        <h3>Ships, and keeps shipping</h3>
+        <p>Every project here is deployed and live on Vercel, Railway or Docker — plus one currently in progress at EgoTechWorld.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RECRUITER CONNECTION PATH ================= -->
+  <section class="section reveal" id="recruiter-path">
+    <div class="section-head">
+      <span class="tag">06.8 — Explore my work</span>
+      <h2>From here to verified.</h2>
+      <p class="sub">A quick path to check everything above for yourself.</p>
+    </div>
+    <div class="recruiter-path">
+      <a href="#work" class="path-step"><span class="path-num">1</span><span>Projects</span></a>
+      <span class="path-arrow" aria-hidden="true">→</span>
+      <a href="https://github.com/nilushamadhuwanthi123?tab=repositories" target="_blank" rel="noopener" class="path-step"><span class="path-num">2</span><span>GitHub</span></a>
+      <span class="path-arrow" aria-hidden="true">→</span>
+      <a href="https://www.linkedin.com/in/nilushamadhuwanthi" target="_blank" rel="noopener" class="path-step"><span class="path-num">3</span><span>LinkedIn</span></a>
+      <span class="path-arrow" aria-hidden="true">→</span>
+      <a href="assets/resume.pdf" download class="path-step"><span class="path-num">4</span><span>Resume</span></a>
+      <span class="path-arrow" aria-hidden="true">→</span>
+      <a href="#contact" class="path-step"><span class="path-num">5</span><span>Contact</span></a>
+    </div>
+  </section>
+
   <!-- ================= CONTACT: CONNECT TO NILUVERSE ================= -->
   <section class="section reveal" id="contact">
     <div class="contact-box">
@@ -633,6 +727,7 @@
           </div>
           <div class="channel-actions">
             <a href="https://www.linkedin.com/in/nilushamadhuwanthi" target="_blank" rel="noopener" class="channel-link">Open ↗</a>
+            <button type="button" class="channel-copy" id="copy-linkedin" data-copy="https://www.linkedin.com/in/nilushamadhuwanthi">Copy</button>
           </div>
         </div>
         <div class="channel-card">
@@ -645,6 +740,7 @@
           </div>
           <div class="channel-actions">
             <a href="https://github.com/nilushamadhuwanthi123" target="_blank" rel="noopener" class="channel-link">Open ↗</a>
+            <button type="button" class="channel-copy" id="copy-github" data-copy="https://github.com/nilushamadhuwanthi123">Copy</button>
           </div>
         </div>
       </div>

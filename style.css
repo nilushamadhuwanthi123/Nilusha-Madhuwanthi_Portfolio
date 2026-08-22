@@ -2089,6 +2089,135 @@ footer .social a:hover{
 .marquee span b{color:var(--gold);}
 @keyframes marqueeScroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
 
+/* ================= currently building ================= */
+.building-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:26px 28px;
+  max-width:640px;
+}
+.building-top{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.building-top h3{ font-family:var(--font-head); font-size:1.1rem; }
+.building-status{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  font-family:var(--font-head);
+  font-size:.72rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--gold-bright);
+  background:rgba(201,168,92,.12);
+  border:1px solid rgba(201,168,92,.4);
+  border-radius:999px;
+  padding:5px 12px;
+}
+.building-status i{
+  width:7px; height:7px; border-radius:50%;
+  background:var(--gold-bright);
+  animation:core-pulse 1.6s ease-in-out infinite;
+}
+.building-card p{ color:var(--silver); margin-bottom:16px; line-height:1.65; }
+
+/* ================= debugging stories ================= */
+.debug-grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:20px;
+}
+.debug-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:24px 22px;
+}
+.debug-card h3{ font-family:var(--font-head); font-size:1rem; margin-bottom:14px; color:var(--ivory); }
+.debug-row{
+  display:grid;
+  grid-template-columns:110px 1fr;
+  gap:12px;
+  padding:8px 0;
+  border-top:1px solid var(--border);
+  font-size:.88rem;
+}
+.debug-row:first-of-type{ border-top:none; }
+.debug-row b{
+  font-family:var(--font-head);
+  font-size:.72rem;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+.debug-row span{ color:var(--silver); line-height:1.55; }
+@media (max-width:760px){
+  .debug-grid{ grid-template-columns:1fr; }
+  .debug-row{ grid-template-columns:1fr; gap:4px; }
+}
+
+/* ================= why work with me ================= */
+.whyme-grid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:18px;
+}
+.whyme-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:24px 20px;
+  transition:all .3s ease;
+}
+.whyme-card:hover{ border-color:var(--gold); transform:translateY(-6px); }
+.whyme-card h3{ font-family:var(--font-head); font-size:.98rem; margin-bottom:10px; color:var(--ivory); }
+.whyme-card p{ font-size:.88rem; color:var(--silver); line-height:1.6; }
+.whyme-card p a{ color:var(--gold-bright); border-bottom:1px dotted var(--gold-bright); }
+@media (max-width:920px){ .whyme-grid{ grid-template-columns:repeat(2, 1fr); } }
+@media (max-width:560px){ .whyme-grid{ grid-template-columns:1fr; } }
+
+/* ================= recruiter connection path ================= */
+.recruiter-path{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.path-step{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:10px 18px 10px 10px;
+  font-family:var(--font-head);
+  font-size:.85rem;
+  color:var(--ivory);
+  transition:all .25s ease;
+}
+.path-step:hover{ border-color:var(--gold); transform:translateY(-3px); color:var(--gold-bright); }
+.path-num{
+  display:flex; align-items:center; justify-content:center;
+  width:22px; height:22px;
+  border-radius:50%;
+  background:var(--olive-primary);
+  color:var(--bg);
+  font-size:.72rem;
+  flex-shrink:0;
+}
+.path-arrow{ color:var(--silver-muted); font-size:1rem; }
+@media (max-width:600px){
+  .recruiter-path{ flex-direction:column; align-items:stretch; }
+  .path-arrow{ display:none; }
+  .path-step{ justify-content:center; }
+}
+
 /* ================= approach cards ================= */
 .approach-grid{
   display:grid;
