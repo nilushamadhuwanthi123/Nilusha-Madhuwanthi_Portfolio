@@ -1553,7 +1553,7 @@
       tech:['Vanilla JS','Web Audio API','IndexedDB','PWA'], demoUrl:'https://waveora-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_MusicPlayer', videoUrl:'https://lnkd.in/p/g887PRgM' },
     { key:'mireva', emoji:'🖼️', title:'MIREVA — Visual Gallery Workspace', tag:'Internship · CodeAlpha', categories:['Frontend','Internship'], status:'live',
       desc:'Masonry & grid layouts, a cinematic lightbox, colour explorer, collections and a lightweight editor — built to be fully keyboard- and screen-reader-operable.',
-      tech:['Vanilla JS','Canvas','A11y','PWA'], demoUrl:'https://mireva-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_ImageGallery' },
+      tech:['Vanilla JS','Canvas','A11y','PWA'], demoUrl:'https://mireva-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_ImageGallery', videoUrl:'https://lnkd.in/p/gX7GrHVU' },
     { key:'nexabank', emoji:'🏦', title:'NexaBank — Online Banking Platform', tag:'Personal · Full Stack', categories:['Full Stack'], status:'live', featured:true,
       desc:'Real account balances, instant transfers and ACID-safe money movement — every transaction runs inside a row-locked DB transaction. Bcrypt auth, CSRF everywhere, full admin console.',
       tech:['PHP','MySQL','Docker','Chart.js'], demoUrl:'https://nexabank-web-production.up.railway.app', repoUrl:'https://github.com/nilushamadhuwanthi123/NexaBank---Online-Banking-System' },
@@ -1644,7 +1644,7 @@
         <span class="spine-tag">${p.tag}</span>
         <div class="spine-node fb-node"></div>
         <div class="project-card" data-open-key="${p.key}">
-          <div class="project-top"><span class="project-emoji">${p.emoji}</span><button type="button" class="fb-save" data-save-key="${p.key}" aria-pressed="${isSaved(p.key)}" aria-label="Save project" title="Save project">${saveIcon}</button>${statusBadge(p)}</div>
+          <div class="project-top"><span class="project-emoji">${p.emoji}</span><button type="button" class="fb-save" data-save-key="${p.key}" aria-pressed="${isSaved(p.key)}" aria-label="Save project" title="Save project">${saveIcon}</button><button type="button" class="fb-compare-toggle" data-compare-key="${p.key}" aria-pressed="false" aria-label="Add to comparison" title="Compare">⇄</button>${statusBadge(p)}</div>
           <h3>${p.title}</h3>
           <p>${p.desc}</p>
           ${contribution}
@@ -1792,6 +1792,99 @@
     const keys = visibleKeys();
     const idx = keys.indexOf(openKey);
     if (idx !== -1 && idx < keys.length - 1) openModal(keys[idx + 1]);
+  });
+
+  // ---- project comparison (pick 2, see them side by side) ----
+  const compareBar = document.getElementById('fb-compare-bar');
+  const compareStatus = document.getElementById('fb-compare-status');
+  const compareGoBtn = document.getElementById('fb-compare-go');
+  const compareClearBtn = document.getElementById('fb-compare-clear');
+  const compareModal = document.getElementById('fb-compare-modal');
+  const compareBody = document.getElementById('fb-compare-body');
+  const compareClose = document.getElementById('fb-compare-close');
+  const compareBackdrop = document.getElementById('fb-compare-backdrop');
+  let compareKeys = [];
+
+  function setCompareBtnState(key, on) {
+    const b = spine.querySelector(`.fb-compare-toggle[data-compare-key="${key}"]`);
+    if (b) { b.setAttribute('aria-pressed', String(on)); b.classList.toggle('active', on); }
+  }
+  function updateCompareBar() {
+    if (!compareBar) return;
+    compareBar.hidden = compareKeys.length === 0;
+    if (compareStatus) {
+      compareStatus.textContent = compareKeys.length === 1
+        ? `${PROJECTS.find((p) => p.key === compareKeys[0]).title} selected — pick a 2nd project`
+        : compareKeys.length === 2
+        ? 'Comparing 2 projects'
+        : 'Pick a 2nd project to compare';
+    }
+    if (compareGoBtn) compareGoBtn.disabled = compareKeys.length < 2;
+  }
+
+  spine.addEventListener('click', (e) => {
+    const btn = e.target.closest('.fb-compare-toggle');
+    if (!btn) return;
+    e.stopPropagation();
+    const key = btn.dataset.compareKey;
+    const idx = compareKeys.indexOf(key);
+    if (idx !== -1) {
+      compareKeys.splice(idx, 1);
+      setCompareBtnState(key, false);
+    } else {
+      if (compareKeys.length >= 2) setCompareBtnState(compareKeys.shift(), false);
+      compareKeys.push(key);
+      setCompareBtnState(key, true);
+    }
+    updateCompareBar();
+  });
+
+  if (compareClearBtn) compareClearBtn.addEventListener('click', () => {
+    compareKeys.forEach((key) => setCompareBtnState(key, false));
+    compareKeys = [];
+    updateCompareBar();
+  });
+
+  function compareRow(label, a, b) {
+    return `<div class="fb-compare-row"><span class="fb-compare-label">${label}</span><span>${a}</span><span>${b}</span></div>`;
+  }
+  function compareLinks(p) {
+    const links = [];
+    if (p.demoUrl) links.push(`<a href="${p.demoUrl}" target="_blank" rel="noopener">Live Demo ↗</a>`);
+    if (p.repoUrl) links.push(`<a href="${p.repoUrl}" target="_blank" rel="noopener">Code ↗</a>`);
+    return links.length ? links.join(' &middot; ') : 'Demo coming soon';
+  }
+  function compareStatusLabel(p) {
+    if (p.status === 'live') return 'Live';
+    if (p.status === 'source') return 'Source available';
+    return 'Demo coming soon';
+  }
+
+  if (compareGoBtn) compareGoBtn.addEventListener('click', () => {
+    if (compareKeys.length < 2 || !compareModal || !compareBody) return;
+    const [a, b] = compareKeys.map((k) => PROJECTS.find((p) => p.key === k));
+    compareBody.innerHTML = `
+      <h3>Compare projects</h3>
+      <div class="fb-compare-table">
+        <div class="fb-compare-row fb-compare-head"><span></span><span>${a.emoji} ${a.title}</span><span>${b.emoji} ${b.title}</span></div>
+        ${compareRow('Category', a.tag, b.tag)}
+        ${compareRow('Status', compareStatusLabel(a), compareStatusLabel(b))}
+        ${compareRow('Tech stack', a.tech.join(', '), b.tech.join(', '))}
+        ${compareRow('Links', compareLinks(a), compareLinks(b))}
+      </div>`;
+    compareModal.hidden = false;
+    requestAnimationFrame(() => compareModal.classList.add('show'));
+  });
+
+  function closeCompareModal() {
+    if (!compareModal) return;
+    compareModal.classList.remove('show');
+    setTimeout(() => { compareModal.hidden = true; }, 250);
+  }
+  if (compareClose) compareClose.addEventListener('click', closeCompareModal);
+  if (compareBackdrop) compareBackdrop.addEventListener('click', closeCompareModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && compareModal && !compareModal.hidden) closeCompareModal();
   });
 })();
 

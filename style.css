@@ -1927,6 +1927,59 @@ html[data-motion="reduced"] .nav-appearance::before, html[data-motion="off"] .na
   padding:0;
 }
 .fb-expand-hint:hover{ text-decoration:underline; }
+.fb-compare-toggle{
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--silver-muted);
+  font-size:.85rem;
+  width:26px; height:26px;
+  border-radius:8px;
+  cursor:pointer;
+  line-height:1;
+  transition:all .2s ease;
+}
+.fb-compare-toggle:hover{ border-color:var(--gold); color:var(--gold-bright); }
+.fb-compare-toggle.active{ background:rgba(201,168,92,.16); border-color:var(--gold); color:var(--gold-bright); }
+
+/* ---------- work: project comparison bar + modal ---------- */
+.fb-compare-bar{
+  position:fixed;
+  left:50%; bottom:24px;
+  transform:translateX(-50%);
+  z-index:190;
+  display:flex; align-items:center; gap:16px;
+  background:var(--glass-94b);
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:10px 12px 10px 20px;
+  box-shadow:0 20px 50px -20px rgba(0,0,0,.6);
+  backdrop-filter:blur(12px);
+  font-size:.85rem;
+  color:var(--silver);
+  max-width:calc(100vw - 32px);
+}
+.fb-compare-bar[hidden]{ display:none; }
+.fb-compare-bar-actions{ display:flex; gap:8px; flex-shrink:0; }
+.fb-compare-card{ max-width:640px; }
+.fb-compare-table{ display:flex; flex-direction:column; gap:2px; margin-top:16px; }
+.fb-compare-row{
+  display:grid;
+  grid-template-columns:110px 1fr 1fr;
+  gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+  font-size:.86rem;
+  color:var(--silver);
+}
+.fb-compare-row:last-child{ border-bottom:none; }
+.fb-compare-label{ color:var(--silver-muted); font-family:var(--font-head); font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; }
+.fb-compare-head{ font-weight:600; color:var(--ivory); }
+.fb-compare-row a{ color:var(--gold-bright); }
+@media (max-width:600px){
+  .fb-compare-bar{ flex-direction:column; align-items:stretch; gap:10px; padding:14px; border-radius:18px; }
+  .fb-compare-row{ grid-template-columns:1fr; gap:2px; }
+  .fb-compare-label{ margin-top:6px; }
+}
 
 /* ---------- work: case study modal ---------- */
 .fb-modal{
@@ -2119,7 +2172,7 @@ html[data-motion="reduced"] .nav-appearance::before, html[data-motion="off"] .na
 
 .project-links{
   display:flex;
-  gap:14px;
+  gap:8px;
   flex-wrap:wrap;
   font-size:.85rem;
 }
@@ -2128,11 +2181,26 @@ html[data-motion="reduced"] .nav-appearance::before, html[data-motion="off"] .na
   display:inline-flex;
   align-items:center;
   gap:6px;
-  transition:opacity .2s ease;
+  padding:7px 14px;
+  border-radius:999px;
+  border:1px solid rgba(201,168,92,.4);
+  background:rgba(201,168,92,.06);
+  font-size:.8rem;
+  transition:all .2s ease;
 }
-.project-links a:hover{opacity:.7;}
+.project-links a:hover{
+  background:rgba(201,168,92,.16);
+  border-color:var(--gold);
+  transform:translateY(-1px);
+}
 .project-links a.video-link{
   color:var(--olive-soft);
+  border-color:rgba(137,148,102,.4);
+  background:rgba(137,148,102,.06);
+}
+.project-links a.video-link:hover{
+  background:rgba(137,148,102,.18);
+  border-color:var(--olive-soft);
 }
 
 /* ---------- contact ---------- */
