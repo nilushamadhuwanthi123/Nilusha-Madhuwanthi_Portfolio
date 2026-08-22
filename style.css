@@ -785,6 +785,7 @@ nav{
 .project-links{
   display:flex;
   gap:14px;
+  flex-wrap:wrap;
   font-size:.85rem;
 }
 .project-links a{
@@ -795,6 +796,9 @@ nav{
   transition:opacity .2s ease;
 }
 .project-links a:hover{opacity:.7;}
+.project-links a.video-link{
+  color:var(--olive-soft);
+}
 
 /* ---------- contact ---------- */
 .contact-box{
