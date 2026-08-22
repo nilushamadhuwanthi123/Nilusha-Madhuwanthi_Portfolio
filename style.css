@@ -174,11 +174,11 @@ nav{
   width:100%;
   max-width:1180px;
   margin:0 auto;
-  padding:11px 22px;
+  padding:11px 18px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:18px;
+  gap:12px;
   border-radius:999px;
   border:1px solid rgba(48,53,42,.7);
   background:rgba(16,18,15,.42);
@@ -241,31 +241,31 @@ html[data-motion="reduced"] nav, html[data-motion="off"] nav{ transition:none; }
 
 .nav-links{
   display:flex;
-  gap:20px;
+  gap:2px;
   list-style:none;
 }
 
 .nav-links a{
-  font-size:.8rem;
+  font-size:.78rem;
   color:var(--silver);
   letter-spacing:.02em;
   text-transform:uppercase;
   transition:color .25s ease, background-color .25s ease;
   position:relative;
   white-space:nowrap;
-  padding:6px 11px;
+  padding:6px 9px;
   border-radius:999px;
 }
 .nav-links a::after{
   content:'';
   position:absolute;
-  left:11px; bottom:-2px;
+  left:9px; bottom:-2px;
   width:0; height:1px;
   background:var(--gold);
   transition:width .25s ease;
 }
 .nav-links a:hover{color:var(--gold-bright); background:rgba(137,148,102,.08);}
-.nav-links a:hover::after{width:calc(100% - 22px);}
+.nav-links a:hover::after{width:calc(100% - 18px);}
 .nav-links a.active{
   color:var(--ivory);
   background:rgba(201,168,92,.14);
