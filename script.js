@@ -959,6 +959,46 @@
   if (el) el.textContent = new Date().getFullYear();
 })();
 
+/* ---------- navbar: scroll state + scroll-spy active pill ---------- */
+(function navScrollState() {
+  const header = document.querySelector('header');
+  if (!header) return;
+  function onScroll() {
+    header.classList.toggle('scrolled', window.scrollY > 24);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+(function navScrollSpy() {
+  const links = Array.from(document.querySelectorAll('.nav-links a[href^="#"]'));
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  const map = new Map();
+  links.forEach((a) => {
+    const id = a.getAttribute('href').slice(1);
+    const sec = document.getElementById(id);
+    if (sec) map.set(sec, a);
+  });
+  if (!map.size) return;
+
+  let current = null;
+  function setActive(link) {
+    if (current === link) return;
+    links.forEach((a) => a.classList.remove('active'));
+    if (link) link.classList.add('active');
+    current = link;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter((e) => e.isIntersecting)
+      .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+    if (visible.length) setActive(map.get(visible[0].target));
+  }, { rootMargin: '-35% 0px -50% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
+
+  map.forEach((_, sec) => observer.observe(sec));
+})();
+
 /* ---------- Ask Nilusha: local AI-style portfolio assistant ---------- */
 /* No external API — answers are matched by keyword against real portfolio
    data only, so nothing here is ever invented. */
