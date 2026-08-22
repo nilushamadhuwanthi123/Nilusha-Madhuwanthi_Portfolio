@@ -86,6 +86,7 @@
       <li><a href="#contact">Contact</a></li>
     </ul>
     <button class="nav-cmdk" data-cmdk-open type="button"><kbd>⌘</kbd><kbd>K</kbd> <span class="nav-cmdk-label">Search</span></button>
+    <button class="nav-appearance" id="appearance-toggle" aria-haspopup="dialog" aria-expanded="false" aria-label="Appearance settings" type="button">◐</button>
     <button class="nav-recruiter" id="recruiter-toggle" type="button">⚡ 60s view</button>
     <a href="#contact" class="nav-cta">Let's talk</a>
     <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" type="button">
@@ -712,11 +713,7 @@
   </form>
 </div>
 
-<!-- ================= APPEARANCE SETTINGS ================= -->
-<div class="appearance-toggle-wrap">
-  <button class="appearance-toggle" id="appearance-toggle" aria-haspopup="dialog" aria-expanded="false" aria-label="Appearance settings" type="button">◐</button>
-  <span class="appearance-toggle-label">Appearance</span>
-</div>
+<!-- ================= APPEARANCE SETTINGS (trigger now lives in the navbar) ================= -->
 <div class="appearance-panel" id="appearance-panel" role="dialog" aria-label="Appearance settings" hidden>
   <h4>Theme</h4>
   <div class="appearance-group" id="theme-group" role="radiogroup" aria-label="Theme">
