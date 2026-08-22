@@ -1200,7 +1200,7 @@ footer .social a:hover{
 .reveal.in{opacity:1; transform:translateY(0);}
 
 /* ---------- responsive ---------- */
-@media (max-width:860px){
+@media (max-width:920px){
   .nav-toggle{ display:flex; }
   .nav-links{
     display:flex;
