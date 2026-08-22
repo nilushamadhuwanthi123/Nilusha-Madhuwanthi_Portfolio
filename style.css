@@ -657,7 +657,7 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
      content wrappers below */
   pointer-events:none;
 }
-.hero-photo-wrap, .hero-actions, .mode-switch, .hero-stats, .scroll-cue{
+.hero-photo-row, .hero-actions, .mode-switch, .hero-stats, .scroll-cue{
   pointer-events:auto;
 }
 
