@@ -517,10 +517,31 @@
 
   // ---- scroll: the Earth eases back slightly as the visitor leaves the hero ----
   const heroEl = document.querySelector('.hero');
+  const skillsEl = document.getElementById('skills');
+  const workEl = document.getElementById('work');
   let scrollProgress = 0;
+  // The skills-orbit is a real feature (labelled skill "planets"), not just hero
+  // decoration - it should stay visible through About + Skills, then fade out
+  // before the Work section starts so it never bleeds into the project cards.
+  let canvasOpacity = 1;
   function updateScrollProgress() {
     const heroHeight = heroEl ? heroEl.offsetHeight : window.innerHeight;
     scrollProgress = Math.min(1, Math.max(0, window.scrollY / (heroHeight * 0.9)));
+
+    const y = window.scrollY;
+    const heroFade = heroHeight * 0.9;
+    const skillsEnd = skillsEl ? skillsEl.offsetTop + skillsEl.offsetHeight : heroFade * 3;
+    const workStart = workEl ? workEl.offsetTop : skillsEnd + 800;
+    if (y <= heroFade) {
+      canvasOpacity = 1 - scrollProgress * 0.3;
+    } else if (y <= skillsEnd) {
+      canvasOpacity = 0.7;
+    } else if (y < workStart) {
+      const fade = (y - skillsEnd) / Math.max(1, workStart - skillsEnd);
+      canvasOpacity = Math.max(0, 0.7 * (1 - fade));
+    } else {
+      canvasOpacity = 0;
+    }
   }
   window.addEventListener('scroll', updateScrollProgress, { passive: true });
   updateScrollProgress();
@@ -617,7 +638,7 @@
     camera.position.y += (2.2 - mouseY * parallaxY - camera.position.y) * 0.02;
     const targetZ = (isMobile ? 15 : 11.5) + scrollProgress * (isMobile ? 4 : 5);
     camera.position.z += (targetZ - camera.position.z) * 0.05;
-    canvas.style.opacity = scrollProgress >= 1 ? '0' : String(1 - scrollProgress * 0.96);
+    canvas.style.opacity = String(canvasOpacity);
     camera.lookAt(lookTargetX, 0, 0);
 
     renderer.render(scene, camera);
@@ -672,7 +693,7 @@
         }
       });
     },
-    { threshold: 0.15 }
+    { threshold: 0, rootMargin: '0px 0px -10% 0px' }
   );
   els.forEach((el) => io.observe(el));
 })();
@@ -1577,6 +1598,38 @@
     return '<span class="repo-badge">Demo coming soon</span>';
   }
 
+  const TECH_GROUP = {
+    'Vanilla JS':'Frontend', Canvas:'Frontend', HTML5:'Frontend', CSS3:'Frontend', JavaScript:'Frontend',
+    React:'Frontend', Vite:'Frontend', TypeScript:'Frontend', A11y:'Frontend',
+    'Node.js':'Backend', Express:'Backend', PHP:'Backend', 'Spring Boot':'Backend', Java:'Backend', 'Kotlin/Ktor':'Backend',
+    Kotlin:'Mobile', 'Android Studio':'Mobile',
+    MySQL:'Database', MongoDB:'Database', PostgreSQL:'Database', Firebase:'Database', IndexedDB:'Database',
+    'OAuth 2.0':'Auth', JWT:'Auth',
+    'Socket.IO':'APIs & Realtime', 'Google Maps API':'APIs & Realtime', 'Web Audio API':'APIs & Realtime', 'math.js':'APIs & Realtime',
+    Docker:'Tools', 'Chart.js':'Tools', PWA:'Tools',
+  };
+  function techDNA(tech) {
+    const groups = {};
+    tech.forEach((t) => {
+      const g = TECH_GROUP[t] || 'Tools';
+      (groups[g] = groups[g] || []).push(t);
+    });
+    const order = ['Frontend','Backend','Mobile','Database','Auth','APIs & Realtime','Tools'];
+    return order.filter((g) => groups[g]).map((g) => `<div class="fb-dna-group"><b>${g}</b><span>${groups[g].join(' · ')}</span></div>`).join('');
+  }
+
+  function savedKeys() {
+    try { return JSON.parse(localStorage.getItem('savedProjects') || '[]'); } catch (e) { return []; }
+  }
+  function isSaved(key) { return savedKeys().includes(key); }
+  function toggleSaved(key) {
+    let s = savedKeys();
+    if (s.includes(key)) s = s.filter((k) => k !== key);
+    else s.push(key);
+    try { localStorage.setItem('savedProjects', JSON.stringify(s)); } catch (e) {}
+    return s.includes(key);
+  }
+
   function cardHTML(p, i) {
     const links = [];
     if (p.demoUrl) links.push(`<a href="${p.demoUrl}" target="_blank" rel="noopener">Live demo ↗</a>`);
@@ -1585,17 +1638,19 @@
     const side = i % 2 === 0 ? 'spine-left' : 'spine-right';
     const featured = p.featured ? ' spine-featured' : '';
     const contribution = p.contribution ? `<p class="fb-contribution"><b>My contribution:</b> ${p.contribution}</p>` : '';
+    const saveIcon = isSaved(p.key) ? '★' : '☆';
     return `
       <div class="spine-item ${side}${featured} fb-rib" data-key="${p.key}" data-search="${(p.title + ' ' + p.tag + ' ' + p.tech.join(' ') + ' ' + p.categories.join(' ')).toLowerCase()}">
         <span class="spine-tag">${p.tag}</span>
         <div class="spine-node fb-node"></div>
-        <div class="project-card">
-          <div class="project-top"><span class="project-emoji">${p.emoji}</span>${statusBadge(p)}</div>
+        <div class="project-card" data-open-key="${p.key}">
+          <div class="project-top"><span class="project-emoji">${p.emoji}</span><button type="button" class="fb-save" data-save-key="${p.key}" aria-pressed="${isSaved(p.key)}" aria-label="Save project" title="Save project">${saveIcon}</button>${statusBadge(p)}</div>
           <h3>${p.title}</h3>
           <p>${p.desc}</p>
           ${contribution}
-          <div class="stack-pills">${p.tech.map((t) => `<span>${t}</span>`).join('')}</div>
+          <div class="stack-pills">${p.tech.map((t) => `<span data-tech="${t}">${t}</span>`).join('')}</div>
           <div class="project-links">${links.length ? links.join('') : '<span class="fb-soon-note">Demo coming soon</span>'}</div>
+          <button type="button" class="fb-expand-hint">View details →</button>
         </div>
       </div>`;
   }
@@ -1611,7 +1666,7 @@
   render();
 
   // filters
-  const ALL_CATS = ['All', ...Array.from(new Set(PROJECTS.flatMap((p) => p.categories)))];
+  const ALL_CATS = ['All', ...Array.from(new Set(PROJECTS.flatMap((p) => p.categories))), '★ Saved'];
   if (filtersWrap) {
     filtersWrap.innerHTML = ALL_CATS.map((c, i) => `<button type="button" class="fb-filter${i === 0 ? ' active' : ''}" data-cat="${c}">${c}</button>`).join('');
   }
@@ -1623,7 +1678,7 @@
     spine.querySelectorAll('.fb-rib').forEach((rib) => {
       const key = rib.dataset.key;
       const p = PROJECTS.find((x) => x.key === key);
-      const matchesCat = activeCat === 'All' || p.categories.includes(activeCat);
+      const matchesCat = activeCat === 'All' || (activeCat === '★ Saved' ? isSaved(key) : p.categories.includes(activeCat));
       const matchesSearch = !q || rib.dataset.search.includes(q);
       const show = matchesCat && matchesSearch;
       rib.classList.toggle('fb-rib-hidden', !show);
@@ -1644,6 +1699,100 @@
     });
   }
   if (searchEl) searchEl.addEventListener('input', applyFilters);
+
+  // save/bookmark toggle
+  spine.addEventListener('click', (e) => {
+    const saveBtn = e.target.closest('.fb-save');
+    if (!saveBtn) return;
+    e.stopPropagation();
+    const nowSaved = toggleSaved(saveBtn.dataset.saveKey);
+    saveBtn.textContent = nowSaved ? '★' : '☆';
+    saveBtn.setAttribute('aria-pressed', String(nowSaved));
+    if (activeCat === '★ Saved') applyFilters();
+  });
+
+  // tech pill hover -> highlight other projects sharing that tech
+  spine.addEventListener('mouseover', (e) => {
+    const pill = e.target.closest('.stack-pills span');
+    if (!pill) return;
+    const tech = pill.dataset.tech;
+    spine.querySelectorAll('.fb-rib').forEach((rib) => {
+      const p = PROJECTS.find((x) => x.key === rib.dataset.key);
+      rib.classList.toggle('fb-tech-highlight', p.tech.includes(tech));
+    });
+  });
+  spine.addEventListener('mouseout', (e) => {
+    const pill = e.target.closest('.stack-pills span');
+    if (!pill) return;
+    spine.querySelectorAll('.fb-rib').forEach((rib) => rib.classList.remove('fb-tech-highlight'));
+  });
+
+  // ---- case study modal ----
+  const modal = document.getElementById('fb-modal');
+  const modalBody = document.getElementById('fb-modal-body');
+  const modalClose = document.getElementById('fb-modal-close');
+  const modalBackdrop = document.getElementById('fb-modal-backdrop');
+  const prevBtn = document.getElementById('fb-prev');
+  const nextBtn = document.getElementById('fb-next');
+  let openKey = null;
+
+  function visibleKeys() {
+    return Array.from(spine.querySelectorAll('.fb-rib:not(.fb-rib-hidden)')).map((r) => r.dataset.key);
+  }
+
+  function openModal(key) {
+    const p = PROJECTS.find((x) => x.key === key);
+    if (!p || !modal || !modalBody) return;
+    openKey = key;
+    const links = [];
+    if (p.demoUrl) links.push(`<a href="${p.demoUrl}" target="_blank" rel="noopener" class="btn btn-primary">Live Demo ↗</a>`);
+    if (p.repoUrl) links.push(`<a href="${p.repoUrl}" target="_blank" rel="noopener" class="btn btn-ghost">View Code ↗</a>`);
+    if (!links.length) links.push('<span class="fb-soon-note">Demo coming soon</span>');
+    const contribution = p.contribution ? `<div class="fb-modal-section"><b>My Contribution</b><p>${p.contribution}</p></div>` : '';
+    modalBody.innerHTML = `
+      <div class="fb-modal-top"><span class="project-emoji">${p.emoji}</span>${statusBadge(p)}</div>
+      <h3>${p.title}</h3>
+      <span class="spine-tag">${p.tag}</span>
+      <div class="fb-modal-section"><b>Overview</b><p>${p.desc}</p></div>
+      ${contribution}
+      <div class="fb-modal-section"><b>Tech Stack</b><div class="fb-dna">${techDNA(p.tech)}</div></div>
+      <div class="fb-modal-links">${links.join('')}</div>`;
+    modal.hidden = false;
+    requestAnimationFrame(() => modal.classList.add('show'));
+    updateNav();
+  }
+  function closeModal() {
+    modal.classList.remove('show');
+    setTimeout(() => { modal.hidden = true; }, 250);
+    openKey = null;
+  }
+  function updateNav() {
+    const keys = visibleKeys();
+    const idx = keys.indexOf(openKey);
+    if (prevBtn) prevBtn.disabled = idx <= 0;
+    if (nextBtn) nextBtn.disabled = idx === -1 || idx >= keys.length - 1;
+  }
+
+  spine.addEventListener('click', (e) => {
+    const card = e.target.closest('.project-card');
+    if (!card || e.target.closest('.fb-save') || e.target.closest('.project-links a')) return;
+    openModal(card.dataset.openKey);
+  });
+  if (modalClose) modalClose.addEventListener('click', closeModal);
+  if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && !modal.hidden) closeModal();
+  });
+  if (prevBtn) prevBtn.addEventListener('click', () => {
+    const keys = visibleKeys();
+    const idx = keys.indexOf(openKey);
+    if (idx > 0) openModal(keys[idx - 1]);
+  });
+  if (nextBtn) nextBtn.addEventListener('click', () => {
+    const keys = visibleKeys();
+    const idx = keys.indexOf(openKey);
+    if (idx !== -1 && idx < keys.length - 1) openModal(keys[idx + 1]);
+  });
 })();
 
 /* ---------- contact: connect to niluverse ---------- */
