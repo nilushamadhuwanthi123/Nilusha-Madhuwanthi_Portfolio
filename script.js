@@ -100,9 +100,9 @@
   if (!el) return;
   const roles = [
     'Full-Stack Engineer',
-    'Software Engineering Undergraduate @ SLIIT',
-    'Frontend Development Intern @ CodeAlpha',
-    'Software Engineering Intern @ EgoTechWorld',
+    'Full Stack Engineer Intern @ EgoTechWorld',
+    'Frontend Developer Intern @ CodeAlpha Technologies',
+    'Web Developer Intern @ Codveda Technologies',
     'Building things without eval()',
   ];
   let r = 0, c = 0, deleting = false;
