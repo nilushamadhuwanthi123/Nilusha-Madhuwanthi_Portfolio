@@ -727,7 +727,7 @@
 /* ---------- magnetic buttons ---------- */
 (function magnetic() {
   if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
-  document.querySelectorAll('.btn, .nav-cta').forEach((btn) => {
+  document.querySelectorAll('.btn, .nav-cta, .talk-fab').forEach((btn) => {
     btn.addEventListener('mousemove', (e) => {
       const r = btn.getBoundingClientRect();
       const mx = e.clientX - r.left - r.width / 2;
@@ -983,8 +983,16 @@
 (function navScrollState() {
   const header = document.querySelector('header');
   if (!header) return;
+  let lastY = window.scrollY;
   function onScroll() {
-    header.classList.toggle('scrolled', window.scrollY > 24);
+    const y = window.scrollY;
+    header.classList.toggle('scrolled', y > 24);
+    if (y > 160 && y > lastY + 4) {
+      header.classList.add('nav-dim');
+    } else if (y < lastY - 4 || y <= 160) {
+      header.classList.remove('nav-dim');
+    }
+    lastY = y;
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
@@ -1346,9 +1354,11 @@
     toggle.setAttribute('aria-expanded', 'false');
     setTimeout(() => { panel.hidden = true; }, 180);
   }
-  toggle.addEventListener('click', () => { panel.classList.contains('show') ? closePanel() : openPanel(); });
+  const navThemeToggle = document.getElementById('nav-theme-toggle');
+  const triggers = [toggle, navThemeToggle].filter(Boolean);
+  triggers.forEach((t) => t.addEventListener('click', () => { panel.classList.contains('show') ? closePanel() : openPanel(); }));
   document.addEventListener('click', (e) => {
-    if (panel.classList.contains('show') && !panel.contains(e.target) && e.target !== toggle && !toggle.contains(e.target)) closePanel();
+    if (panel.classList.contains('show') && !panel.contains(e.target) && !triggers.some((t) => t.contains(e.target))) closePanel();
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel.classList.contains('show')) closePanel(); });
 })();

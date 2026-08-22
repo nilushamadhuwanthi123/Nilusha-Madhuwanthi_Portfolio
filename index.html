@@ -87,17 +87,27 @@
       <span class="logo-word">NILUVERSE</span>
     </a>
     <ul class="nav-links">
+      <li><a href="#">Home</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#skills">Skills</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#education">Education</a></li>
-      <li><a href="#certificates">Certificates</a></li>
       <li><a href="#work">Work</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li class="nav-extra"><a href="#education">Education</a></li>
+      <li class="nav-extra"><a href="#certificates">Certificates</a></li>
+      <li class="nav-extra"><a href="assets/resume.pdf" download>Resume ⬇</a></li>
+      <li class="nav-extra"><a href="#contact">Contact</a></li>
     </ul>
-    <button class="nav-cmdk" data-cmdk-open type="button"><kbd>⌘</kbd><kbd>K</kbd> <span class="nav-cmdk-label">Search</span></button>
-    <button class="nav-recruiter" id="recruiter-toggle" type="button">⚡ 60s view</button>
-    <a href="#contact" class="nav-cta">Let's talk</a>
+    <div class="nav-controls">
+      <button class="nav-icon-btn" data-cmdk-open type="button" aria-label="Search — Command K" title="Search (⌘K)">
+        <span class="nav-icon" aria-hidden="true">⌕</span><span class="nav-kbd-hint"><kbd>⌘</kbd><kbd>K</kbd></span>
+      </button>
+      <button class="nav-icon-btn" id="recruiter-toggle" type="button" aria-label="60-second recruiter view" title="60-second recruiter view">
+        <span class="nav-icon" aria-hidden="true">⚡</span>
+      </button>
+      <button class="nav-icon-btn" id="nav-theme-toggle" type="button" aria-label="Appearance settings" title="Appearance settings">
+        <span class="nav-icon" aria-hidden="true">◐</span>
+      </button>
+    </div>
     <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" type="button">
       <span></span><span></span><span></span>
     </button>
@@ -706,6 +716,11 @@
     <button type="submit" aria-label="Send">↑</button>
   </form>
 </div>
+
+<!-- ================= LET'S TALK (standalone floating CTA, bottom-right, above AI assistant) ================= -->
+<a href="#contact" class="talk-fab" aria-label="Let's talk — go to contact section">
+  <span>Let's Talk</span><span class="talk-fab-arrow" aria-hidden="true">↗</span>
+</a>
 
 <!-- ================= APPEARANCE SETTINGS (floating, bottom-left, always visible) ================= -->
 <button class="appearance-fab" id="appearance-toggle" aria-haspopup="dialog" aria-expanded="false" aria-label="Appearance settings" title="Appearance settings" type="button">

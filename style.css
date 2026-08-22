@@ -281,32 +281,70 @@ header{
   opacity:0;
   transform:translateY(-10px);
   animation:navbar-in .6s ease .1s forwards;
+  transition:transform .35s ease, opacity .35s ease;
+  pointer-events:none;
 }
+header, header nav{ pointer-events:auto; }
 @keyframes navbar-in{ to{ opacity:1; transform:translateY(0); } }
 html[data-motion="reduced"] header, html[data-motion="off"] header{ animation:none; opacity:1; transform:none; }
+header.nav-dim{ opacity:.5; transform:translateY(-6px); }
+header.nav-dim:hover, header.nav-dim:focus-within{ opacity:1; transform:translateY(0); }
+html[data-motion="reduced"] header.nav-dim, html[data-motion="off"] header.nav-dim{ opacity:1; transform:none; }
 
 nav{
-  width:100%;
-  max-width:1180px;
+  width:auto;
+  max-width:calc(100vw - 32px);
   margin:0 auto;
-  padding:11px 18px;
+  padding:9px 10px 9px 16px;
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:12px;
+  justify-content:center;
+  gap:6px;
   border-radius:999px;
   border:1px solid rgba(48,53,42,.7);
   background:var(--glass-42);
   backdrop-filter:blur(14px);
   box-shadow:0 1px 0 0 var(--tint-2) inset, 0 18px 40px -22px var(--shadow-ambient);
-  transition:background-color .3s ease, border-color .3s ease, box-shadow .3s ease, backdrop-filter .3s ease;
+  transition:background-color .3s ease, border-color .3s ease, box-shadow .3s ease, backdrop-filter .3s ease, padding .3s ease;
 }
 header.scrolled nav{
   background:var(--glass-78);
   border-color:var(--border);
   box-shadow:0 1px 0 0 var(--tint-3) inset, 0 22px 48px -20px var(--shadow-ambient-strong);
+  padding:7px 9px 7px 14px;
 }
 html[data-motion="reduced"] nav, html[data-motion="off"] nav{ transition:none; }
+
+.nav-controls{ display:flex; align-items:center; gap:6px; margin-left:4px; }
+.nav-icon-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:5px;
+  width:34px; height:34px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  background:var(--tint-2);
+  color:var(--silver);
+  font-size:.95rem;
+  cursor:pointer;
+  transition:all .22s ease;
+  padding:0;
+}
+.nav-icon-btn[data-cmdk-open]{ width:auto; padding:0 12px 0 11px; border-radius:999px; }
+.nav-kbd-hint{ display:inline-flex; gap:3px; }
+.nav-kbd-hint kbd{
+  font-family:var(--font-head);
+  font-size:.64rem;
+  background:var(--tint-5);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:1px 4px;
+}
+.nav-icon-btn:hover, .nav-icon-btn:focus-visible{
+  color:var(--gold-bright);
+  border-color:rgba(201,168,92,.5);
+  background:rgba(201,168,92,.1);
+  transform:translateY(-1px);
+}
+@media (max-width:920px){ .nav-icon-btn[data-cmdk-open] .nav-kbd-hint{ display:none; } }
 
 .logo{
   display:inline-flex;
@@ -380,6 +418,7 @@ html[data-motion="reduced"] nav, html[data-motion="off"] nav{ transition:none; }
   transition:width .25s ease;
 }
 .nav-links a:hover{color:var(--gold-bright); background:rgba(137,148,102,.08);}
+@media (min-width:921px){ .nav-links li.nav-extra{ display:none; } }
 .nav-links a:hover::after{width:calc(100% - 18px);}
 .nav-links a.active{
   color:var(--ivory);
@@ -2453,6 +2492,41 @@ footer .social a:hover{
 }
 /* Floating Appearance toggle - fixed to the viewport so it's visible at every
    scroll depth, deliberately kept away from the navbar and the hero photo. */
+.talk-fab{
+  position:fixed;
+  right:22px; bottom:154px;
+  z-index:69;
+  display:inline-flex; align-items:center; gap:8px;
+  padding:12px 20px 12px 22px;
+  border-radius:999px;
+  background:var(--olive-primary);
+  color:var(--bg);
+  font-family:var(--font-head);
+  font-size:.86rem;
+  font-weight:600;
+  letter-spacing:.02em;
+  border:1px solid rgba(224,196,119,.35);
+  box-shadow:0 4px 0 0 rgba(0,0,0,.15) inset, 0 14px 34px -14px rgba(137,148,102,.55), 0 0 0 0 rgba(224,196,119,0);
+  backdrop-filter:blur(6px);
+  cursor:pointer;
+  transition:transform .22s ease, box-shadow .3s ease, background-color .22s ease;
+}
+.talk-fab-arrow{ display:inline-block; transition:transform .22s ease; }
+.talk-fab:hover, .talk-fab:focus-visible{
+  background:var(--gold-bright);
+  box-shadow:0 4px 0 0 rgba(0,0,0,.15) inset, 0 18px 42px -14px rgba(224,196,119,.65), 0 0 26px -4px rgba(224,196,119,.55);
+}
+.talk-fab:hover .talk-fab-arrow, .talk-fab:focus-visible .talk-fab-arrow{ transform:translate(3px,-3px); }
+html[data-motion="reduced"] .talk-fab, html[data-motion="off"] .talk-fab{ transition:none; }
+html[data-motion="reduced"] .talk-fab:hover .talk-fab-arrow, html[data-motion="off"] .talk-fab:hover .talk-fab-arrow{ transform:none; }
+@media (max-width:640px){
+  .talk-fab{
+    right:12px; bottom:calc(12px + 78px + 10px);
+    padding:10px 16px 10px 18px;
+    font-size:.8rem;
+  }
+}
+
 .appearance-fab{
   position:fixed;
   left:16px; bottom:16px;
