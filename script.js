@@ -1515,6 +1515,137 @@
   });
 })();
 
+/* ---------- work: project fishbone ---------- */
+(function projectFishbone() {
+  const spine = document.getElementById('project-spine');
+  const filtersWrap = document.getElementById('fb-filters');
+  const searchEl = document.getElementById('fb-search');
+  const countEl = document.getElementById('fb-count');
+  if (!spine) return;
+
+  const PROJECTS = [
+    { key:'nexora', emoji:'🧮', title:'NEXORA — Mathematics Workspace', tag:'Internship · CodeAlpha', categories:['Frontend','Internship'], status:'live',
+      desc:'Graphing, step-by-step equation solving, matrices, statistics and unit conversion in one installable PWA. Every expression routed through math.js — eval() appears nowhere.',
+      tech:['Vanilla JS','Canvas','math.js','PWA'], demoUrl:'https://nexora-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_Calculator', videoUrl:'https://lnkd.in/p/gJBJ4Ntc' },
+    { key:'waveora', emoji:'🎵', title:'WAVEORA — Offline Music Player', tag:'Internship · CodeAlpha', categories:['Frontend','Internship'], status:'live',
+      desc:'A Web Audio API engine with a live visualiser, IndexedDB-backed library, queue, playlists and listening stats. Fully usable with no connection once loaded.',
+      tech:['Vanilla JS','Web Audio API','IndexedDB','PWA'], demoUrl:'https://waveora-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_MusicPlayer', videoUrl:'https://lnkd.in/p/g887PRgM' },
+    { key:'mireva', emoji:'🖼️', title:'MIREVA — Visual Gallery Workspace', tag:'Internship · CodeAlpha', categories:['Frontend','Internship'], status:'live',
+      desc:'Masonry & grid layouts, a cinematic lightbox, colour explorer, collections and a lightweight editor — built to be fully keyboard- and screen-reader-operable.',
+      tech:['Vanilla JS','Canvas','A11y','PWA'], demoUrl:'https://mireva-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_ImageGallery' },
+    { key:'nexabank', emoji:'🏦', title:'NexaBank — Online Banking Platform', tag:'Personal · Full Stack', categories:['Full Stack'], status:'live', featured:true,
+      desc:'Real account balances, instant transfers and ACID-safe money movement — every transaction runs inside a row-locked DB transaction. Bcrypt auth, CSRF everywhere, full admin console.',
+      tech:['PHP','MySQL','Docker','Chart.js'], demoUrl:'https://nexabank-web-production.up.railway.app', repoUrl:'https://github.com/nilushamadhuwanthi123/NexaBank---Online-Banking-System' },
+    { key:'fintrack', emoji:'💰', title:'FinTrack — Personal Finance Tracker', tag:'Internship · Codveda', categories:['Full Stack','Internship'], status:'live',
+      desc:'Budgets, categorized transactions and spending trends in a React + Vite dashboard, built to make a full month of cash flow legible at a glance.',
+      tech:['React','Vite','Chart.js'], demoUrl:'https://fintrack-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/FinTrack-Finace-Tarcker-app_Codveda_Level-02_task3', videoUrl:'https://lnkd.in/p/gndeZres' },
+    { key:'medicare', emoji:'🏥', title:'MediCare — Hospital Management', tag:'Personal · Full Stack', categories:['Full Stack'], status:'live', featured:true,
+      desc:'Patients, appointments, staff and records in a full CRUD system with role-based access control, seeded with realistic demo data.',
+      tech:['React','Node.js','Express','MongoDB'], demoUrl:'https://frontend-ecru-five-78.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/MediCare-Hospital_Management_System' },
+    { key:'orvexa', emoji:'🧭', title:'Orvexa — Operations & Productivity Platform', tag:'Personal · Full Stack', categories:['Full Stack'], status:'live', featured:true,
+      desc:'Projects, a drag-and-drop task board, real-time collaboration over Socket.IO and analytics computed from real data.',
+      tech:['React','Node.js','Express','MongoDB','Socket.IO'], demoUrl:'https://orvexa-production-1b61.up.railway.app', repoUrl:'https://github.com/nilushamadhuwanthi123/orvexa-productivity-platform', videoUrl:'https://lnkd.in/p/grBdF8Ai' },
+    { key:'flowboard', emoji:'✅', title:'FlowBoard — To-Do List App', tag:'Internship · Codveda', categories:['Frontend','Internship'], status:'live',
+      desc:'A clean task manager with boards, priorities and due dates — built to make daily task triage fast rather than fussy.',
+      tech:['HTML5','CSS3','JavaScript'], demoUrl:'https://flowboard-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/FlowBoard-TO-DO-List-App_Codveda_Level-02_task2', videoUrl:'https://lnkd.in/p/gwfhK2JK' },
+    { key:'fixfinder', emoji:'🔧', title:'FixFinder — Local Services Directory', tag:'Internship · Codveda', categories:['Frontend','Internship'], status:'live',
+      desc:'A responsive multi-page site for finding trusted local service professionals, with searchable/filterable listings, professional profiles, a quote-request modal, FAQ accordion, and dark mode.',
+      tech:['HTML5','CSS3','JavaScript'], demoUrl:'https://fixfinder-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/FixFinder_Codveda_Level1', videoUrl:'https://lnkd.in/p/gcPkBbCa' },
+    { key:'smartcampus', emoji:'🏫', title:'Smart Campus Operations System', tag:'Academic · SLIIT IT3030 Group Project', categories:['Full Stack','University'], status:'source',
+      desc:'A university facility-booking and incident-ticketing platform built with a 4-person SLIIT team, with Google OAuth sign-in and a REST API secured by Spring Security.',
+      tech:['Spring Boot','Java','React','MySQL','OAuth 2.0'], repoUrl:'https://github.com/nilushamadhuwanthi123/Smart_Campus_Operations_PAF' },
+    { key:'linguaflow', emoji:'🌐', title:'LinguaFlow AI — Translator', tag:'Personal · Full Stack', categories:['Full Stack'], status:'source',
+      desc:"A multilingual translation platform — real auth, real text and voice translation, AI-assisted rewriting and a usage dashboard, backed by PostgreSQL. Image, document and video translation are scoped but intentionally not yet built — see the repo's own roadmap.",
+      tech:['Kotlin/Ktor','React','TypeScript','PostgreSQL'], repoUrl:'https://github.com/nilushamadhuwanthi123/LinguaFlow-AI-Translator_App' },
+    { key:'workpulse', emoji:'🗂️', title:'WorkPuise — Leave & Attendance System', tag:'Personal · Full Stack', categories:['Full Stack'], status:'soon',
+      desc:'Enterprise-style leave & attendance system with JWT auth, role-based access, and manager approval workflows.',
+      tech:['React','Node.js','Express','MongoDB'] },
+    { key:'uniroute', emoji:'🚌', title:'UniRoute — Shuttle Service Management', tag:'Personal · Full Stack', categories:['Full Stack'], status:'soon',
+      desc:'Transportation management system for campus shuttles.', contribution:'Owned the route management module and improved UX via a responsive interface.',
+      tech:['React','Node.js','MongoDB'] },
+    { key:'mindfulday', emoji:'🧘', title:'MindfulDay — Wellness Tracking App', tag:'Personal · Mobile', categories:['Mobile'], status:'soon',
+      desc:'Mobile app tracking daily habits, mood, water intake, exercise, and personal wellness goals.',
+      tech:['Kotlin','Android Studio','Firebase'] },
+    { key:'blooddonation', emoji:'🩸', title:'Blood Donation Management System', tag:'Personal · Full Stack', categories:['Full Stack'], status:'soon',
+      desc:'Role-based platform with JWT auth, Google Maps donor location, real-time notifications, and donor recommendation logic.',
+      tech:['Java','JWT','Google Maps API'] },
+  ];
+
+  function statusBadge(p) {
+    if (p.status === 'live') return '<span class="live-dot"><i></i>Live</span>';
+    if (p.status === 'source') return '<span class="repo-badge">Source available</span>';
+    return '<span class="repo-badge">Demo coming soon</span>';
+  }
+
+  function cardHTML(p, i) {
+    const links = [];
+    if (p.demoUrl) links.push(`<a href="${p.demoUrl}" target="_blank" rel="noopener">Live demo ↗</a>`);
+    if (p.repoUrl) links.push(`<a href="${p.repoUrl}" target="_blank" rel="noopener">Repo ↗</a>`);
+    if (p.videoUrl) links.push(`<a href="${p.videoUrl}" target="_blank" rel="noopener" class="video-link">▶ Watch demo</a>`);
+    const side = i % 2 === 0 ? 'spine-left' : 'spine-right';
+    const featured = p.featured ? ' spine-featured' : '';
+    const contribution = p.contribution ? `<p class="fb-contribution"><b>My contribution:</b> ${p.contribution}</p>` : '';
+    return `
+      <div class="spine-item ${side}${featured} fb-rib" data-key="${p.key}" data-search="${(p.title + ' ' + p.tag + ' ' + p.tech.join(' ') + ' ' + p.categories.join(' ')).toLowerCase()}">
+        <span class="spine-tag">${p.tag}</span>
+        <div class="spine-node fb-node"></div>
+        <div class="project-card">
+          <div class="project-top"><span class="project-emoji">${p.emoji}</span>${statusBadge(p)}</div>
+          <h3>${p.title}</h3>
+          <p>${p.desc}</p>
+          ${contribution}
+          <div class="stack-pills">${p.tech.map((t) => `<span>${t}</span>`).join('')}</div>
+          <div class="project-links">${links.length ? links.join('') : '<span class="fb-soon-note">Demo coming soon</span>'}</div>
+        </div>
+      </div>`;
+  }
+
+  function render() {
+    spine.innerHTML = `
+      <div class="spine-line" aria-hidden="true">
+        <span class="spine-cap spine-cap-start">START</span>
+        <span class="spine-cap spine-cap-end">CONTINUE BUILDING →</span>
+      </div>
+      ${PROJECTS.map(cardHTML).join('')}`;
+  }
+  render();
+
+  // filters
+  const ALL_CATS = ['All', ...Array.from(new Set(PROJECTS.flatMap((p) => p.categories)))];
+  if (filtersWrap) {
+    filtersWrap.innerHTML = ALL_CATS.map((c, i) => `<button type="button" class="fb-filter${i === 0 ? ' active' : ''}" data-cat="${c}">${c}</button>`).join('');
+  }
+
+  let activeCat = 'All';
+  function applyFilters() {
+    const q = (searchEl && searchEl.value.trim().toLowerCase()) || '';
+    let visible = 0;
+    spine.querySelectorAll('.fb-rib').forEach((rib) => {
+      const key = rib.dataset.key;
+      const p = PROJECTS.find((x) => x.key === key);
+      const matchesCat = activeCat === 'All' || p.categories.includes(activeCat);
+      const matchesSearch = !q || rib.dataset.search.includes(q);
+      const show = matchesCat && matchesSearch;
+      rib.classList.toggle('fb-rib-hidden', !show);
+      if (show) visible++;
+    });
+    if (countEl) countEl.textContent = `${visible} of ${PROJECTS.length} projects`;
+  }
+  applyFilters();
+
+  if (filtersWrap) {
+    filtersWrap.addEventListener('click', (e) => {
+      const btn = e.target.closest('.fb-filter');
+      if (!btn) return;
+      filtersWrap.querySelectorAll('.fb-filter').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCat = btn.dataset.cat;
+      applyFilters();
+    });
+  }
+  if (searchEl) searchEl.addEventListener('input', applyFilters);
+})();
+
 /* ---------- contact: connect to niluverse ---------- */
 (function contactConnect() {
   const chipsWrap = document.getElementById('purpose-chips');

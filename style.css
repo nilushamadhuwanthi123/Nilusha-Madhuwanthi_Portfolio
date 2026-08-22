@@ -1748,6 +1748,30 @@ html[data-motion="reduced"] .nav-appearance::before, html[data-motion="off"] .na
 .spine-item.spine-right .spine-node{ left:-53px; }
 .spine-item:hover .spine-node{ box-shadow:0 0 0 6px rgba(201,168,117,.24), 0 0 22px rgba(201,168,117,.8); transform:scale(1.15); }
 
+/* diagonal "rib" connector between spine node and project card */
+.spine-item .spine-node::before{
+  content:'';
+  position:absolute;
+  top:50%;
+  width:44px;
+  height:2px;
+  pointer-events:none;
+  background:linear-gradient(to right, rgba(201,168,117,.7), rgba(201,168,117,.1));
+}
+.spine-item.spine-left .spine-node::before{
+  right:13px;
+  transform:translateY(-50%) rotate(12deg);
+  transform-origin:right center;
+}
+.spine-item.spine-right .spine-node::before{
+  left:13px;
+  transform:translateY(-50%) rotate(-12deg);
+  transform-origin:left center;
+  background:linear-gradient(to left, rgba(201,168,117,.7), rgba(201,168,117,.1));
+}
+.spine-item:hover .spine-node::before{ background:linear-gradient(to right, rgba(201,168,117,.95), rgba(201,168,117,.3)); }
+.spine-item.spine-right:hover .spine-node::before{ background:linear-gradient(to left, rgba(201,168,117,.95), rgba(201,168,117,.3)); }
+
 .spine-tag{
   display:inline-block;
   font-size:.68rem;
@@ -1805,6 +1829,79 @@ html[data-motion="reduced"] .nav-appearance::before, html[data-motion="off"] .na
   .spine-item.spine-right .spine-node{
     left:-33px; right:auto;
   }
+  .spine-item .spine-node::before{ display:none; }
+}
+
+/* ---------- work: fishbone controls (filters + search) ---------- */
+.fb-controls{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+  max-width:980px;
+  margin:32px auto 0;
+}
+.fb-filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.fb-filter{
+  font-family:var(--font-head);
+  font-size:.76rem;
+  letter-spacing:.03em;
+  color:var(--silver-muted);
+  background:transparent;
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:7px 15px;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+.fb-filter:hover{ border-color:var(--gold); color:var(--ivory); }
+.fb-filter.active{
+  background:rgba(201,168,92,.12);
+  border-color:var(--gold);
+  color:var(--gold-bright);
+}
+.fb-search{
+  flex:1;
+  min-width:180px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:9px 16px;
+  color:var(--ivory);
+  font-size:.86rem;
+  font-family:var(--font-body);
+}
+.fb-search:focus{ outline:none; border-color:var(--gold); }
+.fb-count{
+  font-size:.78rem;
+  color:var(--silver-muted);
+  white-space:nowrap;
+}
+.fb-contribution{
+  font-size:.85rem;
+  color:var(--silver);
+  background:rgba(201,168,92,.06);
+  border-left:2px solid var(--gold);
+  padding:8px 12px;
+  margin-bottom:14px;
+  border-radius:0 8px 8px 0;
+}
+.fb-contribution b{ color:var(--gold-bright); font-weight:600; }
+.fb-soon-note{
+  font-size:.82rem;
+  color:var(--silver-muted);
+  font-style:italic;
+}
+.fb-rib-hidden{
+  display:none;
+}
+@media (max-width:600px){
+  .fb-controls{ flex-direction:column; align-items:stretch; }
+  .fb-search{ width:100%; }
 }
 @media (prefers-reduced-motion: reduce){
   .spine-item{ transition:none; opacity:1; transform:none; }
