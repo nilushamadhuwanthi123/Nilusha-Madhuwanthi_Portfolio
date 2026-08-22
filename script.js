@@ -1775,7 +1775,7 @@
 
   spine.addEventListener('click', (e) => {
     const card = e.target.closest('.project-card');
-    if (!card || e.target.closest('.fb-save') || e.target.closest('.project-links a')) return;
+    if (!card || e.target.closest('.fb-save') || e.target.closest('.fb-compare-toggle') || e.target.closest('.project-links a')) return;
     openModal(card.dataset.openKey);
   });
   if (modalClose) modalClose.addEventListener('click', closeModal);
