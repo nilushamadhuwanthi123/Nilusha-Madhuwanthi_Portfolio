@@ -585,17 +585,78 @@
     </div>
   </section>
 
-  <!-- ================= CONTACT ================= -->
+  <!-- ================= CONTACT: CONNECT TO NILUVERSE ================= -->
   <section class="section reveal" id="contact">
     <div class="contact-box">
       <span class="tag">07 — Contact</span>
       <h2>Let's build something real together.</h2>
       <p class="sub">Open to internships, junior full-stack roles, and anything worth building properly.</p>
-      <div class="contact-actions">
-        <a href="mailto:nilushamadhuwanthi02@gmail.com" class="btn btn-primary">Email me</a>
-        <a href="https://github.com/nilushamadhuwanthi123" target="_blank" rel="noopener" class="btn btn-ghost">GitHub</a>
-        <a href="https://www.linkedin.com/in/nilushamadhuwanthi" target="_blank" rel="noopener" class="btn btn-ghost">LinkedIn</a>
+
+      <div class="connection-core" aria-hidden="true">
+        <span class="core-wave"></span>
+        <span class="core-wave core-wave-2"></span>
+        <span class="core-dot"></span>
       </div>
+
+      <div class="channel-cards">
+        <div class="channel-card">
+          <div class="channel-top">
+            <span class="channel-icon">✉</span>
+            <div>
+              <b>Email</b>
+              <span>nilushamadhuwanthi02@gmail.com</span>
+            </div>
+          </div>
+          <div class="channel-actions">
+            <a href="mailto:nilushamadhuwanthi02@gmail.com" class="channel-link">Open ↗</a>
+            <button type="button" class="channel-copy" id="copy-email" data-copy="nilushamadhuwanthi02@gmail.com">Copy</button>
+          </div>
+        </div>
+        <div class="channel-card">
+          <div class="channel-top">
+            <span class="channel-icon">in</span>
+            <div>
+              <b>LinkedIn</b>
+              <span>/in/nilushamadhuwanthi</span>
+            </div>
+          </div>
+          <div class="channel-actions">
+            <a href="https://www.linkedin.com/in/nilushamadhuwanthi" target="_blank" rel="noopener" class="channel-link">Open ↗</a>
+          </div>
+        </div>
+        <div class="channel-card">
+          <div class="channel-top">
+            <span class="channel-icon">⌥</span>
+            <div>
+              <b>GitHub</b>
+              <span>/nilushamadhuwanthi123</span>
+            </div>
+          </div>
+          <div class="channel-actions">
+            <a href="https://github.com/nilushamadhuwanthi123" target="_blank" rel="noopener" class="channel-link">Open ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <form class="contact-form" id="contact-form">
+        <p class="form-label">What would you like to talk about?</p>
+        <div class="purpose-chips" id="purpose-chips" role="radiogroup" aria-label="Purpose">
+          <button type="button" class="purpose-chip" role="radio" data-purpose="Internship opportunity">Internship opportunity</button>
+          <button type="button" class="purpose-chip" role="radio" data-purpose="Collaboration">Collaboration</button>
+          <button type="button" class="purpose-chip" role="radio" data-purpose="Freelance work">Freelance work</button>
+          <button type="button" class="purpose-chip" role="radio" data-purpose="Just saying hi">Just saying hi</button>
+        </div>
+        <div class="form-row">
+          <input type="text" id="contact-name" placeholder="Your name" autocomplete="name" />
+          <input type="email" id="contact-email" placeholder="Your email" autocomplete="email" />
+        </div>
+        <textarea id="contact-message" placeholder="What's on your mind?" rows="4"></textarea>
+        <div class="form-foot">
+          <button type="submit" class="btn btn-primary">Compose email ✉</button>
+          <span class="form-note">Opens your email app with this pre-filled — nothing is sent from here.</span>
+        </div>
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+      </form>
     </div>
   </section>
 

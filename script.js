@@ -1393,6 +1393,81 @@
   }
 })();
 
+/* ---------- contact: connect to niluverse ---------- */
+(function contactConnect() {
+  const chipsWrap = document.getElementById('purpose-chips');
+  const form = document.getElementById('contact-form');
+  const status = document.getElementById('form-status');
+  const copyBtn = document.getElementById('copy-email');
+
+  let purpose = '';
+  if (chipsWrap) {
+    chipsWrap.querySelectorAll('.purpose-chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const already = chip.getAttribute('aria-checked') === 'true';
+        chipsWrap.querySelectorAll('.purpose-chip').forEach((c) => c.setAttribute('aria-checked', 'false'));
+        if (!already) {
+          chip.setAttribute('aria-checked', 'true');
+          purpose = chip.dataset.purpose;
+        } else {
+          purpose = '';
+        }
+      });
+    });
+  }
+
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const text = copyBtn.dataset.copy;
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (e) {
+        // clipboard API unavailable — fall back to a temporary selectable input
+        const tmp = document.createElement('input');
+        tmp.value = text;
+        document.body.appendChild(tmp);
+        tmp.select();
+        try { document.execCommand('copy'); } catch (e2) {}
+        document.body.removeChild(tmp);
+      }
+      copyBtn.textContent = 'Copied ✓';
+      copyBtn.classList.add('copied');
+      setTimeout(() => { copyBtn.textContent = 'Copy'; copyBtn.classList.remove('copied'); }, 1800);
+    });
+  }
+
+  if (form && status) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('contact-name').value.trim();
+      const email = document.getElementById('contact-email').value.trim();
+      const message = document.getElementById('contact-message').value.trim();
+
+      if (!message) {
+        status.textContent = "Add a short message so I know what you're reaching out about.";
+        status.className = 'form-status error';
+        return;
+      }
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        status.textContent = 'That email address looks incomplete — double-check it.';
+        status.className = 'form-status error';
+        return;
+      }
+
+      const subject = purpose || 'Portfolio contact';
+      const bodyLines = [];
+      if (name) bodyLines.push(`From: ${name}`);
+      if (email) bodyLines.push(`Reply to: ${email}`);
+      bodyLines.push('', message);
+      const mailto = `mailto:nilushamadhuwanthi02@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
+      window.location.href = mailto;
+
+      status.textContent = 'Your email app should now be open with this pre-filled — hit send there to reach me.';
+      status.className = 'form-status success';
+    });
+  }
+})();
+
 /* ---------- education journey expand/collapse ---------- */
 (function eduJourney() {
   const toggles = document.querySelectorAll('.edu-toggle');
