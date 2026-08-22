@@ -142,17 +142,18 @@ nav{
 
 .nav-links{
   display:flex;
-  gap:34px;
+  gap:20px;
   list-style:none;
 }
 
 .nav-links a{
-  font-size:.88rem;
+  font-size:.8rem;
   color:var(--silver);
-  letter-spacing:.03em;
+  letter-spacing:.02em;
   text-transform:uppercase;
   transition:color .25s ease;
   position:relative;
+  white-space:nowrap;
 }
 .nav-links a::after{
   content:'';
@@ -212,6 +213,9 @@ nav{
 .nav-recruiter:hover{
   background:rgba(201,168,92,.1);
   border-color:var(--gold);
+}
+@media (max-width:1140px){
+  .nav-cmdk span, .nav-cmdk kbd:last-of-type{ display:none; }
 }
 @media (max-width:920px){
   .nav-cmdk span, .nav-cmdk kbd:last-of-type{ display:none; }
