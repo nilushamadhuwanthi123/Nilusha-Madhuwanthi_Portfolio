@@ -1069,8 +1069,8 @@
       links: [{ label: 'Explore Projects', href: '#work' }],
     },
     {
-      test: /intern|experience|egotechworld|codealpha|codveda|work(ed)?\s*at/i,
-      answer: 'Two internships running at once: Full Stack Engineer Intern at EgoTechWorld, and Frontend Developer Intern at CodeAlpha Technologies. Also completed 3 levels as a Web Developer Intern at Codveda Technologies.',
+      test: /intern|experience|egotechworld|codveda|work(ed)?\s*at/i,
+      answer: 'Two internships running at once: Full Stack Engineer Intern at EgoTechWorld, and Web Developer Intern at Codveda Technologies — progressing through leveled projects from static UI builds up to a full-stack, JWT-authenticated system.',
       links: [{ label: 'See Experience', href: '#experience' }],
     },
     {
@@ -1484,19 +1484,12 @@
       desc: 'Full-stack development work alongside a full-time degree — six months in and still running.',
       projects: ['Bakery Management System (in progress)'],
     },
-    codealpha: {
-      role: 'Frontend Developer Intern',
-      company: 'CodeAlpha Technologies',
-      when: 'Ongoing — through Sep 2026',
-      desc: 'Shipped three framework-free, PWA-installable frontend projects — all deployed live.',
-      projects: ['NEXORA', 'WAVEORA', 'MIREVA'],
-    },
     codveda: {
       role: 'Web Developer Intern',
       company: 'Codveda Technologies',
-      when: 'Completed — 3 levels',
-      desc: 'Progressed through three levels of hands-on development tasks — all deployed live.',
-      projects: ['FlowBoard', 'FixFinder', 'FinTrack'],
+      when: 'August 2026 – Present',
+      desc: 'Progressing through leveled development tasks — from static UI builds to a full-stack, JWT-authenticated system.',
+      projects: ['FlowBoard', 'FixFinder', 'FinTrack', 'WorkPuise'],
     },
   };
 
@@ -1545,13 +1538,13 @@
   if (!spine) return;
 
   const PROJECTS = [
-    { key:'nexora', emoji:'🧮', title:'NEXORA — Mathematics Workspace', tag:'Internship · CodeAlpha', categories:['Frontend','Internship'], status:'live',
+    { key:'nexora', emoji:'🧮', title:'NEXORA — Mathematics Workspace', tag:'Personal · Frontend', categories:['Frontend'], status:'live',
       desc:'Graphing, step-by-step equation solving, matrices, statistics and unit conversion in one installable PWA. Every expression routed through math.js — eval() appears nowhere.',
       tech:['Vanilla JS','Canvas','math.js','PWA'], demoUrl:'https://nexora-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_Calculator', videoUrl:'https://lnkd.in/p/gJBJ4Ntc' },
-    { key:'waveora', emoji:'🎵', title:'WAVEORA — Offline Music Player', tag:'Internship · CodeAlpha', categories:['Frontend','Internship'], status:'live',
+    { key:'waveora', emoji:'🎵', title:'WAVEORA — Offline Music Player', tag:'Personal · Frontend', categories:['Frontend'], status:'live',
       desc:'A Web Audio API engine with a live visualiser, IndexedDB-backed library, queue, playlists and listening stats. Fully usable with no connection once loaded.',
       tech:['Vanilla JS','Web Audio API','IndexedDB','PWA'], demoUrl:'https://waveora-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_MusicPlayer', videoUrl:'https://lnkd.in/p/g887PRgM' },
-    { key:'mireva', emoji:'🖼️', title:'MIREVA — Visual Gallery Workspace', tag:'Internship · CodeAlpha', categories:['Frontend','Internship'], status:'live',
+    { key:'mireva', emoji:'🖼️', title:'MIREVA — Visual Gallery Workspace', tag:'Personal · Frontend', categories:['Frontend'], status:'live',
       desc:'Masonry & grid layouts, a cinematic lightbox, colour explorer, collections and a lightweight editor — built to be fully keyboard- and screen-reader-operable.',
       tech:['Vanilla JS','Canvas','A11y','PWA'], demoUrl:'https://mireva-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_ImageGallery', videoUrl:'https://lnkd.in/p/gX7GrHVU' },
     { key:'nexabank', emoji:'🏦', title:'NexaBank — Online Banking Platform', tag:'Personal · Full Stack', categories:['Full Stack'], status:'live', featured:true,
@@ -1578,7 +1571,7 @@
     { key:'linguaflow', emoji:'🌐', title:'LinguaFlow AI — Translator', tag:'Personal · Full Stack', categories:['Full Stack'], status:'source',
       desc:"A multilingual translation platform — real auth, real text and voice translation, AI-assisted rewriting and a usage dashboard, backed by PostgreSQL. Image, document and video translation are scoped but intentionally not yet built — see the repo's own roadmap.",
       tech:['Kotlin/Ktor','React','TypeScript','PostgreSQL'], repoUrl:'https://github.com/nilushamadhuwanthi123/LinguaFlow-AI-Translator_App' },
-    { key:'workpulse', emoji:'🗂️', title:'WorkPuise — Leave & Attendance System', tag:'Personal · Full Stack', categories:['Full Stack'], status:'soon',
+    { key:'workpulse', emoji:'🗂️', title:'WorkPuise — Leave & Attendance System', tag:'Internship · Codveda', categories:['Full Stack','Internship'], status:'soon',
       desc:'Enterprise-style leave & attendance system with JWT auth, role-based access, and manager approval workflows.',
       tech:['React','Node.js','Express','MongoDB'] },
     { key:'uniroute', emoji:'🚌', title:'UniRoute — Shuttle Service Management', tag:'Personal · Full Stack', categories:['Full Stack'], status:'soon',
