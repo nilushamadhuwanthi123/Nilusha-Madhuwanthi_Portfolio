@@ -2177,30 +2177,32 @@ html[data-motion="reduced"] .nav-appearance::before, html[data-motion="off"] .na
   font-size:.85rem;
 }
 .project-links a{
-  color:var(--gold-bright);
+  color:var(--silver);
   display:inline-flex;
   align-items:center;
   gap:6px;
   padding:7px 14px;
   border-radius:999px;
-  border:1px solid rgba(201,168,92,.4);
-  background:rgba(201,168,92,.06);
+  border:1px solid rgba(196,199,194,.4);
+  background:rgba(196,199,194,.07);
   font-size:.8rem;
   transition:all .2s ease;
 }
 .project-links a:hover{
-  background:rgba(201,168,92,.16);
-  border-color:var(--gold);
+  background:rgba(196,199,194,.18);
+  border-color:var(--silver);
+  color:var(--ivory);
   transform:translateY(-1px);
 }
 .project-links a.video-link{
-  color:var(--olive-soft);
-  border-color:rgba(137,148,102,.4);
-  background:rgba(137,148,102,.06);
+  color:var(--silver);
+  border-color:rgba(196,199,194,.4);
+  background:rgba(196,199,194,.07);
 }
 .project-links a.video-link:hover{
-  background:rgba(137,148,102,.18);
-  border-color:var(--olive-soft);
+  background:rgba(196,199,194,.18);
+  border-color:var(--silver);
+  color:var(--ivory);
 }
 
 /* ---------- contact ---------- */
