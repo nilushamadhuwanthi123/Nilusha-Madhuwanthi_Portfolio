@@ -254,9 +254,15 @@ nav{
   justify-content:center;
   padding-top:14vh;
   opacity:0;
+  pointer-events:none;
   transition:opacity .18s ease;
 }
-.cmdk-overlay.show{opacity:1;}
+/* the [hidden] attribute is overridden by the display:flex rule above unless
+   we re-assert display:none here — without this, the "hidden" overlay still
+   sits on top of the whole page (invisible but pointer-events:auto) and
+   swallows every click on the site, including nav links and project buttons */
+.cmdk-overlay[hidden]{ display:none; }
+.cmdk-overlay.show{ opacity:1; pointer-events:auto; }
 .cmdk-box{
   width:min(560px, 90vw);
   background:var(--card);
@@ -316,9 +322,13 @@ nav{
   display:flex; align-items:center; justify-content:center;
   padding:24px;
   opacity:0;
+  pointer-events:none;
   transition:opacity .2s ease;
 }
-.recruiter-overlay.show{opacity:1;}
+/* same [hidden]-vs-display:flex conflict as .cmdk-overlay — without this,
+   this "hidden" overlay silently blocks every click across the whole page */
+.recruiter-overlay[hidden]{ display:none; }
+.recruiter-overlay.show{ opacity:1; pointer-events:auto; }
 .recruiter-card{
   position:relative;
   width:min(480px, 92vw);
