@@ -1097,8 +1097,12 @@
   }
 
   const QUICK_ACTIONS = [
-    'Explore Projects', 'Frontend Skills', 'Internship Experience',
-    'Education', 'GitHub', 'LinkedIn', 'Resume',
+    'What frontend technologies does Nilusha use?',
+    'Which projects use React?',
+    'What did Nilusha build at EgoTechWorld?',
+    'What are her strongest full-stack projects?',
+    'Where does she study?',
+    'How can I contact her?',
   ];
 
   function addMessage(role, text, links) {
@@ -1182,6 +1186,8 @@
       setTimeout(() => { if (!opened) hideNudge(); }, 8000);
     }
   }
+  const nudgeClose = document.getElementById('ai-nudge-close');
+  if (nudgeClose) nudgeClose.addEventListener('click', (e) => { e.stopPropagation(); hideNudge(); });
 
   orb.addEventListener('click', () => {
     panel.classList.contains('show') ? closePanel() : openPanel();
