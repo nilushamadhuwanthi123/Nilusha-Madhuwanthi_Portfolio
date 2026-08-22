@@ -1448,6 +1448,73 @@
   }
 })();
 
+/* ---------- experience: career constellation ---------- */
+(function careerConstellation() {
+  const wrap = document.getElementById('constellation');
+  const detail = document.getElementById('const-detail');
+  const body = document.getElementById('const-detail-body');
+  if (!wrap || !detail || !body) return;
+
+  const DATA = {
+    egotechworld: {
+      role: 'Full Stack Engineer Intern',
+      company: 'EgoTechWorld',
+      when: 'Ongoing — through Jan / Feb 2027',
+      desc: 'Full-stack development work alongside a full-time degree — six months in and still running.',
+      projects: ['Bakery Management System (in progress)'],
+    },
+    codealpha: {
+      role: 'Frontend Developer Intern',
+      company: 'CodeAlpha Technologies',
+      when: 'Ongoing — through Sep 2026',
+      desc: 'Shipped three framework-free, PWA-installable frontend projects — all deployed live.',
+      projects: ['NEXORA', 'WAVEORA', 'MIREVA'],
+    },
+    codveda: {
+      role: 'Web Developer Intern',
+      company: 'Codveda Technologies',
+      when: 'Completed — 3 levels',
+      desc: 'Progressed through three levels of hands-on development tasks — all deployed live.',
+      projects: ['FlowBoard', 'FixFinder', 'FinTrack'],
+    },
+  };
+
+  function render(key) {
+    const d = DATA[key];
+    if (!d) return;
+    body.innerHTML = '';
+    const h3 = document.createElement('h3');
+    h3.textContent = `${d.role} — ${d.company}`;
+    const when = document.createElement('span');
+    when.className = 'const-when';
+    when.textContent = d.when;
+    const p = document.createElement('p');
+    p.textContent = d.desc;
+    const chips = document.createElement('div');
+    chips.className = 'const-projects';
+    d.projects.forEach((proj) => {
+      const s = document.createElement('span');
+      s.textContent = proj;
+      chips.appendChild(s);
+    });
+    body.append(h3, when, p, chips);
+    detail.hidden = false;
+  }
+
+  wrap.querySelectorAll('.const-node').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const already = btn.getAttribute('aria-expanded') === 'true';
+      wrap.querySelectorAll('.const-node').forEach((b) => b.setAttribute('aria-expanded', 'false'));
+      if (already) {
+        detail.hidden = true;
+        return;
+      }
+      btn.setAttribute('aria-expanded', 'true');
+      render(btn.dataset.node);
+    });
+  });
+})();
+
 /* ---------- contact: connect to niluverse ---------- */
 (function contactConnect() {
   const chipsWrap = document.getElementById('purpose-chips');

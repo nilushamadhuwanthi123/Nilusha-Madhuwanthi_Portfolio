@@ -1004,6 +1004,115 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
 }
 .timeline-item p{color:var(--silver); font-size:.95rem; max-width:640px;}
 
+/* ---------- experience: career constellation ---------- */
+.constellation{
+  position:relative;
+  height:340px;
+  max-width:680px;
+  margin:0 auto;
+}
+.const-lines{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  z-index:0;
+}
+.const-lines line{
+  stroke:var(--border);
+  stroke-width:.6;
+  vector-effect:non-scaling-stroke;
+}
+.const-hub{
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  width:104px; height:104px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(circle at 35% 30%, rgba(201,168,92,.22), var(--card) 70%);
+  border:1px solid var(--gold);
+  box-shadow:0 0 0 8px rgba(201,168,92,.06), 0 20px 50px -20px rgba(201,168,92,.4);
+  font-family:var(--font-head);
+  font-size:.82rem;
+  letter-spacing:.06em;
+  color:var(--ivory);
+  z-index:2;
+  animation:floatPhoto 7s ease-in-out infinite;
+}
+.const-node{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  background:var(--glass-92, var(--card));
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px 16px;
+  cursor:pointer;
+  font-family:var(--font-body);
+  color:var(--ivory);
+  z-index:2;
+  transition:all .25s ease;
+  width:150px;
+}
+.const-node:hover, .const-node[aria-expanded="true"]{
+  border-color:var(--gold);
+  transform:translate(-50%,-50%) translateY(-4px);
+  box-shadow:0 16px 40px -20px rgba(201,168,92,.4);
+}
+.const-node-dot{
+  width:9px; height:9px; border-radius:50%;
+  background:var(--gold-bright);
+  box-shadow:0 0 0 5px rgba(201,168,92,.14);
+}
+.const-node-label{ font-family:var(--font-head); font-size:.82rem; text-align:center; }
+.const-node-when{ font-size:.72rem; color:var(--silver-muted); }
+.const-node-1{ top:12%; left:50%; }
+.const-node-2{ top:84%; left:16%; }
+.const-node-3{ top:84%; left:84%; }
+
+.const-detail{
+  max-width:680px;
+  margin:20px auto 0;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:22px 24px;
+}
+.const-detail h3{ font-family:var(--font-head); font-size:1.05rem; margin-bottom:4px; }
+.const-detail .const-when{ font-size:.8rem; color:var(--gold); margin-bottom:12px; display:block; }
+.const-detail p{ color:var(--silver); line-height:1.6; margin-bottom:14px; }
+.const-projects{ display:flex; flex-wrap:wrap; gap:8px; }
+.const-projects span{
+  font-family:var(--font-head);
+  font-size:.76rem;
+  background:rgba(201,168,92,.1);
+  border:1px solid rgba(201,168,92,.35);
+  color:var(--gold-bright);
+  border-radius:999px;
+  padding:5px 12px;
+}
+
+@media (max-width:760px){
+  .constellation{
+    height:auto;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    max-width:100%;
+  }
+  .const-lines, .const-hub{ display:none; }
+  .const-node{
+    position:static;
+    transform:none;
+    width:100%;
+    flex-direction:row;
+    justify-content:flex-start;
+    gap:12px;
+    border-left:2px solid var(--olive-soft);
+    border-radius:10px;
+  }
+  .const-node:hover, .const-node[aria-expanded="true"]{ transform:none; }
+  .const-node-label{ text-align:left; }
+}
+
 /* ---------- ai assistant: astronaut mascot (no longer trapped in a circle) ---------- */
 .ai-orb{
   position:fixed;

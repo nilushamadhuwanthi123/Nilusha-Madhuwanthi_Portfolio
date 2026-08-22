@@ -299,30 +299,40 @@
     </div>
   </section>
 
-  <!-- ================= EXPERIENCE ================= -->
+  <!-- ================= EXPERIENCE: CAREER CONSTELLATION ================= -->
   <section class="section reveal" id="experience">
     <div class="section-head">
       <span class="tag">05 — Experience</span>
       <h2>Where the work actually happened.</h2>
+      <p class="sub">Click a node to see the role, timeline and real shipped projects.</p>
     </div>
-    <div class="timeline">
-      <div class="timeline-item">
-        <div class="when">Ongoing — through Jan / Feb 2027</div>
-        <h3>Full Stack Engineer Intern <small>@ EgoTechWorld</small></h3>
-        <p>Full-stack development work alongside a full-time degree — six months in and still running.</p>
-      </div>
-      <div class="timeline-item">
-        <div class="when">Ongoing — through Sep 2026</div>
-        <h3>Frontend Developer Intern <small>@ CodeAlpha Technologies</small></h3>
-        <p>Shipped three framework-free, PWA-installable frontend projects: a mathematics workspace (NEXORA), an
-          offline-capable music player (WAVEORA) and an accessibility-first image gallery (MIREVA) — all deployed live.</p>
-      </div>
-      <div class="timeline-item">
-        <div class="when">Completed — 3 levels</div>
-        <h3>Web Developer Intern <small>@ Codveda Technologies</small></h3>
-        <p>Progressed through three levels of hands-on development tasks, producing a task manager, a local-services
-          directory site and a React + Vite personal finance dashboard — all deployed live.</p>
-      </div>
+
+    <div class="constellation" id="constellation">
+      <svg class="const-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="50" y1="50" x2="50" y2="10"></line>
+        <line x1="50" y1="50" x2="14" y2="82"></line>
+        <line x1="50" y1="50" x2="86" y2="82"></line>
+      </svg>
+      <div class="const-hub"><span>NILUSHA</span></div>
+      <button type="button" class="const-node const-node-1" data-node="egotechworld" aria-expanded="false">
+        <span class="const-node-dot"></span>
+        <span class="const-node-label">EgoTechWorld</span>
+        <span class="const-node-when">Ongoing</span>
+      </button>
+      <button type="button" class="const-node const-node-2" data-node="codealpha" aria-expanded="false">
+        <span class="const-node-dot"></span>
+        <span class="const-node-label">CodeAlpha Technologies</span>
+        <span class="const-node-when">Ongoing</span>
+      </button>
+      <button type="button" class="const-node const-node-3" data-node="codveda" aria-expanded="false">
+        <span class="const-node-dot"></span>
+        <span class="const-node-label">Codveda Technologies</span>
+        <span class="const-node-when">Completed</span>
+      </button>
+    </div>
+
+    <div class="const-detail" id="const-detail" hidden>
+      <div id="const-detail-body"></div>
     </div>
   </section>
 
