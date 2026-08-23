@@ -21,6 +21,12 @@
 
   --text-scale:1;
 
+  /* ---- design mode: live design tokens (demo — Olive Green accent never changes) ---- */
+  --dm-radius:1;
+  --dm-glow:1;
+  --dm-motion:1;
+  --dm-blur:1;
+
   /* ---- theme-aware glass/tint surfaces: every floating panel and subtle
      overlay below uses these instead of a hardcoded dark rgba, so it stays
      legible when the page background flips light (Light theme) ---- */
@@ -551,11 +557,34 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   width:min(560px, 90vw);
   background:var(--card);
   border:1px solid var(--border);
-  border-radius:16px;
+  border-radius:calc(16px * var(--dm-radius));
   box-shadow:0 30px 70px -20px rgba(0,0,0,.6);
+  backdrop-filter:blur(calc(6px * var(--dm-blur)));
   overflow:hidden;
+  position:relative;
   transform:translateY(-10px);
   transition:transform .18s ease;
+}
+
+/* ---------- search astronaut mascot ---------- */
+.cmdk-astronaut{
+  position:absolute;
+  top:14px; right:18px;
+  font-size:1.5rem;
+  line-height:1;
+  z-index:2;
+  pointer-events:none;
+  animation:cmdk-astro-float 3.2s ease-in-out infinite;
+  transition:transform .25s ease;
+}
+@keyframes cmdk-astro-float{
+  0%, 100%{ transform:translateY(0) rotate(-4deg); }
+  50%{ transform:translateY(-5px) rotate(4deg); }
+}
+.cmdk-astronaut.dm-typing{ animation-play-state:paused; transform:translateY(-2px) rotate(-10deg) scale(1.05); }
+.cmdk-astronaut.dm-empty{ animation-play-state:paused; transform:translateY(0) rotate(0deg) scale(.95); opacity:.6; }
+@media (prefers-reduced-motion: reduce){
+  .cmdk-astronaut{ animation:none; }
 }
 .cmdk-overlay.show .cmdk-box{ transform:translateY(0); }
 .cmdk-input-row{
@@ -853,11 +882,11 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   align-items:center;
   gap:8px;
   padding:14px 28px;
-  border-radius:10px;
+  border-radius:calc(10px * var(--dm-radius));
   font-size:.92rem;
   font-weight:600;
   letter-spacing:.01em;
-  transition:all .25s ease;
+  transition:all calc(.25s / var(--dm-motion)) ease;
   cursor:pointer;
   border:1px solid transparent;
 }
@@ -866,8 +895,8 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   color:var(--bg);
 }
 .btn-primary:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 30px -8px rgba(201,168,92,.45);
+  transform:translateY(calc(-2px * var(--dm-motion)));
+  box-shadow:0 10px calc(30px * var(--dm-glow)) -8px rgba(201,168,92, calc(.45 * var(--dm-glow)));
 }
 .btn-ghost{
   border-color:var(--border);
@@ -1921,14 +1950,17 @@ html[data-motion="reduced"] .ai-orb-status::after, html[data-motion="off"] .ai-o
 html[data-motion="reduced"] .nav-appearance, html[data-motion="off"] .nav-appearance{ transition:none; }
 html[data-motion="reduced"] .nav-appearance::before, html[data-motion="off"] .nav-appearance::before{ animation:none; opacity:.4; }
 
+/* accessibility always wins: Design Mode's Motion token never overrides a chosen Reduced/No Motion preference */
+html[data-motion="reduced"], html[data-motion="off"]{ --dm-motion:1 !important; }
+
 .appearance-panel{
   position:fixed; bottom:96px; left:16px; z-index:180;
   width:272px;
   max-width:calc(100vw - 32px);
   background:var(--glass-92);
   border:1px solid var(--border);
-  border-radius:16px;
-  backdrop-filter:blur(16px);
+  border-radius:calc(16px * var(--dm-radius));
+  backdrop-filter:blur(calc(16px * var(--dm-blur)));
   box-shadow:0 30px 70px -20px rgba(0,0,0,.6);
   padding:16px;
   opacity:0; transform:translateY(8px) scale(.98);
@@ -1937,6 +1969,83 @@ html[data-motion="reduced"] .nav-appearance::before, html[data-motion="off"] .na
   max-height:calc(100vh - 130px);
   overflow-y:auto;
 }
+
+/* ---------- design mode panel: live design-token demo ---------- */
+.design-mode-panel{
+  position:fixed; bottom:96px; left:16px; z-index:181;
+  width:288px;
+  max-width:calc(100vw - 32px);
+  background:var(--glass-92);
+  border:1px solid var(--border);
+  border-radius:calc(16px * var(--dm-radius));
+  backdrop-filter:blur(calc(16px * var(--dm-blur)));
+  box-shadow:0 30px 70px -20px rgba(0,0,0,.6);
+  padding:18px;
+  opacity:0; transform:translateY(8px) scale(.98);
+  pointer-events:none;
+  transition:opacity .18s ease, transform .18s ease;
+  max-height:calc(100vh - 130px);
+  overflow-y:auto;
+}
+.design-mode-panel[hidden]{ display:none; }
+.design-mode-panel.show{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+.design-mode-panel h4{
+  font-family:var(--font-head); font-size:.86rem; color:var(--ivory);
+  display:flex; align-items:baseline; gap:8px; margin:0 0 8px;
+}
+.design-mode-panel h4 small{ font-size:.62rem; font-weight:400; color:var(--gold-bright); letter-spacing:.04em; text-transform:uppercase; }
+.dm-note{ font-size:.74rem; color:var(--silver-muted); line-height:1.4; margin-bottom:16px; }
+.dm-row{
+  display:flex; align-items:center; justify-content:space-between;
+  font-size:.76rem; color:var(--silver);
+  margin-bottom:4px;
+}
+.dm-row label{ font-family:var(--font-head); letter-spacing:.02em; }
+.dm-range-labels{ display:flex; gap:8px; color:var(--silver-muted); font-size:.66rem; letter-spacing:.03em; text-transform:uppercase; }
+.dm-accent-chip{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:.74rem; color:var(--ivory);
+}
+.dm-accent-chip i{
+  width:12px; height:12px; border-radius:50%;
+  background:linear-gradient(135deg, var(--olive-primary), var(--gold-bright));
+  display:inline-block;
+}
+.dm-slider{
+  -webkit-appearance:none; appearance:none;
+  width:100%; height:4px;
+  border-radius:999px;
+  background:var(--border);
+  margin:6px 0 16px;
+  cursor:pointer;
+}
+.dm-slider::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:14px; height:14px;
+  border-radius:50%;
+  background:var(--gold-bright);
+  box-shadow:0 0 0 4px rgba(224,196,119,.18);
+  cursor:pointer;
+}
+.dm-slider::-moz-range-thumb{
+  width:14px; height:14px; border:none; border-radius:50%;
+  background:var(--gold-bright);
+  box-shadow:0 0 0 4px rgba(224,196,119,.18);
+  cursor:pointer;
+}
+.dm-reset{
+  width:100%;
+  margin-top:4px;
+  padding:8px;
+  border-radius:calc(9px * var(--dm-radius));
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--silver);
+  font-size:.76rem;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+.dm-reset:hover{ border-color:var(--gold); color:var(--ivory); }
 .appearance-panel[hidden]{ display:none; }
 .appearance-panel.show{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
 .appearance-panel h4{ font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--silver-muted); margin:14px 0 8px; }
@@ -2582,11 +2691,11 @@ html[data-motion="reduced"] .nav-appearance::before, html[data-motion="off"] .na
 .project-card{
   background:linear-gradient(180deg, var(--card), rgba(0,0,0,.08)), var(--card);
   border:1px solid var(--border);
-  border-radius:20px;
+  border-radius:calc(20px * var(--dm-radius));
   padding:26px 28px 24px;
   display:flex;
   flex-direction:column;
-  transition:transform .3s cubic-bezier(.2,.8,.2,1), border-color .25s ease, box-shadow .3s ease;
+  transition:transform calc(.3s / var(--dm-motion)) cubic-bezier(.2,.8,.2,1), border-color .25s ease, box-shadow calc(.3s / var(--dm-motion)) ease;
   position:relative;
   overflow:hidden;
   will-change:transform;
@@ -2600,7 +2709,7 @@ html[data-motion="reduced"] .nav-appearance::before, html[data-motion="off"] .na
   transition:opacity .3s ease;
 }
 .project-card:hover{
-  box-shadow:0 28px 56px -22px rgba(201,168,92,.35);
+  box-shadow:0 28px calc(56px * var(--dm-glow)) -22px rgba(201,168,92, calc(.35 * var(--dm-glow)));
 }
 .project-card:hover::after{ opacity:1; }
 .project-card::before{

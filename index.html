@@ -55,9 +55,10 @@
 
 <div class="cmdk-overlay" id="cmdk-overlay" hidden>
   <div class="cmdk-box">
+    <span class="cmdk-astronaut" id="cmdk-astronaut" aria-hidden="true">👨‍🚀</span>
     <div class="cmdk-input-row">
       <span class="cmdk-icon">⌘</span>
-      <input type="text" id="cmdk-input" placeholder="Jump to a section, project, or link…" autocomplete="off" />
+      <input type="text" id="cmdk-input" placeholder="Explore Nilusha's universe…" autocomplete="off" />
       <kbd>esc</kbd>
     </div>
     <ul class="cmdk-list" id="cmdk-list"></ul>
@@ -123,6 +124,9 @@
       </button>
       <button class="nav-icon-btn" id="nav-theme-toggle" type="button" aria-label="Appearance settings" title="Appearance settings">
         <span class="nav-icon" aria-hidden="true">◐</span>
+      </button>
+      <button class="nav-icon-btn" id="design-mode-toggle" type="button" aria-label="Design Mode — try the design tokens" title="Design Mode" aria-expanded="false">
+        <span class="nav-icon" aria-hidden="true">🎨</span>
       </button>
     </div>
     <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" type="button">
@@ -853,6 +857,36 @@
 </a>
 
 <!-- ================= APPEARANCE SETTINGS (floating, bottom-left, always visible) ================= -->
+<div class="design-mode-panel" id="design-mode-panel" role="dialog" aria-label="Design Mode — live design tokens" hidden>
+  <h4>Design Mode <small>Live UI tokens</small></h4>
+  <p class="dm-note">This is the real design system behind NILUVERSE — drag a token and watch the site respond live.</p>
+  <div class="dm-row">
+    <label for="dm-accent">Accent</label>
+    <span class="dm-accent-chip"><i></i>Olive Green</span>
+  </div>
+  <div class="dm-row">
+    <label for="dm-radius">Radius</label>
+    <span class="dm-range-labels"><span>Sharp</span><span>Soft</span></span>
+  </div>
+  <input type="range" id="dm-radius" class="dm-slider" min="0" max="1.6" step="0.05" value="1" data-token="radius" />
+  <div class="dm-row">
+    <label for="dm-glow">Glow</label>
+    <span class="dm-range-labels"><span>Low</span><span>High</span></span>
+  </div>
+  <input type="range" id="dm-glow" class="dm-slider" min="0.2" max="2" step="0.05" value="1" data-token="glow" />
+  <div class="dm-row">
+    <label for="dm-motion">Motion</label>
+    <span class="dm-range-labels"><span>Low</span><span>High</span></span>
+  </div>
+  <input type="range" id="dm-motion" class="dm-slider" min="0.4" max="1.8" step="0.05" value="1" data-token="motion" />
+  <div class="dm-row">
+    <label for="dm-blur">Blur</label>
+    <span class="dm-range-labels"><span>Low</span><span>High</span></span>
+  </div>
+  <input type="range" id="dm-blur" class="dm-slider" min="0" max="2" step="0.05" value="1" data-token="blur" />
+  <button type="button" class="dm-reset" id="dm-reset">Reset to default</button>
+</div>
+
 <button class="appearance-fab" id="appearance-toggle" aria-haspopup="dialog" aria-expanded="false" aria-label="Appearance settings" title="Appearance settings" type="button">
   <span>◐</span>
 </button>

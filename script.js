@@ -870,10 +870,12 @@
       li.addEventListener('click', () => { c.action(); close(); });
       list.appendChild(li);
     });
+    const astro = document.getElementById('cmdk-astronaut');
+    if (astro) astro.classList.toggle('dm-empty', !!q && !filtered.length);
     if (!filtered.length) {
       const li = document.createElement('li');
       li.className = 'cmdk-empty';
-      li.textContent = 'No matches';
+      li.textContent = q ? 'Nothing found in this corner of the universe.' : 'No matches';
       list.appendChild(li);
     }
   }
@@ -900,7 +902,17 @@
     if (e.key === 'Escape' && !overlay.hidden) close();
   });
   overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
-  input.addEventListener('input', () => { activeIndex = 0; render(input.value); });
+  let typingTimer = null;
+  input.addEventListener('input', () => {
+    activeIndex = 0;
+    render(input.value);
+    const astro = document.getElementById('cmdk-astronaut');
+    if (astro && input.value) {
+      astro.classList.add('dm-typing');
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(() => astro.classList.remove('dm-typing'), 500);
+    }
+  });
   input.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown') { e.preventDefault(); activeIndex = Math.min(activeIndex + 1, Math.min(filtered.length, 8) - 1); render(input.value); }
     if (e.key === 'ArrowUp') { e.preventDefault(); activeIndex = Math.max(activeIndex - 1, 0); render(input.value); }
@@ -1360,6 +1372,69 @@
   triggers.forEach((t) => t.addEventListener('click', () => { panel.classList.contains('show') ? closePanel() : openPanel(); }));
   document.addEventListener('click', (e) => {
     if (panel.classList.contains('show') && !panel.contains(e.target) && !triggers.some((t) => t.contains(e.target))) closePanel();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel.classList.contains('show')) closePanel(); });
+})();
+
+/* ---------- design mode: live design-token demo (Radius / Glow / Motion / Blur) ---------- */
+(function designMode() {
+  const toggle = document.getElementById('design-mode-toggle');
+  const panel = document.getElementById('design-mode-panel');
+  if (!toggle || !panel) return;
+
+  const html = document.documentElement;
+  const store = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+  const load = (k, fallback) => { try { const v = localStorage.getItem(k); return v === null ? fallback : v; } catch (e) { return fallback; } };
+
+  const DEFAULTS = { radius: '1', glow: '1', motion: '1', blur: '1' };
+  const sliders = Array.from(panel.querySelectorAll('.dm-slider'));
+
+  function applyToken(token, value) {
+    html.style.setProperty(`--dm-${token}`, value);
+  }
+  function loadAll() {
+    sliders.forEach((s) => {
+      const token = s.dataset.token;
+      const v = load(`dm-${token}`, DEFAULTS[token]);
+      s.value = v;
+      applyToken(token, v);
+    });
+  }
+  loadAll();
+
+  sliders.forEach((s) => {
+    s.addEventListener('input', () => {
+      const token = s.dataset.token;
+      applyToken(token, s.value);
+      store(`dm-${token}`, s.value);
+    });
+  });
+
+  const resetBtn = document.getElementById('dm-reset');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      sliders.forEach((s) => {
+        const token = s.dataset.token;
+        s.value = DEFAULTS[token];
+        applyToken(token, DEFAULTS[token]);
+        store(`dm-${token}`, DEFAULTS[token]);
+      });
+    });
+  }
+
+  function openPanel() {
+    panel.hidden = false;
+    requestAnimationFrame(() => panel.classList.add('show'));
+    toggle.setAttribute('aria-expanded', 'true');
+  }
+  function closePanel() {
+    panel.classList.remove('show');
+    toggle.setAttribute('aria-expanded', 'false');
+    setTimeout(() => { panel.hidden = true; }, 180);
+  }
+  toggle.addEventListener('click', () => { panel.classList.contains('show') ? closePanel() : openPanel(); });
+  document.addEventListener('click', (e) => {
+    if (panel.classList.contains('show') && !panel.contains(e.target) && !toggle.contains(e.target)) closePanel();
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel.classList.contains('show')) closePanel(); });
 })();
