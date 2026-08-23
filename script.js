@@ -1113,6 +1113,38 @@
   });
 })();
 
+/* ---------- desktop "More" nav dropdown (Education, Certificates, Code
+   Sample, Frontend Lab, Design System, Auth Flow, Responsive Lab, Builds in
+   Motion, Currently Building, Debugging Stories, Why Work With Me, Resume,
+   Contact) — on mobile this same markup just renders inline as part of the
+   normal hamburger menu (see mobileNav() above + the max-width:920px CSS),
+   so no extra JS branch is needed there. ---------- */
+(function navMoreMenu() {
+  const trigger = document.getElementById('nav-more-trigger');
+  const menu = document.getElementById('nav-more-menu');
+  if (!trigger || !menu) return;
+
+  const close = () => {
+    menu.classList.remove('show');
+    trigger.setAttribute('aria-expanded', 'false');
+  };
+  const open = () => {
+    menu.classList.add('show');
+    trigger.setAttribute('aria-expanded', 'true');
+  };
+
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    menu.classList.contains('show') ? close() : open();
+  });
+  menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+  document.addEventListener('click', (e) => {
+    if (menu.classList.contains('show') && !menu.contains(e.target) && e.target !== trigger) close();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  window.addEventListener('resize', () => { if (window.innerWidth <= 920) close(); });
+})();
+
 /* ---------- footer year ---------- */
 (function year() {
   const el = document.getElementById('year');
