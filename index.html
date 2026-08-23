@@ -100,6 +100,51 @@
   </div>
 </div>
 
+<!-- ================= BUG FIX: these five overlays were previously nested
+     inside a <section class="reveal"> — once the scroll-reveal animation
+     applies transform:translateY(0) to that section, it becomes a new CSS
+     containing block for any position:fixed descendant, so each overlay
+     below rendered thousands of pixels down the document instead of
+     centered on the viewport (invisible unless you scrolled to find it).
+     Moved here as direct body children, same as the working cmdk-overlay /
+     recruiter-overlay above, which is why those two never had this bug. ================= -->
+<div class="fb-modal" id="fb-modal" hidden role="dialog" aria-label="Project details">
+  <div class="fb-modal-backdrop" id="fb-modal-backdrop"></div>
+  <div class="fb-modal-card">
+    <button class="fb-modal-close" id="fb-modal-close" aria-label="Close" type="button">✕</button>
+    <div id="fb-modal-body"></div>
+    <div class="fb-modal-nav">
+      <button type="button" id="fb-prev" class="btn btn-ghost">← Previous</button>
+      <button type="button" id="fb-next" class="btn btn-ghost">Next →</button>
+    </div>
+  </div>
+</div>
+<div class="fb-compare-bar" id="fb-compare-bar" hidden>
+  <span id="fb-compare-status">Pick a 2nd project to compare</span>
+  <div class="fb-compare-bar-actions">
+    <button type="button" id="fb-compare-go" class="btn btn-primary" disabled>Compare ⇄</button>
+    <button type="button" id="fb-compare-clear" class="btn btn-ghost">Clear</button>
+  </div>
+</div>
+<div class="fb-modal" id="fb-compare-modal" hidden role="dialog" aria-label="Compare projects">
+  <div class="fb-modal-backdrop" id="fb-compare-backdrop"></div>
+  <div class="fb-modal-card fb-compare-card">
+    <button class="fb-modal-close" id="fb-compare-close" aria-label="Close" type="button">✕</button>
+    <div id="fb-compare-body"></div>
+  </div>
+</div>
+<div class="skill-graph-modal" id="skill-graph-modal" hidden role="dialog" aria-label="Projects using this skill">
+  <div class="skill-graph-backdrop" id="skill-graph-backdrop"></div>
+  <div class="skill-graph-card">
+    <button class="skill-graph-close" id="skill-graph-close" aria-label="Close" type="button">✕</button>
+    <div id="skill-graph-body"></div>
+  </div>
+</div>
+<div class="cert-detail" id="cert-detail" hidden>
+  <button class="cert-detail-close" id="cert-detail-close" aria-label="Close" type="button">✕</button>
+  <div id="cert-detail-body"></div>
+</div>
+
 <header>
   <nav>
     <a href="#" class="logo">
@@ -376,13 +421,6 @@
       <div class="dna-bars" id="dna-bars"></div>
     </div>
 
-    <div class="skill-graph-modal" id="skill-graph-modal" hidden role="dialog" aria-label="Projects using this skill">
-      <div class="skill-graph-backdrop" id="skill-graph-backdrop"></div>
-      <div class="skill-graph-card">
-        <button class="skill-graph-close" id="skill-graph-close" aria-label="Close" type="button">✕</button>
-        <div id="skill-graph-body"></div>
-      </div>
-    </div>
   </section>
 
   <!-- ================= FRONTEND PLAYGROUND ================= -->
@@ -653,10 +691,6 @@
       <div class="tree-branches" id="tree-branches"></div>
     </div>
 
-    <div class="cert-detail" id="cert-detail" hidden>
-      <button class="cert-detail-close" id="cert-detail-close" aria-label="Close" type="button">✕</button>
-      <div id="cert-detail-body"></div>
-    </div>
   </section>
 
   <!-- ================= WORK: PROJECT FISHBONE ================= -->
@@ -680,32 +714,6 @@
 
     <div class="project-spine" id="project-spine"></div>
     <div class="constellation-view" id="fb-constellation" hidden></div>
-
-    <div class="fb-modal" id="fb-modal" hidden role="dialog" aria-label="Project details">
-      <div class="fb-modal-backdrop" id="fb-modal-backdrop"></div>
-      <div class="fb-modal-card">
-        <button class="fb-modal-close" id="fb-modal-close" aria-label="Close" type="button">✕</button>
-        <div id="fb-modal-body"></div>
-        <div class="fb-modal-nav">
-          <button type="button" id="fb-prev" class="btn btn-ghost">← Previous</button>
-          <button type="button" id="fb-next" class="btn btn-ghost">Next →</button>
-        </div>
-      </div>
-    </div>
-    <div class="fb-compare-bar" id="fb-compare-bar" hidden>
-      <span id="fb-compare-status">Pick a 2nd project to compare</span>
-      <div class="fb-compare-bar-actions">
-        <button type="button" id="fb-compare-go" class="btn btn-primary" disabled>Compare ⇄</button>
-        <button type="button" id="fb-compare-clear" class="btn btn-ghost">Clear</button>
-      </div>
-    </div>
-    <div class="fb-modal" id="fb-compare-modal" hidden role="dialog" aria-label="Compare projects">
-      <div class="fb-modal-backdrop" id="fb-compare-backdrop"></div>
-      <div class="fb-modal-card fb-compare-card">
-        <button class="fb-modal-close" id="fb-compare-close" aria-label="Close" type="button">✕</button>
-        <div id="fb-compare-body"></div>
-      </div>
-    </div>
 
     <div class="spine-outro">
       <p class="spine-outro-note">More projects are being built.</p>
