@@ -2914,9 +2914,15 @@
   let arrivalPulseT = 0;
   let hoverTarget = null;
 
-  function cardCenterScreen(card) {
+  /* BUG FIX: this used to be the literal center of the card, which put the
+     astronaut directly on top of the description text (visible as a blurry
+     shape covering "Every expression routed through math.js..." etc).
+     Aim for a point just above the card's top-right corner instead — still
+     clearly "at" that card, but outside its text/button content entirely,
+     at every card width down to mobile (percentages of r stay in-bounds). */
+  function cardApproachScreen(card) {
     const r = card.getBoundingClientRect();
-    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    return { x: r.left + r.width * 0.86, y: r.top - 6 };
   }
   function toWorld(pt) { return { x: pt.x, y: -pt.y, z: 8 }; }
 
@@ -2927,7 +2933,7 @@
         const r = c.getBoundingClientRect();
         return r.bottom > -200 && r.top < window.innerHeight + 200;
       });
-    waypoints = cards.map((c) => toWorld(cardCenterScreen(c)));
+    waypoints = cards.map((c) => toWorld(cardApproachScreen(c)));
     if (wpIndex >= waypoints.length) wpIndex = 0;
   }
 
@@ -2935,7 +2941,7 @@
   spine.addEventListener('mouseover', (e) => {
     const card = e.target.closest('.project-card');
     if (!card) return;
-    hoverTarget = toWorld(cardCenterScreen(card));
+    hoverTarget = toWorld(cardApproachScreen(card));
   });
   spine.addEventListener('mouseout', (e) => {
     const card = e.target.closest('.project-card');
@@ -2951,7 +2957,7 @@
   spine.addEventListener('click', (e) => {
     const card = e.target.closest('.project-card');
     if (!card || e.target.closest('.fb-save') || e.target.closest('.fb-compare-toggle') || e.target.closest('.project-links a')) return;
-    const pos = toWorld(cardCenterScreen(card));
+    const pos = toWorld(cardApproachScreen(card));
     target.x = pos.x; target.y = pos.y - 26; target.z = pos.z + 4;
     arrivalHold = true;
     arrivalPulseT = 0;
