@@ -340,8 +340,10 @@
 
   const orbitGroups = [];
   const allNodeMeshes = [];
-  SKILL_RINGS.forEach((ring) => {
-    makeOrbitRing(ring.radius, ring.tilt, ring.color, isMobile ? 0.08 : 0.14);
+  const orbitRings = [];
+  SKILL_RINGS.forEach((ring, ringIndex) => {
+    const ringMesh = makeOrbitRing(ring.radius, ring.tilt, ring.color, isMobile ? 0.08 : 0.14);
+    orbitRings.push({ mesh: ringMesh, baseOpacity: isMobile ? 0.08 : 0.14 });
 
     const group = new THREE.Group();
     group.rotation.x = ring.tilt;
@@ -353,7 +355,7 @@
 
       const node = new THREE.Mesh(
         new THREE.SphereGeometry(0.13, 14, 14),
-        new THREE.MeshBasicMaterial({ color: ring.nodeColor })
+        new THREE.MeshBasicMaterial({ color: ring.nodeColor, transparent: true })
       );
       const nodeGlow = new THREE.Mesh(
         new THREE.SphereGeometry(0.26, 10, 10),
@@ -374,8 +376,25 @@
       return nodeGroup;
     });
 
-    orbitGroups.push({ group, nodes, radius: ring.radius, speed: ring.speed, key: ring.key });
+    orbitGroups.push({ group, nodes, radius: ring.radius, speed: ring.speed, key: ring.key, revealDelay: ringIndex * 280 });
   });
+
+  /* ---- staged reveal: on the same first-visit flight (see introFlight
+     above), orbital rings and tech nodes start invisible and fade in one
+     ring at a time as the camera arrives, instead of all being present at
+     once. Returning visits / reduced motion are untouched — materials keep
+     their normal default opacity and this block never runs for them. ---- */
+  const introFlightStart = introFlight ? performance.now() : 0;
+  if (introFlight) {
+    orbitRings.forEach((r) => { r.mesh.material.opacity = 0; });
+    orbitGroups.forEach((og) => {
+      og.nodes.forEach((n) => {
+        n.children[0].material.opacity = 0;
+        n.children[1].material.opacity = 0;
+        n.children[2].material.opacity = 0;
+      });
+    });
+  }
 
   // ---- hover raycast: pause + highlight a skill node, surface an info card ----
   const raycaster = new THREE.Raycaster();
@@ -606,22 +625,31 @@
       }
     }
 
-    orbitGroups.forEach(({ group, nodes, speed }) => {
+    orbitGroups.forEach(({ group, nodes, speed, revealDelay }, ringIdx) => {
       const groupHovered = hoveredGroup && nodes.includes(hoveredGroup);
       group.rotation.y += groupHovered ? 0 : speed * 0.01 * motionScale;
+      const canReveal = !introFlight || (performance.now() - introFlightStart) > (700 + revealDelay);
+      if (introFlight) {
+        const ringInfo = orbitRings[ringIdx];
+        const ringTarget = canReveal ? ringInfo.baseOpacity : 0;
+        ringInfo.mesh.material.opacity += (ringTarget - ringInfo.mesh.material.opacity) * 0.06;
+      }
       nodes.forEach((n) => {
         const isHovered = n === hoveredGroup;
         const targetScale = isHovered ? 1.6 : 1;
         n.scale.x += (targetScale - n.scale.x) * 0.2;
         n.scale.y += (targetScale - n.scale.y) * 0.2;
         n.scale.z += (targetScale - n.scale.z) * 0.2;
+        if (introFlight && !canReveal) return; // still hidden, waiting for this ring's turn
         const targetOpacity = isHovered ? 1 : n.userData.baseOpacity;
         n.children[0].material.opacity = THREE.MathUtils
           ? THREE.MathUtils.lerp(n.children[0].material.opacity ?? 1, targetOpacity, 0.15)
           : targetOpacity;
         n.children[0].material.transparent = true;
         n.children[1].material.opacity = 0.18 * targetOpacity;
-        n.children[2].material.opacity = targetOpacity;
+        n.children[2].material.opacity = THREE.MathUtils
+          ? THREE.MathUtils.lerp(n.children[2].material.opacity ?? 1, targetOpacity, 0.15)
+          : targetOpacity;
       });
     });
     orbitGroups.forEach(({ nodes }) => {
