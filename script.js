@@ -20,7 +20,24 @@
   // mouse-parallax ease. Mobile keeps it centered (text stacks above it there).
   const camBaseX = isMobile ? 0 : -3.6;
   const lookTargetX = isMobile ? 0 : -3.4;
-  camera.position.set(camBaseX, 2.2, isMobile ? 15 : 11.5);
+  /* ---- first-visit cinematic entrance: start this SAME camera further out
+     in deep space and let the existing per-frame easing further down in
+     animate() glide it into its normal resting position. No second camera,
+     no second Earth — just a different starting point, once, on a first
+     visit under full motion (mirrors niluverseIntro()'s own seen/reduced
+     checks so the two stay in sync without sharing state). ---- */
+  let introFlight = false;
+  try {
+    const introSeenEarly = localStorage.getItem('introCompleted') === '1';
+    const motionPrefEarly = localStorage.getItem('motionPreference') || 'full';
+    const reducedEarly = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    introFlight = !introSeenEarly && !reducedEarly && motionPrefEarly === 'full';
+  } catch (e) {}
+  if (introFlight) {
+    camera.position.set(camBaseX * 0.3, 5.5, (isMobile ? 15 : 11.5) + (isMobile ? 24 : 32));
+  } else {
+    camera.position.set(camBaseX, 2.2, isMobile ? 15 : 11.5);
+  }
 
   const gold = 0xc9a85c;
   const goldBright = 0xe0c477;
@@ -1306,7 +1323,7 @@
     clearTimeout(removeTimer);
     overlay.classList.add('intro-out');
     markSeen();
-    setTimeout(() => { overlay.hidden = true; }, 750);
+    setTimeout(() => { overlay.hidden = true; }, skipAnimation ? 750 : 1650);
   }
   function playIntro() {
     overlay.hidden = false;
@@ -1316,7 +1333,11 @@
       // no motion, just a short honest beat before revealing the Hero
       hideTimer = setTimeout(finishIntro, 500);
     } else {
-      hideTimer = setTimeout(finishIntro, 3200);
+      // shortened on purpose: the overlay now cross-fades (see style.css,
+      // 1.6s) while the Hero's own camera is still gliding in from deep
+      // space (see initUniverse()'s introFlight), so the flight is actually
+      // visible through the dissolve instead of finishing behind a solid layer
+      hideTimer = setTimeout(finishIntro, 1500);
     }
   }
 
