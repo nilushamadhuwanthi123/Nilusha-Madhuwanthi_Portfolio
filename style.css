@@ -1670,6 +1670,30 @@ html[data-motion="reduced"] .motion-card, html[data-motion="off"] .motion-card{ 
   color:var(--silver);
   letter-spacing:.02em;
 }
+/* ---- project → skill connection: brief highlight pulse ---- */
+.skill-card.skill-card-highlight{
+  border-color:var(--gold-bright);
+  background:rgba(201,168,92,.14);
+  box-shadow:0 0 0 3px rgba(224,196,119,.2), 0 14px 34px -16px rgba(201,168,92,.5);
+  animation:skill-card-pulse 1.1s ease-in-out 2;
+}
+@keyframes skill-card-pulse{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-4px); } }
+html[data-motion="reduced"] .skill-card.skill-card-highlight, html[data-motion="off"] .skill-card.skill-card-highlight{ animation:none; }
+.fb-modal-skills-link{
+  display:inline-block;
+  margin:2px 0 14px;
+  background:transparent;
+  border:none;
+  color:var(--gold-bright);
+  font-family:var(--font-head);
+  font-size:.72rem;
+  letter-spacing:.02em;
+  cursor:pointer;
+  padding:0;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.fb-modal-skills-link:hover{ color:var(--ivory); }
 
 .skill-groups{margin-top:44px; display:flex; flex-direction:column; gap:36px;}
 .skill-group-label{

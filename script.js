@@ -1531,6 +1531,37 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel.classList.contains('show')) closePanel(); });
 })();
 
+/* ---------- project → skill connection: "See these skills" in a project
+   modal scrolls to Skills and briefly highlights the matching cards.
+   Complements the existing skill → project graph (click a skill card to see
+   its projects) so the connection works in both directions without a giant
+   graph diagram. ---------- */
+(function projectSkillLink() {
+  const ALIAS = { CSS3: 'CSS3', HTML5: 'HTML5', 'Spring Boot': 'Spring', 'REST API': null, 'Socket.IO': null, PWA: null, Canvas: null, 'A11y': null, 'Vanilla JS': 'JavaScript', 'Web Audio API': null, IndexedDB: null, Docker: 'Docker', 'Chart.js': null, Vite: null, 'OAuth 2.0': null, TypeScript: 'TypeScript', 'Kotlin/Ktor': 'Kotlin', PostgreSQL: null, JWT: null, 'Google Maps API': null };
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.fb-modal-skills-link');
+    if (!btn) return;
+    const techList = btn.dataset.tech.split('|');
+    const skillNames = techList.map((t) => (t in ALIAS ? ALIAS[t] : t)).filter(Boolean);
+    const cards = Array.from(document.querySelectorAll('.skill-card'));
+    const matched = cards.filter((c) => skillNames.some((s) => c.textContent.trim() === s));
+    if (!matched.length) return;
+
+    const modal = document.getElementById('fb-modal');
+    if (modal && !modal.hidden) {
+      modal.classList.remove('show');
+      setTimeout(() => { modal.hidden = true; }, 250);
+    }
+    setTimeout(() => {
+      document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        matched.forEach((c) => c.classList.add('skill-card-highlight'));
+        setTimeout(() => matched.forEach((c) => c.classList.remove('skill-card-highlight')), 2200);
+      }, 500);
+    }, 200);
+  });
+})();
+
 /* ---------- responsive design lab: resize the real, live site ---------- */
 (function responsiveLab() {
   const frame = document.getElementById('rlab-frame');
@@ -2081,6 +2112,7 @@
       ${howItWorks}
       ${problem}
       <div class="fb-modal-section"><b>Tech Stack</b><div class="fb-dna">${techDNA(p.tech)}</div></div>
+      <button type="button" class="fb-modal-skills-link" data-tech="${p.tech.join('|')}">See these skills in the Skills section ↑</button>
       <div class="fb-modal-links">${links.join('')}</div>`;
     modal.hidden = false;
     requestAnimationFrame(() => modal.classList.add('show'));
