@@ -1836,7 +1836,7 @@
       company: 'EgoTechWorld',
       when: 'Ongoing — through Jan / Feb 2027',
       desc: 'Full-stack development work alongside a full-time degree — six months in and still running.',
-      projects: ['Bakery Management System (in progress)'],
+      projects: ['MyNotes — Note-Taking App', 'Bakery Management System (in progress)'],
     },
     codveda: {
       role: 'Web Developer Intern',
@@ -1989,6 +1989,11 @@
       howItWorks:'JWT-guarded role-based access, with the Google Maps API used to locate nearby donors and rule-based logic to recommend matches by blood type and distance.',
       problem:'Speeds up emergency donor matching using location-based search and rule-based donor recommendations.',
       whyThisWay:'Google Maps plus rule-based matching, not just a static directory — because in an emergency, distance and blood-type compatibility are exactly the two variables that decide how fast a match happens.' },
+    { key:'mynotes', emoji:'📝', title:'MyNotes — Full-Stack Notes App', tag:'Internship · EgoTechWorld', categories:['Frontend','Internship'], status:'live',
+      desc:'EgoTechWorld\'s first team project — a full-stack notes app built on Spring Boot, React and MongoDB. My part was the Note_Nilusha module: the note cards grid, category filter buttons, a dedicated search tab, and the edit & delete actions for each note.',
+      tech:['React','Spring Boot','MongoDB'], demoUrl:'https://note-app-egotechworld.vercel.app', repoUrl:'https://github.com/LEULEX-404/Note-App---Egotechworld',
+      howItWorks:'The Note_Nilusha module renders every saved note as a card, wires up the category filter buttons and a dedicated search tab to narrow that list, and handles the edit/delete actions that call the Spring Boot REST API to update or remove a note in MongoDB.',
+      problem:'Gives users a fast way to browse, filter, search and manage their notes from one dashboard instead of scrolling a flat, unsorted list.' },
   ];
 
   function statusBadge(p) {
