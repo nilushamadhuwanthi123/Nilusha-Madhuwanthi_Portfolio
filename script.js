@@ -1888,6 +1888,26 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && compareModal && !compareModal.hidden) closeCompareModal();
   });
+
+  /* ---------- builds in motion: data-driven from PROJECTS[].videoUrl ---------- */
+  const motionGrid = document.getElementById('motion-grid');
+  if (motionGrid) {
+    const withVideo = PROJECTS.filter((p) => p.videoUrl);
+    if (!withVideo.length) {
+      motionGrid.innerHTML = '<p class="motion-empty">No walkthroughs posted yet — check back soon.</p>';
+    } else {
+      motionGrid.innerHTML = withVideo.map((p) => `
+        <a class="motion-card" href="${p.videoUrl}" target="_blank" rel="noopener">
+          <span class="motion-card-icon" aria-hidden="true">▶</span>
+          <span class="motion-card-body">
+            <span class="motion-card-title">${p.title}</span>
+            <span class="motion-card-tag">${p.tag}</span>
+          </span>
+          <span class="motion-card-cta">Watch ↗</span>
+        </a>
+      `).join('');
+    }
+  }
 })();
 
 /* ---------- contact: connect to niluverse ---------- */
