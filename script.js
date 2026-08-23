@@ -2000,3 +2000,88 @@
     });
   });
 })();
+
+/* ---------- frontend lab: live HTML/CSS/JS sandbox ---------- */
+(function frontendLab() {
+  const htmlEl = document.getElementById('lab-html');
+  const cssEl = document.getElementById('lab-css');
+  const jsEl = document.getElementById('lab-js');
+  const preview = document.getElementById('lab-preview');
+  const presetsWrap = document.getElementById('lab-presets');
+  const resetBtn = document.getElementById('lab-reset');
+  const tabs = document.querySelectorAll('.lab-tab');
+  const panes = document.querySelectorAll('.lab-code');
+  if (!htmlEl || !cssEl || !jsEl || !preview) return;
+
+  const PRESETS = [
+    {
+      key: 'counter', label: 'Vanilla JS Counter',
+      html: '<button id="btn">Clicked 0 times</button>',
+      css: 'body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#10120f;}\n#btn{padding:14px 24px;border-radius:999px;border:1px solid #C9A85C;background:transparent;color:#F4F1E8;font-size:1rem;cursor:pointer;}\n#btn:hover{background:#C9A85C;color:#10120f;}',
+      js: 'let n = 0;\nconst btn = document.getElementById("btn");\nbtn.addEventListener("click", () => {\n  n++;\n  btn.textContent = `Clicked ${n} times`;\n});',
+    },
+    {
+      key: 'flipcard', label: 'CSS-only Flip Card',
+      html: '<div class="card"><div class="card-inner"><div class="face front">Hover me</div><div class="face back">Flipped!</div></div></div>',
+      css: 'body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#10120f;perspective:800px;}\n.card{width:160px;height:100px;}\n.card-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}\n.card:hover .card-inner{transform:rotateY(180deg);}\n.face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:12px;backface-visibility:hidden;font-family:sans-serif;color:#10120f;}\n.front{background:#C9A85C;}\n.back{background:#899466;transform:rotateY(180deg);}',
+      js: '',
+    },
+    {
+      key: 'filter', label: 'Debounced Search Filter',
+      html: '<input id="q" placeholder="Search fruit..." />\n<ul id="list">\n  <li>Apple</li><li>Banana</li><li>Mango</li><li>Papaya</li><li>Cherry</li>\n</ul>',
+      css: 'body{font-family:sans-serif;background:#10120f;color:#F4F1E8;padding:24px;}\ninput{padding:8px 12px;border-radius:8px;border:1px solid #30352A;background:#191C16;color:#F4F1E8;width:100%;box-sizing:border-box;}\nul{list-style:none;padding:0;margin-top:12px;}\nli{padding:6px 0;border-bottom:1px solid #30352A;}',
+      js: 'const q = document.getElementById("q");\nconst items = [...document.querySelectorAll("#list li")];\nlet t;\nq.addEventListener("input", () => {\n  clearTimeout(t);\n  t = setTimeout(() => {\n    const v = q.value.toLowerCase();\n    items.forEach((li) => {\n      li.style.display = li.textContent.toLowerCase().includes(v) ? "" : "none";\n    });\n  }, 150);\n});',
+    },
+  ];
+
+  function renderPresetButtons() {
+    presetsWrap.innerHTML = PRESETS.map((p, i) => `<button type="button" class="lab-preset-btn${i === 0 ? ' active' : ''}" data-preset="${p.key}">${p.label}</button>`).join('');
+  }
+
+  function runPreview() {
+    const doc = '<!doctype html><html><head><style>' + cssEl.value + '</style></head><body>' + htmlEl.value
+      + '<script>try{' + jsEl.value + '}catch(e){document.body.insertAdjacentHTML("beforeend","<pre style=\\"color:#e08\\">"+e.message+"</pre>");}<\/script></body></html>';
+    preview.srcdoc = doc;
+  }
+
+  function loadPreset(key) {
+    const p = PRESETS.find((x) => x.key === key) || PRESETS[0];
+    htmlEl.value = p.html;
+    cssEl.value = p.css;
+    jsEl.value = p.js;
+    presetsWrap.querySelectorAll('.lab-preset-btn').forEach((b) => b.classList.toggle('active', b.dataset.preset === p.key));
+    runPreview();
+  }
+
+  let debounceT;
+  [htmlEl, cssEl, jsEl].forEach((el) => {
+    el.addEventListener('input', () => {
+      clearTimeout(debounceT);
+      debounceT = setTimeout(runPreview, 350);
+    });
+  });
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      panes.forEach((p) => p.classList.toggle('active', p.dataset.labPane === tab.dataset.labTab));
+    });
+  });
+
+  presetsWrap.addEventListener('click', (e) => {
+    const btn = e.target.closest('.lab-preset-btn');
+    if (btn) loadPreset(btn.dataset.preset);
+  });
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      const activeBtn = presetsWrap.querySelector('.lab-preset-btn.active');
+      loadPreset(activeBtn ? activeBtn.dataset.preset : PRESETS[0].key);
+    });
+  }
+
+  renderPresetButtons();
+  loadPreset(PRESETS[0].key);
+})();

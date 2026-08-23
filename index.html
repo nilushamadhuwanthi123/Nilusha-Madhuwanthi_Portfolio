@@ -335,6 +335,38 @@
     </div>
   </section>
 
+  <!-- ================= FRONTEND PLAYGROUND ================= -->
+  <section class="section reveal" id="frontend-lab">
+    <div class="section-head">
+      <span class="tag">04.5 — Frontend Lab</span>
+      <h2>Try it live, right here.</h2>
+      <p class="sub">A real HTML / CSS / JS sandbox, running in your browser — pick a starter or write your own, it updates as you type.</p>
+    </div>
+
+    <div class="lab-wrap">
+      <div class="lab-controls">
+        <div class="lab-presets" id="lab-presets" role="group" aria-label="Starter snippets"></div>
+        <button type="button" class="lab-reset" id="lab-reset">Reset</button>
+      </div>
+      <div class="lab-panes">
+        <div class="lab-editors">
+          <div class="lab-tabs" role="tablist" aria-label="Code panes">
+            <button type="button" class="lab-tab active" data-lab-tab="html" role="tab" aria-selected="true">HTML</button>
+            <button type="button" class="lab-tab" data-lab-tab="css" role="tab" aria-selected="false">CSS</button>
+            <button type="button" class="lab-tab" data-lab-tab="js" role="tab" aria-selected="false">JS</button>
+          </div>
+          <textarea class="lab-code active" id="lab-html" data-lab-pane="html" spellcheck="false" aria-label="HTML code"></textarea>
+          <textarea class="lab-code" id="lab-css" data-lab-pane="css" spellcheck="false" aria-label="CSS code"></textarea>
+          <textarea class="lab-code" id="lab-js" data-lab-pane="js" spellcheck="false" aria-label="JavaScript code"></textarea>
+        </div>
+        <div class="lab-preview-wrap">
+          <span class="lab-preview-label">Live preview</span>
+          <iframe class="lab-preview" id="lab-preview" title="Live preview" sandbox="allow-scripts"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= EXPERIENCE: CAREER CONSTELLATION ================= -->
   <section class="section reveal" id="experience">
     <div class="section-head">
