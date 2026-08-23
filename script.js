@@ -1971,6 +1971,74 @@
     });
   })();
 
+  /* ---------- auth flow: interactive step-through, "used in" grounded in real tech tags ---------- */
+  (function authFlow() {
+    const stepsEl = document.getElementById('auth-flow-steps');
+    const playBtn = document.getElementById('auth-flow-play');
+    const resetBtn = document.getElementById('auth-flow-reset');
+    const usedEl = document.getElementById('auth-flow-used');
+    if (!stepsEl) return;
+
+    const usedIn = PROJECTS.filter((p) => p.tech.some((t) => t === 'JWT' || t === 'OAuth 2.0'));
+    if (usedEl) {
+      usedEl.textContent = usedIn.length
+        ? `Tagged directly in: ${usedIn.map((p) => p.title.split('—')[0].trim()).join(', ')}.`
+        : '';
+    }
+
+    const STEPS = [
+      { actor: 'Client', title: 'Submits credentials', desc: 'Email + password sent to the server over HTTPS — never over a plain HTTP request.' },
+      { actor: 'Server', title: 'Verifies the password', desc: 'The stored password is a bcrypt hash, never plaintext. The server hashes the incoming password and compares hashes — it never "reads" the real password back.' },
+      { actor: 'Database', title: 'Looked up safely', desc: 'The user row is fetched with a parameterized / prepared-statement query, so a malicious email or password field can\'t inject SQL.' },
+      { actor: 'Server', title: 'Issues a JWT', desc: 'On a match, the server signs a JSON Web Token containing the user id and role, with a short expiry — not the password, ever.' },
+      { actor: 'Client', title: 'Stores the token', desc: 'The token is kept client-side (memory or a secure cookie depending on the project) and attached to future requests.' },
+      { actor: 'Client', title: 'Sends token on every request', desc: 'Protected routes require the token in the Authorization header — no token, no access.' },
+      { actor: 'Server', title: 'Verifies & responds', desc: 'The server checks the JWT signature and expiry before running the route handler, then returns the protected resource.' },
+    ];
+
+    stepsEl.innerHTML = STEPS.map((s) => `
+      <div class="auth-flow-step">
+        <span class="auth-flow-actor">${s.actor}</span>
+        <span class="auth-flow-dotcol"><span class="auth-flow-dot"></span><span class="auth-flow-line"></span></span>
+        <span class="auth-flow-body"><h4>${s.title}</h4><p>${s.desc}</p></span>
+      </div>
+    `).join('');
+
+    const stepEls = stepsEl.querySelectorAll('.auth-flow-step');
+    let timer = null;
+    let idx = -1;
+
+    function showUpTo(n) {
+      stepEls.forEach((el, i) => el.classList.toggle('active', i <= n));
+    }
+
+    function play() {
+      clearInterval(timer);
+      idx = -1;
+      showUpTo(-1);
+      playBtn.textContent = '⏸ Playing…';
+      timer = setInterval(() => {
+        idx += 1;
+        showUpTo(idx);
+        if (idx >= stepEls.length - 1) {
+          clearInterval(timer);
+          playBtn.textContent = '▶ Play flow';
+        }
+      }, 850);
+    }
+
+    function reset() {
+      clearInterval(timer);
+      idx = -1;
+      showUpTo(-1);
+      playBtn.textContent = '▶ Play flow';
+    }
+
+    if (playBtn) playBtn.addEventListener('click', play);
+    if (resetBtn) resetBtn.addEventListener('click', reset);
+    showUpTo(stepEls.length); // all visible by default (readable without interaction)
+  })();
+
   /* ---------- builds in motion: data-driven from PROJECTS[].videoUrl ---------- */
   const motionGrid = document.getElementById('motion-grid');
   if (motionGrid) {
