@@ -1889,6 +1889,32 @@
     if (e.key === 'Escape' && compareModal && !compareModal.hidden) closeCompareModal();
   });
 
+  /* ---------- developer DNA: aggregated real tech usage across PROJECTS ---------- */
+  const dnaBars = document.getElementById('dna-bars');
+  if (dnaBars) {
+    const counts = {};
+    let total = 0;
+    PROJECTS.forEach((p) => {
+      p.tech.forEach((t) => {
+        const g = TECH_GROUP[t] || 'Tools';
+        counts[g] = (counts[g] || 0) + 1;
+        total += 1;
+      });
+    });
+    const order = ['Frontend', 'Backend', 'Mobile', 'Database', 'Auth', 'APIs & Realtime', 'Tools'];
+    const rows = order
+      .filter((g) => counts[g])
+      .map((g) => ({ g, n: counts[g], pct: Math.round((counts[g] / total) * 100) }))
+      .sort((a, b) => b.n - a.n);
+    dnaBars.innerHTML = rows.map((r) => `
+      <div class="dna-row">
+        <span class="dna-label">${r.g}</span>
+        <span class="dna-track"><span class="dna-fill" style="width:${r.pct}%"></span></span>
+        <span class="dna-pct">${r.pct}%</span>
+      </div>
+    `).join('');
+  }
+
   /* ---------- builds in motion: data-driven from PROJECTS[].videoUrl ---------- */
   const motionGrid = document.getElementById('motion-grid');
   if (motionGrid) {
