@@ -1580,18 +1580,18 @@
     { key:'linguaflow', emoji:'🌐', title:'LinguaFlow AI — Translator', tag:'Personal · Full Stack', categories:['Full Stack'], status:'source',
       desc:"A multilingual translation platform — real auth, real text and voice translation, AI-assisted rewriting and a usage dashboard, backed by PostgreSQL. Image, document and video translation are scoped but intentionally not yet built — see the repo's own roadmap.",
       tech:['Kotlin/Ktor','React','TypeScript','PostgreSQL'], repoUrl:'https://github.com/nilushamadhuwanthi123/LinguaFlow-AI-Translator_App' },
-    { key:'workpulse', emoji:'🗂️', title:'WorkPuise — Leave & Attendance System', tag:'Internship · Codveda', categories:['Full Stack','Internship'], status:'soon',
+    { key:'workpulse', emoji:'🗂️', title:'WorkPuise — Leave & Attendance System', tag:'Internship · Codveda', categories:['Full Stack','Internship'], status:'source',
       desc:'Enterprise-style leave & attendance system with JWT auth, role-based access, and manager approval workflows.',
-      tech:['React','Node.js','Express','MongoDB'] },
+      tech:['React','Node.js','Express','MongoDB'], repoUrl:'https://github.com/nilushamadhuwanthi123/WorkPuise_Codveda_Level-03' },
     { key:'uniroute', emoji:'🚌', title:'UniRoute — Shuttle Service Management', tag:'Personal · Full Stack', categories:['Full Stack'], status:'soon',
       desc:'Transportation management system for campus shuttles.', contribution:'Owned the route management module and improved UX via a responsive interface.',
       tech:['React','Node.js','MongoDB'] },
     { key:'mindfulday', emoji:'🧘', title:'MindfulDay — Wellness Tracking App', tag:'Personal · Mobile', categories:['Mobile'], status:'soon',
       desc:'Mobile app tracking daily habits, mood, water intake, exercise, and personal wellness goals.',
       tech:['Kotlin','Android Studio','Firebase'] },
-    { key:'blooddonation', emoji:'🩸', title:'Blood Donation Management System', tag:'Personal · Full Stack', categories:['Full Stack'], status:'soon',
+    { key:'blooddonation', emoji:'🩸', title:'Blood Donation Management System', tag:'Personal · Full Stack', categories:['Full Stack'], status:'source',
       desc:'Role-based platform with JWT auth, Google Maps donor location, real-time notifications, and donor recommendation logic.',
-      tech:['Java','JWT','Google Maps API'] },
+      tech:['Java','JWT','Google Maps API'], repoUrl:'https://github.com/nilushamadhuwanthi123/Blood-donation-Management-System' },
   ];
 
   function statusBadge(p) {
@@ -1944,7 +1944,7 @@
         html += '<div class="skill-graph-list">' + matches.map((p) => `
           <div class="skill-graph-item">
             <span><span class="skill-graph-item-title">${p.title}</span><br/><span class="skill-graph-item-tag">${p.tag}</span></span>
-            <a href="${p.repoUrl}" target="_blank" rel="noopener">Repo ↗</a>
+            ${p.repoUrl ? `<a href="${p.repoUrl}" target="_blank" rel="noopener">Repo ↗</a>` : '<span class="skill-graph-item-tag">Source not public</span>'}
           </div>
         `).join('') + '</div>';
       }
