@@ -1617,6 +1617,22 @@ html[data-motion="reduced"] .motion-card, html[data-motion="off"] .motion-card{ 
 .const-node-label{ font-family:var(--font-head); font-size:.82rem; text-align:center; }
 .const-node-role{ font-size:.68rem; color:var(--gold-bright); text-align:center; letter-spacing:.02em; }
 .const-node-when{ font-size:.72rem; color:var(--silver-muted); }
+.const-node-view{
+  margin-top:2px;
+  font-family:var(--font-head);
+  font-size:.66rem;
+  letter-spacing:.03em;
+  color:var(--olive-soft, var(--gold-bright));
+  border:1px solid rgba(201,168,92,.4);
+  border-radius:999px;
+  padding:3px 10px;
+  opacity:.85;
+  transition:opacity .2s ease, border-color .2s ease;
+}
+.const-node:hover .const-node-view, .const-node[aria-expanded="true"] .const-node-view{
+  opacity:1;
+  border-color:var(--gold-bright);
+}
 .const-node-1{ top:12%; left:50%; }
 .const-node-2{ top:84%; left:16%; }
 .const-node-3{ top:84%; left:84%; }
@@ -1665,8 +1681,9 @@ html[data-motion="reduced"] .motion-card, html[data-motion="off"] .motion-card{ 
     border-radius:10px;
   }
   .const-node:hover, .const-node[aria-expanded="true"]{ transform:none; }
-  .const-node-dot{ grid-row:1 / span 3; }
-  .const-node-label, .const-node-role, .const-node-when{ grid-column:2; text-align:left; }
+  .const-node-dot{ grid-row:1 / span 4; }
+  .const-node-label, .const-node-role, .const-node-when, .const-node-view{ grid-column:2; text-align:left; }
+  .const-node-view{ width:fit-content; }
 }
 
 /* ---------- ai assistant: astronaut mascot (no longer trapped in a circle) ---------- */

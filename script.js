@@ -1632,49 +1632,79 @@
   const PROJECTS = [
     { key:'nexora', emoji:'🧮', title:'NEXORA — Mathematics Workspace', tag:'Internship · CodeAlpha', categories:['Frontend','Internship'], status:'live',
       desc:'Graphing, step-by-step equation solving, matrices, statistics and unit conversion in one installable PWA. Every expression routed through math.js — eval() appears nowhere.',
-      tech:['Vanilla JS','Canvas','math.js','PWA'], demoUrl:'https://nexora-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_Calculator', videoUrl:'https://lnkd.in/p/gJBJ4Ntc' },
+      tech:['Vanilla JS','Canvas','math.js','PWA'], demoUrl:'https://nexora-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_Calculator', videoUrl:'https://lnkd.in/p/gJBJ4Ntc',
+      howItWorks:'Every expression you type is parsed and evaluated by math.js, then rendered step by step on an HTML5 Canvas — nothing ever runs through JavaScript’s eval().',
+      problem:'Gives a way to graph, solve equations, and convert units in one offline-capable tool instead of switching between separate calculator apps.' },
     { key:'waveora', emoji:'🎵', title:'WAVEORA — Offline Music Player', tag:'Internship · CodeAlpha', categories:['Frontend','Internship'], status:'live',
       desc:'A Web Audio API engine with a live visualiser, IndexedDB-backed library, queue, playlists and listening stats. Fully usable with no connection once loaded.',
-      tech:['Vanilla JS','Web Audio API','IndexedDB','PWA'], demoUrl:'https://waveora-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_MusicPlayer', videoUrl:'https://lnkd.in/p/g887PRgM' },
+      tech:['Vanilla JS','Web Audio API','IndexedDB','PWA'], demoUrl:'https://waveora-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_MusicPlayer', videoUrl:'https://lnkd.in/p/g887PRgM',
+      howItWorks:'Playback and the live visualiser run on the Web Audio API, while the track library, queue and playlists persist in the browser via IndexedDB — no server involved.',
+      problem:'Lets you keep a personal music library and keep listening once a track has loaded, even with no internet connection.' },
     { key:'mireva', emoji:'🖼️', title:'MIREVA — Visual Gallery Workspace', tag:'Internship · CodeAlpha', categories:['Frontend','Internship'], status:'live',
       desc:'Masonry & grid layouts, a cinematic lightbox, colour explorer, collections and a lightweight editor — built to be fully keyboard- and screen-reader-operable.',
-      tech:['Vanilla JS','Canvas','A11y','PWA'], demoUrl:'https://mireva-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_ImageGallery', videoUrl:'https://lnkd.in/p/gX7GrHVU' },
+      tech:['Vanilla JS','Canvas','A11y','PWA'], demoUrl:'https://mireva-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_ImageGallery', videoUrl:'https://lnkd.in/p/gX7GrHVU',
+      howItWorks:'Images render in masonry or grid layout on Canvas, with the lightbox and colour explorer built to be fully operable by keyboard and screen reader, not just mouse.',
+      problem:'Gives a fast, accessible way to browse and organise a photo collection without relying on a heavier, less accessible gallery app.' },
     { key:'nexabank', emoji:'🏦', title:'NexaBank — Online Banking Platform', tag:'Personal · Full Stack', categories:['Full Stack'], status:'live', featured:true,
       desc:'Real account balances, instant transfers and ACID-safe money movement — every transaction runs inside a row-locked DB transaction. Bcrypt auth, CSRF everywhere, full admin console.',
-      tech:['PHP','MySQL','Docker','Chart.js'], demoUrl:'https://nexabank-web-production.up.railway.app', repoUrl:'https://github.com/nilushamadhuwanthi123/NexaBank---Online-Banking-System' },
+      tech:['PHP','MySQL','Docker','Chart.js'], demoUrl:'https://nexabank-web-production.up.railway.app', repoUrl:'https://github.com/nilushamadhuwanthi123/NexaBank---Online-Banking-System',
+      howItWorks:'Every transfer runs inside a row-locked MySQL transaction so two simultaneous requests can\'t corrupt a balance, with bcrypt-hashed passwords and CSRF protection on every form.',
+      problem:'Handles secure fund transfers and real-time balance tracking with dynamic, auto-generated financial reports.' },
     { key:'fintrack', emoji:'💰', title:'FinTrack — Personal Finance Tracker', tag:'Internship · Codveda', categories:['Full Stack','Internship'], status:'live',
       desc:'Budgets, categorized transactions and spending trends in a React + Vite dashboard, built to make a full month of cash flow legible at a glance.',
-      tech:['React','Vite','Chart.js'], demoUrl:'https://fintrack-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/FinTrack-Finace-Tarcker-app_Codveda_Level-02_task3', videoUrl:'https://lnkd.in/p/gndeZres' },
+      tech:['React','Vite','Chart.js'], demoUrl:'https://fintrack-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/FinTrack-Finace-Tarcker-app_Codveda_Level-02_task3', videoUrl:'https://lnkd.in/p/gndeZres',
+      howItWorks:'Transactions are categorized and charted with Chart.js inside a React + Vite dashboard, pulling from a lightweight budgeting data model.',
+      problem:'Makes a full month of spending legible at a glance instead of scrolling through raw transaction lists.' },
     { key:'medicare', emoji:'🏥', title:'MediCare — Hospital Management', tag:'Personal · Full Stack', categories:['Full Stack'], status:'live', featured:true,
       desc:'Patients, appointments, staff and records in a full CRUD system with role-based access control, seeded with realistic demo data.',
-      tech:['React','Node.js','Express','MongoDB'], demoUrl:'https://frontend-ecru-five-78.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/MediCare-Hospital_Management_System' },
+      tech:['React','Node.js','Express','MongoDB'], demoUrl:'https://frontend-ecru-five-78.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/MediCare-Hospital_Management_System',
+      howItWorks:'A Node.js/Express API backed by MongoDB enforces role-based access, so Admin, Doctor, Patient and Receptionist each only see what they\'re meant to.',
+      problem:'Solves fragmented hospital recordkeeping by unifying appointments, billing, and inventory into one role-secured system.' },
     { key:'orvexa', emoji:'🧭', title:'Orvexa — Operations & Productivity Platform', tag:'Personal · Full Stack', categories:['Full Stack'], status:'live', featured:true,
       desc:'Projects, a drag-and-drop task board, real-time collaboration over Socket.IO and analytics computed from real data.',
-      tech:['React','Node.js','Express','MongoDB','Socket.IO'], demoUrl:'https://orvexa-production-1b61.up.railway.app', repoUrl:'https://github.com/nilushamadhuwanthi123/orvexa-productivity-platform', videoUrl:'https://lnkd.in/p/grBdF8Ai' },
+      tech:['React','Node.js','Express','MongoDB','Socket.IO'], demoUrl:'https://orvexa-production-1b61.up.railway.app', repoUrl:'https://github.com/nilushamadhuwanthi123/orvexa-productivity-platform', videoUrl:'https://lnkd.in/p/grBdF8Ai',
+      howItWorks:'Task-board state syncs across users in real time over Socket.IO, with a Node/Express + MongoDB backend computing the analytics from actual project data, not mock numbers.',
+      problem:'Replaces scattered task lists and spreadsheets with one collaborative board a team can update live together.' },
     { key:'flowboard', emoji:'✅', title:'FlowBoard — To-Do List App', tag:'Internship · Codveda', categories:['Frontend','Internship'], status:'live',
       desc:'A clean task manager with boards, priorities and due dates — built to make daily task triage fast rather than fussy.',
-      tech:['HTML5','CSS3','JavaScript'], demoUrl:'https://flowboard-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/FlowBoard-TO-DO-List-App_Codveda_Level-02_task2', videoUrl:'https://lnkd.in/p/gwfhK2JK' },
+      tech:['HTML5','CSS3','JavaScript'], demoUrl:'https://flowboard-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/FlowBoard-TO-DO-List-App_Codveda_Level-02_task2', videoUrl:'https://lnkd.in/p/gwfhK2JK',
+      howItWorks:'A vanilla HTML/CSS/JS build (no framework) that stores boards, priorities and due dates client-side for fast, no-load-time task triage.',
+      problem:'Gives a simple, distraction-free way to sort daily tasks by priority instead of a heavier project-management tool.' },
     { key:'fixfinder', emoji:'🔧', title:'FixFinder — Local Services Directory', tag:'Internship · Codveda', categories:['Frontend','Internship'], status:'live',
       desc:'A responsive multi-page site for finding trusted local service professionals, with searchable/filterable listings, professional profiles, a quote-request modal, FAQ accordion, and dark mode.',
-      tech:['HTML5','CSS3','JavaScript'], demoUrl:'https://fixfinder-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/FixFinder_Codveda_Level1', videoUrl:'https://lnkd.in/p/gcPkBbCa' },
+      tech:['HTML5','CSS3','JavaScript'], demoUrl:'https://fixfinder-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/FixFinder_Codveda_Level1', videoUrl:'https://lnkd.in/p/gcPkBbCa',
+      howItWorks:'A multi-page vanilla JS site with searchable/filterable listings, a quote-request modal and an FAQ accordion, styled with a working dark mode toggle.',
+      problem:'Helps someone find a trustworthy local service professional through searchable profiles instead of relying on word of mouth.' },
     { key:'smartcampus', emoji:'🏫', title:'Smart Campus Operations System', tag:'Academic · SLIIT IT3030 Group Project', categories:['Full Stack','University'], status:'source',
       desc:'A university facility-booking and incident-ticketing platform built with a 4-person SLIIT team, with Google OAuth sign-in and a REST API secured by Spring Security.',
-      tech:['Spring Boot','Java','React','MySQL','OAuth 2.0'], repoUrl:'https://github.com/nilushamadhuwanthi123/Smart_Campus_Operations_PAF' },
+      tech:['Spring Boot','Java','React','MySQL','OAuth 2.0'], repoUrl:'https://github.com/nilushamadhuwanthi123/Smart_Campus_Operations_PAF',
+      howItWorks:'Spring Boot + Spring Security expose a REST API behind Google OAuth sign-in, with React consuming it on the frontend and MySQL storing bookings and tickets.',
+      problem:'Replaces manual facility booking with a self-service system and a trackable incident ticketing workflow.' },
     { key:'linguaflow', emoji:'🌐', title:'LinguaFlow AI — Translator', tag:'Personal · Full Stack', categories:['Full Stack'], status:'source',
       desc:"A multilingual translation platform — real auth, real text and voice translation, AI-assisted rewriting and a usage dashboard, backed by PostgreSQL. Image, document and video translation are scoped but intentionally not yet built — see the repo's own roadmap.",
-      tech:['Kotlin/Ktor','React','TypeScript','PostgreSQL'], repoUrl:'https://github.com/nilushamadhuwanthi123/LinguaFlow-AI-Translator_App' },
+      tech:['Kotlin/Ktor','React','TypeScript','PostgreSQL'], repoUrl:'https://github.com/nilushamadhuwanthi123/LinguaFlow-AI-Translator_App',
+      howItWorks:'A Kotlin/Ktor backend serves a React + TypeScript frontend, storing user accounts and translation history in PostgreSQL, with real auth guarding every request.',
+      problem:'Aims to unify text, voice, image and video translation into one interface instead of switching between separate tools — text and voice are live today, with image/document/video scoped on the repo\'s own roadmap.' },
     { key:'workpulse', emoji:'🗂️', title:'WorkPuise — Leave & Attendance System', tag:'Internship · Codveda', categories:['Full Stack','Internship'], status:'source',
       desc:'Enterprise-style leave & attendance system with JWT auth, role-based access, and manager approval workflows.',
-      tech:['React','Node.js','Express','MongoDB'], repoUrl:'https://github.com/nilushamadhuwanthi123/WorkPuise_Codveda_Level-03' },
+      tech:['React','Node.js','Express','MongoDB'], repoUrl:'https://github.com/nilushamadhuwanthi123/WorkPuise_Codveda_Level-03',
+      howItWorks:'A React frontend talks to a Node.js/Express API guarded by JWT auth, with MongoDB storing leave requests and their manager-approval status.',
+      problem:'Automates manual leave tracking with a structured request-approval flow between employees and managers.' },
     { key:'uniroute', emoji:'🚌', title:'UniRoute — Shuttle Service Management', tag:'Personal · Full Stack', categories:['Full Stack'], status:'soon',
       desc:'Transportation management system for campus shuttles.', contribution:'Owned the route management module and improved UX via a responsive interface.',
-      tech:['React','Node.js','MongoDB'] },
+      tech:['React','Node.js','MongoDB'],
+      howItWorks:'A React frontend paired with a Node.js/MongoDB backend for routes; my part was the route-management module and the responsive UI around it.',
+      problem:'Solves seat and route conflicts for campus shuttles through a dedicated route management module I owned.' },
     { key:'mindfulday', emoji:'🧘', title:'MindfulDay — Wellness Tracking App', tag:'Personal · Mobile', categories:['Mobile'], status:'soon',
       desc:'Mobile app tracking daily habits, mood, water intake, exercise, and personal wellness goals.',
-      tech:['Kotlin','Android Studio','Firebase'] },
+      tech:['Kotlin','Android Studio','Firebase'],
+      howItWorks:'A native Kotlin/Android Studio app with Firebase handling the data layer for daily habit, mood and hydration logs.',
+      problem:'Helps users build consistent wellness habits with daily mood, hydration, and goal-progress tracking.' },
     { key:'blooddonation', emoji:'🩸', title:'Blood Donation Management System', tag:'Personal · Full Stack', categories:['Full Stack'], status:'source',
       desc:'Role-based platform with JWT auth, Google Maps donor location, real-time notifications, and donor recommendation logic.',
-      tech:['Java','JWT','Google Maps API'], repoUrl:'https://github.com/nilushamadhuwanthi123/Blood-donation-Management-System' },
+      tech:['Java','JWT','Google Maps API'], repoUrl:'https://github.com/nilushamadhuwanthi123/Blood-donation-Management-System',
+      howItWorks:'JWT-guarded role-based access, with the Google Maps API used to locate nearby donors and rule-based logic to recommend matches by blood type and distance.',
+      problem:'Speeds up emergency donor matching using location-based search and rule-based donor recommendations.' },
   ];
 
   function statusBadge(p) {
@@ -1901,12 +1931,16 @@
     if (p.repoUrl) links.push(`<a href="${p.repoUrl}" target="_blank" rel="noopener" class="btn btn-ghost">View Code ↗</a>`);
     if (!links.length) links.push('<span class="fb-soon-note">Demo coming soon</span>');
     const contribution = p.contribution ? `<div class="fb-modal-section"><b>My Contribution</b><p>${p.contribution}</p></div>` : '';
+    const howItWorks = p.howItWorks ? `<div class="fb-modal-section"><b>How It Works</b><p>${p.howItWorks}</p></div>` : '';
+    const problem = p.problem ? `<div class="fb-modal-section"><b>The Real-World Problem It Solves</b><p>${p.problem}</p></div>` : '';
     modalBody.innerHTML = `
       <div class="fb-modal-top"><span class="project-emoji">${p.emoji}</span>${statusBadge(p)}</div>
       <h3>${p.title}</h3>
       <span class="spine-tag">${p.tag}</span>
       <div class="fb-modal-section"><b>Overview</b><p>${p.desc}</p></div>
       ${contribution}
+      ${howItWorks}
+      ${problem}
       <div class="fb-modal-section"><b>Tech Stack</b><div class="fb-dna">${techDNA(p.tech)}</div></div>
       <div class="fb-modal-links">${links.join('')}</div>`;
     modal.hidden = false;
