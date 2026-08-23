@@ -352,6 +352,20 @@ html[data-motion="reduced"] nav, html[data-motion="off"] nav{ transition:none; }
 }
 @media (max-width:920px){ .nav-icon-btn[data-cmdk-open] .nav-kbd-hint{ display:none; } }
 
+/* one-time first-visit nudge toward the recruiter 60-second view, so new
+   visitors actually notice the ⚡ button exists before scrolling past it */
+.nav-recruiter-pulse{
+  color:var(--gold-bright);
+  border-color:var(--gold);
+  animation:nav-recruiter-pulse-anim 1.8s ease-in-out 3;
+}
+@keyframes nav-recruiter-pulse-anim{
+  0%, 100%{ box-shadow:0 0 0 0 rgba(201,168,92,.45); }
+  50%{ box-shadow:0 0 0 7px rgba(201,168,92,0); }
+}
+html[data-motion="reduced"] .nav-recruiter-pulse,
+html[data-motion="off"] .nav-recruiter-pulse{ animation:none; box-shadow:0 0 0 2px rgba(201,168,92,.4); }
+
 .logo{
   display:inline-flex;
   align-items:center;
@@ -695,7 +709,21 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   border:1px solid var(--border);
   border-radius:999px;
   padding:5px 12px;
+  opacity:0;
+  transform:translateY(6px);
+  animation:recruiter-chip-in .35s ease forwards;
 }
+.recruiter-skills span:nth-child(1){ animation-delay:.05s; }
+.recruiter-skills span:nth-child(2){ animation-delay:.09s; }
+.recruiter-skills span:nth-child(3){ animation-delay:.13s; }
+.recruiter-skills span:nth-child(4){ animation-delay:.17s; }
+.recruiter-skills span:nth-child(5){ animation-delay:.21s; }
+.recruiter-skills span:nth-child(6){ animation-delay:.25s; }
+.recruiter-skills span:nth-child(7){ animation-delay:.29s; }
+.recruiter-skills span:nth-child(8){ animation-delay:.33s; }
+@keyframes recruiter-chip-in{ to{ opacity:1; transform:translateY(0); } }
+html[data-motion="reduced"] .recruiter-skills span,
+html[data-motion="off"] .recruiter-skills span{ animation:none; opacity:1; transform:none; }
 .recruiter-flagships{ display:flex; flex-direction:column; gap:10px; margin-bottom:26px; }
 .recruiter-flagships a{
   display:flex; flex-direction:column;

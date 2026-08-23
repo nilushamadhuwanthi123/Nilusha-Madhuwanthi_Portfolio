@@ -987,12 +987,78 @@
   const overlay = document.getElementById('recruiter-overlay');
   const closeBtn = document.getElementById('recruiter-close');
   if (!toggle || !overlay) return;
-  function open() { overlay.hidden = false; requestAnimationFrame(() => overlay.classList.add('show')); }
-  function close() { overlay.classList.remove('show'); setTimeout(() => { overlay.hidden = true; }, 200); }
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // count-up the stat numbers each time the card opens, same easing pattern
+  // as the hero stats (countStats()) — makes the "60-second view" feel alive
+  // instead of a static screenshot of numbers.
+  function animateStats() {
+    const stats = overlay.querySelectorAll('.recruiter-stats b');
+    stats.forEach((el) => {
+      const raw = el.textContent.trim();
+      const target = parseInt(raw, 10);
+      if (Number.isNaN(target)) return;
+      const suffix = raw.replace(/^[0-9]+/, '');
+      if (reducedMotion) { el.textContent = target + suffix; return; }
+      let n = 0;
+      const step = Math.max(1, Math.round(target / 20));
+      (function tick() {
+        n = Math.min(target, n + step);
+        el.textContent = n + suffix;
+        if (n < target) requestAnimationFrame(tick);
+      })();
+    });
+  }
+
+  function open() {
+    overlay.hidden = false;
+    requestAnimationFrame(() => overlay.classList.add('show'));
+    animateStats();
+    // move focus into the card so keyboard/screen-reader users land on the
+    // close control instead of staying on the trigger button behind an
+    // overlay they can no longer see past
+    setTimeout(() => { if (closeBtn) closeBtn.focus(); }, 220);
+  }
+  function close() {
+    overlay.classList.remove('show');
+    setTimeout(() => { overlay.hidden = true; }, 200);
+    toggle.focus();
+  }
   toggle.addEventListener('click', open);
   if (closeBtn) closeBtn.addEventListener('click', close);
   overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !overlay.hidden) close(); });
+
+  // one-time nudge, after the entrance intro finishes, pointing first-time
+  // visitors at this 60-second view so they actually discover it — same
+  // "show once, dismiss forever" localStorage pattern as the AI bot greeting
+  // and the auth-flow alien.
+  let nudgeSeen = false;
+  try { nudgeSeen = localStorage.getItem('recruiterNudgeSeen') === '1'; } catch (e) {}
+  if (!nudgeSeen && !reducedMotion) {
+    const dismissNudge = () => {
+      toggle.classList.remove('nav-recruiter-pulse');
+      try { localStorage.setItem('recruiterNudgeSeen', '1'); } catch (e) {}
+    };
+    const armNudge = () => {
+      setTimeout(() => { if (!overlay.classList.contains('show')) toggle.classList.add('nav-recruiter-pulse'); }, 900);
+      setTimeout(dismissNudge, 9000);
+    };
+    let introDone = false;
+    try { introDone = localStorage.getItem('introCompleted') === '1'; } catch (e) {}
+    if (introDone) {
+      armNudge();
+    } else {
+      const introOverlay = document.getElementById('intro-overlay');
+      if (introOverlay) {
+        const mo = new MutationObserver(() => { if (introOverlay.hidden) { mo.disconnect(); armNudge(); } });
+        mo.observe(introOverlay, { attributes: true, attributeFilter: ['hidden'] });
+      } else {
+        armNudge();
+      }
+    }
+    toggle.addEventListener('click', dismissNudge, { once: true });
+  }
 })();
 
 /* ---------- mouse-reactive nebula ---------- */
