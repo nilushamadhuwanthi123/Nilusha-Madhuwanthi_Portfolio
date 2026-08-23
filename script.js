@@ -1456,24 +1456,32 @@
   // not just on their first-ever visit.
   let hideTimer = null;
   let removeTimer = null;
+  let warpTimer = null;
   function finishIntro() {
     clearTimeout(hideTimer);
     clearTimeout(removeTimer);
+    clearTimeout(warpTimer);
     overlay.classList.add('intro-out');
     setTimeout(() => { overlay.hidden = true; }, skipAnimation ? 750 : 1650);
   }
   function playIntro() {
     overlay.hidden = false;
-    overlay.classList.remove('intro-out');
+    overlay.classList.remove('intro-out', 'intro-warp', 'intro-cinematic');
     if (skipAnimation) {
       // still a brief, respectful pause so it doesn't feel like a glitch —
       // no motion, just a short honest beat before revealing the Hero
       hideTimer = setTimeout(finishIntro, 500);
     } else {
-      // shortened on purpose: the overlay now cross-fades (see style.css,
-      // 1.6s) while the Hero's own camera is still gliding in from deep
-      // space (see initUniverse()'s introFlight), so the flight is actually
-      // visible through the dissolve instead of finishing behind a solid layer
+      // cross-fades (see style.css, 1.6s) while the Hero's own camera is
+      // still gliding in from deep space (see initUniverse()'s introFlight),
+      // so the flight is actually visible through the dissolve instead of
+      // finishing behind a solid layer.
+      overlay.classList.add('intro-cinematic');
+      // ~550ms before the exit fires: stars streak outward, the mark
+      // flashes, and the word/tagline dim out of the way — a "warp jump"
+      // beat right before the iris-collapse exit, so leaving the intro
+      // actually feels like jumping into the universe, not just fading out.
+      warpTimer = setTimeout(() => overlay.classList.add('intro-warp'), 950);
       hideTimer = setTimeout(finishIntro, 1500);
     }
   }

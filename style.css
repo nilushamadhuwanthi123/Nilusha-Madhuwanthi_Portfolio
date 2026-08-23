@@ -141,6 +141,16 @@ a{color:inherit; text-decoration:none;}
 }
 .intro-overlay[hidden]{ display:none; }
 .intro-overlay.intro-out{ opacity:0; pointer-events:none; }
+/* ---- cinematic exit (full motion only — the plain opacity fade above is
+   the untouched fallback for Skip/reduced-motion/no-motion). Instead of a
+   flat crossfade, the overlay collapses inward through an iris/wormhole
+   shrink right as the "warp" burst below plays, so leaving the intro reads
+   as actually jumping INTO the universe rather than a slide fading out. ---- */
+.intro-overlay.intro-cinematic{
+  transition:opacity 1.6s ease, clip-path 1.15s cubic-bezier(.65,0,.35,1);
+  clip-path:circle(150% at 50% 50%);
+}
+.intro-overlay.intro-cinematic.intro-out{ clip-path:circle(0% at 50% 50%); }
 .intro-stars{
   position:absolute; inset:0;
   background-image:
@@ -152,6 +162,24 @@ a{color:inherit; text-decoration:none;}
     radial-gradient(1.5px 1.5px at 45% 35%, rgba(244,241,232,.5), transparent);
   background-size:100% 100%;
   opacity:.8;
+  transition:transform .55s cubic-bezier(.2,.8,.2,1), filter .55s ease;
+}
+/* ---- "warp jump" burst — fires ~550ms before the iris-collapse exit
+   starts: stars streak outward and brighten, the logo flashes, the word
+   and tagline dim out of the way, like the moment a ship jumps to warp
+   right before arriving. ---- */
+.intro-overlay.intro-cinematic.intro-warp .intro-stars{
+  transform:scale(1.9);
+  filter:blur(2.5px) brightness(1.7);
+}
+.intro-overlay.intro-cinematic.intro-warp .intro-mark{
+  transform:scale(1.22);
+  box-shadow:0 0 34px 6px rgba(224,196,119,.55);
+}
+.intro-overlay.intro-cinematic.intro-warp .intro-word,
+.intro-overlay.intro-cinematic.intro-warp .intro-tag{
+  opacity:0 !important;
+  transition:opacity .35s ease;
 }
 .intro-content{ position:relative; text-align:center; }
 .intro-mark{
@@ -164,6 +192,7 @@ a{color:inherit; text-decoration:none;}
   border:1px solid rgba(201,168,92,.4);
   opacity:0; transform:scale(.8);
   animation:intro-mark-in 1s ease .15s forwards;
+  transition:transform .5s cubic-bezier(.3,.6,.3,1.4), box-shadow .5s ease;
 }
 .intro-word{
   font-family:var(--font-head); font-weight:600;
