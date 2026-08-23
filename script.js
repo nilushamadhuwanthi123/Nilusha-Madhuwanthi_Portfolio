@@ -35,18 +35,19 @@
   // mouse-parallax ease. Mobile keeps it centered (text stacks above it there).
   const camBaseX = isMobile ? 0 : -3.6;
   const lookTargetX = isMobile ? 0 : -3.4;
-  /* ---- first-visit cinematic entrance: start this SAME camera further out
-     in deep space and let the existing per-frame easing further down in
-     animate() glide it into its normal resting position. No second camera,
-     no second Earth — just a different starting point, once, on a first
-     visit under full motion (mirrors niluverseIntro()'s own seen/reduced
-     checks so the two stay in sync without sharing state). ---- */
+  /* ---- cinematic entrance: start this SAME camera further out in deep
+     space and let the existing per-frame easing further down in animate()
+     glide it into its normal resting position. No second camera, no second
+     Earth — just a different starting point, on EVERY visit under full
+     motion (mirrors niluverseIntro()'s own reduced-motion check so the two
+     stay in sync without sharing state). Plays every time by design — the
+     "seen once, never again" gate was removed on request so anyone opening
+     the link sees the full entrance, not just first-time visitors. ---- */
   let introFlight = false;
   try {
-    const introSeenEarly = localStorage.getItem('introCompleted') === '1';
     const motionPrefEarly = localStorage.getItem('motionPreference') || 'full';
     const reducedEarly = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    introFlight = !introSeenEarly && !reducedEarly && motionPrefEarly === 'full';
+    introFlight = !reducedEarly && motionPrefEarly === 'full';
   } catch (e) {}
   if (introFlight) {
     camera.position.set(camBaseX * 0.3, 5.5, (isMobile ? 15 : 11.5) + (isMobile ? 24 : 32));
@@ -1418,20 +1419,15 @@
   try { motionPref = localStorage.getItem('motionPreference') || 'full'; } catch (e) {}
   const skipAnimation = reducedMotion || motionPref !== 'full';
 
-  function seen() {
-    try { return localStorage.getItem('introCompleted') === '1'; } catch (e) { return false; }
-  }
-  function markSeen() {
-    try { localStorage.setItem('introCompleted', '1'); } catch (e) {}
-  }
-
+  // Plays on EVERY visit by request — no "seen once" localStorage gate.
+  // Whoever opens the link gets the full Niluverse entrance every time,
+  // not just on their first-ever visit.
   let hideTimer = null;
   let removeTimer = null;
   function finishIntro() {
     clearTimeout(hideTimer);
     clearTimeout(removeTimer);
     overlay.classList.add('intro-out');
-    markSeen();
     setTimeout(() => { overlay.hidden = true; }, skipAnimation ? 750 : 1650);
   }
   function playIntro() {
@@ -1455,13 +1451,10 @@
     if (e.key === 'Escape' && !overlay.hidden) finishIntro();
   });
   if (replayBtn) {
-    replayBtn.addEventListener('click', () => {
-      try { localStorage.removeItem('introCompleted'); } catch (e) {}
-      playIntro();
-    });
+    replayBtn.addEventListener('click', () => { playIntro(); });
   }
 
-  if (!seen()) playIntro();
+  playIntro();
 })();
 
 /* ---------- appearance settings (theme / motion / text size / contrast) ---------- */
