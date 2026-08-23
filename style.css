@@ -1122,7 +1122,44 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   background:var(--card);
   padding:22px 20px;
 }
-.auth-flow-controls{ display:flex; gap:10px; margin-bottom:22px; }
+.auth-flow-controls{ display:flex; gap:10px; margin-bottom:22px; position:relative; }
+/* ---- one-off "alien" nudge pointing at Play flow — purely decorative,
+   scoped to this section only, never repeats after its first appearance ---- */
+.auth-flow-alien{
+  position:absolute;
+  left:calc(100% + 4px);
+  top:50%;
+  transform:translateY(-50%) scale(.85);
+  display:flex; align-items:center; gap:6px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .35s ease, transform .35s ease;
+}
+.auth-flow-alien.show{ opacity:1; transform:translateY(-50%) scale(1); }
+.auth-flow-alien-bubble{
+  font-family:var(--font-head);
+  font-size:.72rem;
+  white-space:nowrap;
+  background:var(--glass-94);
+  border:1px solid rgba(143,174,90,.4);
+  color:var(--ivory);
+  border-radius:999px 999px 999px 4px;
+  padding:6px 12px;
+  box-shadow:0 10px 26px -12px rgba(143,174,90,.5);
+}
+.auth-flow-alien-emoji{
+  font-size:1.3rem;
+  animation:auth-flow-alien-bob 1.6s ease-in-out infinite;
+}
+@keyframes auth-flow-alien-bob{
+  0%, 100%{ transform:translateY(0) rotate(0deg); }
+  50%{ transform:translateY(-5px) rotate(-8deg); }
+}
+html[data-motion="reduced"] .auth-flow-alien-emoji, html[data-motion="off"] .auth-flow-alien-emoji{ animation:none; }
+@media (max-width:760px){
+  .auth-flow-alien{ position:static; transform:none; margin-left:4px; opacity:0; }
+  .auth-flow-alien.show{ transform:none; }
+}
 .auth-flow-steps{
   display:flex;
   flex-direction:column;

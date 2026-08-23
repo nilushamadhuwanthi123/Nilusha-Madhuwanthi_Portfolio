@@ -2249,6 +2249,34 @@
     if (playBtn) playBtn.addEventListener('click', play);
     if (resetBtn) resetBtn.addEventListener('click', reset);
     showUpTo(stepEls.length); // all visible by default (readable without interaction)
+
+    /* ---- playful "alien" prompt pointing at Play flow, shown once as the
+       section scrolls into view — a tiny, one-off, purely decorative nudge
+       scoped only to this section (not the astronaut, not the AI bot). ---- */
+    const alien = document.getElementById('auth-flow-alien');
+    const authFlowSection = document.getElementById('auth-flow');
+    if (alien && authFlowSection && playBtn) {
+      let alienSeen = false;
+      try { alienSeen = localStorage.getItem('authFlowAlienSeen') === '1'; } catch (e) {}
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!alienSeen) {
+        const dismiss = () => {
+          alien.classList.remove('show');
+          try { localStorage.setItem('authFlowAlienSeen', '1'); } catch (e) {}
+        };
+        const alienIO = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setTimeout(() => alien.classList.add('show'), reduced ? 0 : 500);
+              setTimeout(dismiss, 6000);
+              alienIO.disconnect();
+            }
+          });
+        }, { threshold: 0.4 });
+        alienIO.observe(authFlowSection);
+        playBtn.addEventListener('click', dismiss, { once: true });
+      }
+    }
   })();
 
   /* ---------- builds in motion: data-driven from PROJECTS[].videoUrl ---------- */
