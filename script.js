@@ -1702,6 +1702,73 @@
   }
   if (searchEl) searchEl.addEventListener('input', applyFilters);
 
+  // ---- constellation view: same real PROJECTS data, orbit layout grouped by primary category ----
+  const constWrap = document.getElementById('fb-constellation');
+  const viewToggle = document.querySelector('.fb-view-toggle');
+  let constellationBuilt = false;
+
+  function buildConstellation() {
+    if (!constWrap || constellationBuilt) return;
+    constellationBuilt = true;
+
+    const groups = {};
+    PROJECTS.forEach((p) => {
+      const cat = p.categories[0] || 'Other';
+      (groups[cat] = groups[cat] || []).push(p);
+    });
+    const catNames = Object.keys(groups);
+    const isMobile = window.innerWidth <= 760;
+    const ringGap = isMobile ? 15 : 13;
+
+    let html = `<div class="cv-center">MY<br/>PROJECTS</div>`;
+
+    // build ring radii: distribute categories across concentric rings
+    const ringRadii = catNames.map((_, i) => (isMobile ? 18 : 16) + i * ringGap);
+    html += ringRadii.map((r) => `<div class="cv-orbit-ring" style="width:${r * 2}%; height:${r * 2}%;"></div>`).join('');
+
+    catNames.forEach((cat, ringIdx) => {
+      const items = groups[cat];
+      const radius = ringRadii[ringIdx];
+      items.forEach((p, i) => {
+        const angle = (i / items.length) * 2 * Math.PI + ringIdx * 0.4; // slight offset per ring so labels don't stack
+        const top = 50 + radius * Math.sin(angle);
+        const left = 50 + radius * Math.cos(angle);
+        html += `
+          <button type="button" class="cv-node${p.featured ? ' cv-featured' : ''}" data-open-key="${p.key}" style="--cv-top:${top}%; --cv-left:${left}%;" aria-label="${p.title}">
+            <span class="cv-node-dot">${p.emoji}</span>
+            <span class="cv-node-label">${p.title.split('—')[0].split('-')[0].trim()}<br/><span class="cv-node-cat">${cat}</span></span>
+          </button>`;
+      });
+    });
+
+    constWrap.innerHTML = html;
+    constWrap.addEventListener('click', (e) => {
+      const node = e.target.closest('.cv-node');
+      if (!node) return;
+      openModal(node.dataset.openKey);
+    });
+  }
+
+  if (viewToggle) {
+    viewToggle.addEventListener('click', (e) => {
+      const btn = e.target.closest('.fb-view-btn');
+      if (!btn) return;
+      const view = btn.dataset.view;
+      viewToggle.querySelectorAll('.fb-view-btn').forEach((b) => {
+        b.classList.toggle('active', b === btn);
+        b.setAttribute('aria-selected', String(b === btn));
+      });
+      if (view === 'constellation') {
+        buildConstellation();
+        spine.hidden = true;
+        constWrap.hidden = false;
+      } else {
+        constWrap.hidden = true;
+        spine.hidden = false;
+      }
+    });
+  }
+
   // save/bookmark toggle
   spine.addEventListener('click', (e) => {
     const saveBtn = e.target.closest('.fb-save');

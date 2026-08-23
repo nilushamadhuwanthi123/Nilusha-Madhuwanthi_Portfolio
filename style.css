@@ -946,6 +946,126 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
 
 .section-head{margin-bottom:60px;}
 
+/* ---------- project view toggle (fishbone / constellation) ---------- */
+.fb-view-toggle{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin:22px 0 28px;
+}
+.fb-view-btn{
+  font-family:var(--font-head);
+  font-size:.78rem;
+  letter-spacing:.03em;
+  padding:8px 18px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--silver);
+  cursor:pointer;
+  transition:all .2s ease;
+}
+.fb-view-btn:hover{ color:var(--ivory); border-color:var(--gold); }
+.fb-view-btn.active{
+  background:var(--olive-primary);
+  border-color:var(--olive-primary);
+  color:var(--ivory);
+}
+
+/* ---------- constellation view: same real PROJECTS data, orbit layout ---------- */
+.constellation-view{
+  position:relative;
+  width:100%;
+  min-height:640px;
+  margin:0 auto 40px;
+}
+.cv-node{
+  position:absolute;
+  top:var(--cv-top);
+  left:var(--cv-left);
+  transform:translate(-50%,-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  width:104px;
+  cursor:pointer;
+  background:none;
+  border:none;
+  padding:0;
+}
+.cv-node-dot{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.15rem;
+  background:radial-gradient(circle at 32% 28%, var(--gold-bright), var(--olive-primary) 72%);
+  border:1px solid var(--border);
+  box-shadow:0 0 0 4px rgba(201,168,92,.08);
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.cv-node:hover .cv-node-dot, .cv-node:focus-visible .cv-node-dot{
+  transform:scale(1.14);
+  box-shadow:0 0 0 8px rgba(201,168,92,.16);
+}
+.cv-node.cv-featured .cv-node-dot{
+  width:56px; height:56px; font-size:1.35rem;
+}
+.cv-node-label{
+  font-family:var(--font-head);
+  font-size:.7rem;
+  text-align:center;
+  color:var(--silver);
+  line-height:1.25;
+}
+.cv-node:hover .cv-node-label, .cv-node:focus-visible .cv-node-label{ color:var(--ivory); }
+.cv-node-cat{
+  font-size:.6rem;
+  color:var(--gold);
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.cv-center{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  background:var(--card);
+  border:1px solid var(--gold);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-head);
+  font-size:.62rem;
+  text-align:center;
+  color:var(--gold-bright);
+  line-height:1.2;
+  padding:6px;
+  z-index:2;
+}
+.cv-orbit-ring{
+  position:absolute;
+  top:50%;
+  left:50%;
+  border:1px dashed var(--border);
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  opacity:.5;
+}
+@media (max-width:760px){
+  .constellation-view{ min-height:1400px; }
+  .cv-node{ width:84px; }
+  .cv-node-dot{ width:38px; height:38px; font-size:1rem; }
+  .cv-node.cv-featured .cv-node-dot{ width:46px; height:46px; }
+}
+
 /* ---------- auth flow ---------- */
 .auth-flow-wrap{
   border:1px solid var(--border);
