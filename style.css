@@ -1577,7 +1577,8 @@ html[data-motion="reduced"] .motion-card, html[data-motion="off"] .motion-card{ 
 .const-node-role{ font-size:.68rem; color:var(--gold-bright); text-align:center; letter-spacing:.02em; }
 .const-node-when{ font-size:.72rem; color:var(--silver-muted); }
 .const-node-1{ top:12%; left:50%; }
-.const-node-2{ top:84%; left:50%; }
+.const-node-2{ top:84%; left:16%; }
+.const-node-3{ top:84%; left:84%; }
 
 .const-detail{
   max-width:680px;

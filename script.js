@@ -661,6 +661,7 @@
     'Full-Stack Engineer',
     'Full Stack Engineer Intern @ EgoTechWorld',
     'Web Developer Intern @ Codveda Technologies',
+    'Formerly Frontend Developer Intern @ CodeAlpha',
     'Building things without eval()',
   ];
   let r = 0, c = 0, deleting = false;
@@ -1076,8 +1077,8 @@
       links: [{ label: 'Explore Projects', href: '#work' }],
     },
     {
-      test: /intern|experience|egotechworld|codveda|work(ed)?\s*at/i,
-      answer: 'Two internships running at once: Full Stack Engineer Intern at EgoTechWorld, and Web Developer Intern at Codveda Technologies — progressing through leveled projects from static UI builds up to a full-stack, JWT-authenticated system.',
+      test: /intern|experience|egotechworld|codveda|codealpha|work(ed)?\s*at/i,
+      answer: 'Two internships running at once right now: Full Stack Engineer Intern at EgoTechWorld, and Web Developer Intern at Codveda Technologies — progressing through leveled projects from static UI builds up to a full-stack, JWT-authenticated system. Also completed an earlier Frontend Developer Intern stint at CodeAlpha Technologies, shipping NEXORA, WAVEORA and MIREVA.',
       links: [{ label: 'See Experience', href: '#experience' }],
     },
     {
@@ -1500,6 +1501,13 @@
       desc: 'Progressing through leveled development tasks — from static UI builds to a full-stack, JWT-authenticated system.',
       projects: ['FlowBoard', 'FixFinder', 'FinTrack', 'WorkPuise'],
     },
+    codealpha: {
+      role: 'Frontend Developer Intern',
+      company: 'CodeAlpha Technologies',
+      when: 'Completed',
+      desc: 'A frontend-focused internship — three vanilla JS builds shipped end to end, from a scientific calculator to a full offline-capable music player and image gallery.',
+      projects: ['NEXORA', 'WAVEORA', 'MIREVA'],
+    },
   };
 
   function render(key) {
@@ -1547,13 +1555,13 @@
   if (!spine) return;
 
   const PROJECTS = [
-    { key:'nexora', emoji:'🧮', title:'NEXORA — Mathematics Workspace', tag:'Personal · Frontend', categories:['Frontend'], status:'live',
+    { key:'nexora', emoji:'🧮', title:'NEXORA — Mathematics Workspace', tag:'Internship · CodeAlpha', categories:['Frontend','Internship'], status:'live',
       desc:'Graphing, step-by-step equation solving, matrices, statistics and unit conversion in one installable PWA. Every expression routed through math.js — eval() appears nowhere.',
       tech:['Vanilla JS','Canvas','math.js','PWA'], demoUrl:'https://nexora-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_Calculator', videoUrl:'https://lnkd.in/p/gJBJ4Ntc' },
-    { key:'waveora', emoji:'🎵', title:'WAVEORA — Offline Music Player', tag:'Personal · Frontend', categories:['Frontend'], status:'live',
+    { key:'waveora', emoji:'🎵', title:'WAVEORA — Offline Music Player', tag:'Internship · CodeAlpha', categories:['Frontend','Internship'], status:'live',
       desc:'A Web Audio API engine with a live visualiser, IndexedDB-backed library, queue, playlists and listening stats. Fully usable with no connection once loaded.',
       tech:['Vanilla JS','Web Audio API','IndexedDB','PWA'], demoUrl:'https://waveora-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_MusicPlayer', videoUrl:'https://lnkd.in/p/g887PRgM' },
-    { key:'mireva', emoji:'🖼️', title:'MIREVA — Visual Gallery Workspace', tag:'Personal · Frontend', categories:['Frontend'], status:'live',
+    { key:'mireva', emoji:'🖼️', title:'MIREVA — Visual Gallery Workspace', tag:'Internship · CodeAlpha', categories:['Frontend','Internship'], status:'live',
       desc:'Masonry & grid layouts, a cinematic lightbox, colour explorer, collections and a lightweight editor — built to be fully keyboard- and screen-reader-operable.',
       tech:['Vanilla JS','Canvas','A11y','PWA'], demoUrl:'https://mireva-fix.vercel.app', repoUrl:'https://github.com/nilushamadhuwanthi123/CodeAlpha_ImageGallery', videoUrl:'https://lnkd.in/p/gX7GrHVU' },
     { key:'nexabank', emoji:'🏦', title:'NexaBank — Online Banking Platform', tag:'Personal · Full Stack', categories:['Full Stack'], status:'live', featured:true,
