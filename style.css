@@ -2973,6 +2973,13 @@ html[data-motion="reduced"], html[data-motion="off"]{ --dm-motion:1 !important; 
   margin-bottom:6px;
 }
 .fb-modal-section p{ color:var(--silver); line-height:1.6; font-size:.92rem; }
+.fb-modal-why{
+  border-left:2px solid var(--gold);
+  padding-left:14px;
+  background:linear-gradient(90deg, rgba(212,175,55,.06), transparent);
+  border-radius:0 8px 8px 0;
+  padding-top:2px; padding-bottom:2px;
+}
 .fb-dna{ display:flex; flex-direction:column; gap:6px; }
 .fb-dna-group{ display:flex; gap:8px; font-size:.86rem; }
 .fb-dna-group b{ color:var(--gold-bright); font-family:var(--font-head); font-size:.78rem; min-width:110px; }
