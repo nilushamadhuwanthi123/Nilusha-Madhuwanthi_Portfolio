@@ -477,6 +477,27 @@
     </div>
   </section>
 
+  <!-- ================= RESPONSIVE DESIGN LAB ================= -->
+  <section class="section reveal" id="responsive-lab">
+    <div class="section-head">
+      <span class="tag">04.8 — Responsive by Design</span>
+      <h2>One codebase, three screens.</h2>
+      <p class="sub">This is the real, live site resized in front of you — not mockup screenshots. Drag the slider or pick a preset.</p>
+    </div>
+    <div class="rlab-wrap">
+      <div class="rlab-controls">
+        <button type="button" class="lab-preset-btn active" data-rlab-size="1400">Desktop</button>
+        <button type="button" class="lab-preset-btn" data-rlab-size="820">Tablet</button>
+        <button type="button" class="lab-preset-btn" data-rlab-size="390">Mobile</button>
+        <span class="rlab-width" id="rlab-width">1400px</span>
+      </div>
+      <input type="range" id="rlab-slider" class="dm-slider" min="360" max="1400" step="10" value="1400" aria-label="Preview width" />
+      <div class="rlab-frame-wrap">
+        <iframe class="rlab-frame" id="rlab-frame" src="./?embed=1#hero" title="Live responsive preview of this site" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= EXPERIENCE: CAREER CONSTELLATION ================= -->
   <section class="section reveal" id="experience">
     <div class="section-head">

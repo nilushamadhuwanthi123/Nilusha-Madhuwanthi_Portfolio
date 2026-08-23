@@ -1115,6 +1115,43 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   .cv-node.cv-featured .cv-node-dot{ width:46px; height:46px; }
 }
 
+/* ---------- responsive design lab ---------- */
+.rlab-wrap{
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:var(--card);
+  padding:22px 20px;
+}
+.rlab-controls{ display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+.rlab-width{
+  margin-left:auto;
+  font-family:var(--font-head);
+  font-size:.72rem;
+  color:var(--silver-muted);
+  letter-spacing:.03em;
+}
+.rlab-frame-wrap{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--bg);
+  height:560px;
+  display:flex;
+  justify-content:center;
+  overflow-x:auto;
+  overflow-y:hidden;
+}
+.rlab-frame{
+  height:100%;
+  width:1400px;
+  max-width:none;
+  border:0;
+  transition:width .3s ease;
+  flex-shrink:0;
+}
+@media (max-width:900px){
+  .rlab-frame-wrap{ height:420px; }
+}
+
 /* ---------- design system showcase ---------- */
 .ds-wrap{ display:flex; flex-direction:column; gap:28px; }
 .ds-block{

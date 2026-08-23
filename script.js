@@ -1,5 +1,20 @@
 // ================= Nilusha Madhuwanthi — Portfolio =================
 
+/* ---------- Responsive Design Lab safety guard ----------
+   The lab below embeds this SAME page in an <iframe> (?embed=1) so visitors
+   see the real, live site resized rather than a screenshot. Without this
+   guard that embedded copy would embed itself again, and again — infinite
+   iframes. When loaded with ?embed=1 we simply remove the lab section
+   before its own script runs, so recursion stops at exactly one level. */
+(function stopEmbedRecursion() {
+  try {
+    if (new URLSearchParams(location.search).get('embed') === '1') {
+      const lab = document.getElementById('responsive-lab');
+      if (lab) lab.remove();
+    }
+  } catch (e) {}
+})();
+
 /* ---------- 3D skills universe (Three.js) ---------- */
 (function initUniverse() {
   const canvas = document.getElementById('bg-canvas');
@@ -1514,6 +1529,27 @@
     if (panel.classList.contains('show') && !panel.contains(e.target) && !toggle.contains(e.target)) closePanel();
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel.classList.contains('show')) closePanel(); });
+})();
+
+/* ---------- responsive design lab: resize the real, live site ---------- */
+(function responsiveLab() {
+  const frame = document.getElementById('rlab-frame');
+  const slider = document.getElementById('rlab-slider');
+  const widthLabel = document.getElementById('rlab-width');
+  const presetBtns = document.querySelectorAll('[data-rlab-size]');
+  if (!frame || !slider) return;
+
+  function setWidth(px) {
+    frame.style.width = `${px}px`;
+    slider.value = String(px);
+    if (widthLabel) widthLabel.textContent = `${px}px`;
+    presetBtns.forEach((b) => b.classList.toggle('active', Number(b.dataset.rlabSize) === Number(px)));
+  }
+
+  slider.addEventListener('input', () => setWidth(slider.value));
+  presetBtns.forEach((btn) => {
+    btn.addEventListener('click', () => setWidth(btn.dataset.rlabSize));
+  });
 })();
 
 /* ---------- design system: click a color swatch to copy its hex ---------- */
