@@ -1516,6 +1516,32 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel.classList.contains('show')) closePanel(); });
 })();
 
+/* ---------- design system: click a color swatch to copy its hex ---------- */
+(function designSystemShowcase() {
+  const swatches = document.querySelectorAll('.ds-swatch');
+  if (!swatches.length) return;
+  swatches.forEach((sw) => {
+    sw.addEventListener('click', async () => {
+      const hex = sw.dataset.hex;
+      try {
+        await navigator.clipboard.writeText(hex);
+      } catch (e) {
+        // clipboard API unavailable/blocked — fall back to a temporary selectable input
+        const tmp = document.createElement('input');
+        tmp.value = hex;
+        document.body.appendChild(tmp);
+        tmp.select();
+        try { document.execCommand('copy'); } catch (e2) {}
+        document.body.removeChild(tmp);
+      }
+      sw.classList.remove('ds-copied');
+      void sw.offsetWidth; // restart the pop animation on repeat clicks
+      sw.classList.add('ds-copied');
+      setTimeout(() => sw.classList.remove('ds-copied'), 1400);
+    });
+  });
+})();
+
 /* ---------- certificates: knowledge tree ---------- */
 /* Every credential below is real and already lived in the flat certificate
    grid — this just re-groups the same titles/links/dates into branches. */
