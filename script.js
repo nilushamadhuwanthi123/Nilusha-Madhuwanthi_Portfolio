@@ -2085,3 +2085,24 @@
   renderPresetButtons();
   loadPreset(PRESETS[0].key);
 })();
+
+/* ---------- connectivity indicator ---------- */
+(function connectivityIndicator() {
+  const toast = document.getElementById('connectivity-toast');
+  if (!toast) return;
+  let hideTimer;
+  function show(message, cls) {
+    clearTimeout(hideTimer);
+    toast.textContent = message;
+    toast.classList.remove('online', 'offline');
+    toast.classList.add(cls);
+    toast.hidden = false;
+    requestAnimationFrame(() => toast.classList.add('show'));
+    hideTimer = setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => { toast.hidden = true; }, 320);
+    }, 3200);
+  }
+  window.addEventListener('offline', () => show('⚠ You are offline — some things may not load', 'offline'));
+  window.addEventListener('online', () => show('✓ Back online', 'online'));
+})();

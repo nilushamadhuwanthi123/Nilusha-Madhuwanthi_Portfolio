@@ -946,6 +946,29 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
 
 .section-head{margin-bottom:60px;}
 
+/* ---------- connectivity toast ---------- */
+.connectivity-toast{
+  position:fixed;
+  top:14px; left:50%;
+  transform:translate(-50%, -60px);
+  z-index:200;
+  padding:10px 20px;
+  border-radius:999px;
+  font-size:.8rem;
+  font-family:var(--font-head);
+  border:1px solid var(--border);
+  background:var(--glass-94);
+  backdrop-filter:blur(10px);
+  color:var(--ivory);
+  box-shadow:0 14px 34px -16px rgba(0,0,0,.6);
+  transition:transform .3s ease, opacity .3s ease;
+  opacity:0;
+}
+.connectivity-toast.show{ transform:translate(-50%, 0); opacity:1; }
+.connectivity-toast.offline{ border-color:rgba(196,90,90,.5); color:#e08a8a; }
+.connectivity-toast.online{ border-color:rgba(137,148,102,.5); color:var(--gold-bright); }
+html[data-motion="reduced"] .connectivity-toast, html[data-motion="off"] .connectivity-toast{ transition:none; }
+
 /* ---------- achievements (hero badge strip) ---------- */
 .achievements{ margin-top:36px; }
 .achievements-title{
