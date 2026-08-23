@@ -2576,6 +2576,7 @@
       const btn = e.target.closest('.fb-view-btn');
       if (!btn) return;
       fishboneView = btn.dataset.view === 'fishbone';
+      canvas.classList.toggle('show', sectionVisible && fishboneView);
     });
   }
 
