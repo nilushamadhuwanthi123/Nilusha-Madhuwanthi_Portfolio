@@ -986,6 +986,14 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
   transition:opacity .5s ease;
 }
 .work-astronaut-canvas.show{ opacity:1; }
+/* subtle card-side glow while the astronaut is arrived beside it — part of the
+   arrival sequence's "card highlight" step, purely a border/shadow accent,
+   never resizes or repositions the card itself */
+.project-card.fb-astro-arrived{
+  border-color:rgba(143,174,90,.55);
+  box-shadow:0 0 0 1px rgba(143,174,90,.25), 0 18px 44px -22px rgba(143,174,90,.4);
+  transition:border-color .4s ease, box-shadow .4s ease;
+}
 
 /* ---------- project view toggle (fishbone / constellation) ---------- */
 .fb-view-toggle{

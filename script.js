@@ -2462,6 +2462,15 @@
   if (!canvas || !workSection || !spine || typeof THREE === 'undefined') return;
 
   const isMobile = () => window.innerWidth <= 760;
+  const isTablet = () => window.innerWidth > 760 && window.innerWidth <= 1024;
+  /* responsive scale tiers — the astronaut is meant to read as the main
+     explorer character, not a tiny decorative icon, while staying
+     secondary to project content (never resized/moved cards to make room) */
+  function baseScale() {
+    if (isMobile()) return 1.25;   // smaller but clearly visible, no continuous flight
+    if (isTablet()) return 1.55;   // tablet: simplified but present
+    return 1.9;                    // desktop: full exploration, main character
+  }
   function motionAllowed() {
     let pref = 'full';
     try { pref = localStorage.getItem('motionPreference') || 'full'; } catch (e) {}
@@ -2482,6 +2491,10 @@
   const keyLight = new THREE.PointLight(0xe0c477, 1.1, 900);
   keyLight.position.set(200, -150, 220);
   scene.add(keyLight);
+  /* olive-green rim light for depth/contrast at the larger scale — no neon, just a soft edge glow */
+  const rimLight = new THREE.PointLight(0x8fae5a, 1.4, 700);
+  rimLight.position.set(-160, 60, -80);
+  scene.add(rimLight);
 
   /* ---- build a small low-poly astronaut from primitives (no external assets) ---- */
   const astro = new THREE.Group();
@@ -2532,7 +2545,22 @@
   chestLight.position.set(0, 2, 10);
   astro.add(chestLight);
 
-  astro.scale.setScalar(isMobile() ? 0.85 : 1);
+  /* soft ambient shadow + atmospheric glow behind/below the astronaut — pure
+     visual polish for the larger scale, GPU-cheap (two flat circles, additive/alpha blend) */
+  const shadowBlob = new THREE.Mesh(
+    new THREE.CircleGeometry(16, 20),
+    new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.22, depthWrite: false })
+  );
+  shadowBlob.position.set(0, -24, -6);
+  astro.add(shadowBlob);
+  const auraGlow = new THREE.Mesh(
+    new THREE.CircleGeometry(30, 24),
+    new THREE.MeshBasicMaterial({ color: 0x8fae5a, transparent: true, opacity: 0.1, depthWrite: false })
+  );
+  auraGlow.position.set(0, 2, -14);
+  astro.add(auraGlow);
+
+  astro.scale.setScalar(baseScale());
   scene.add(astro);
 
   /* ---- tiny local particle haze around the astronaut (LOCAL only, not a second galaxy) ---- */
@@ -2547,6 +2575,20 @@
   dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
   const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: 0xe0c477, size: 1.6, transparent: true, opacity: 0.35, depthWrite: false }));
   astro.add(dust);
+
+  /* ---- thin, elegant flight trail: a fixed-length ring buffer of past world
+     positions, rendered as fading olive-green points behind the astronaut.
+     GPU-cheap (one small Points object, positions written in place each frame,
+     no allocations in the render loop). Skipped entirely on mobile/reduced-motion. */
+  const TRAIL_LEN = isMobile() ? 0 : 16;
+  let trail = null, trailPositions = null, trailOpacities = null, trailHistory = [];
+  if (TRAIL_LEN > 0) {
+    trailPositions = new Float32Array(TRAIL_LEN * 3);
+    const trailGeo = new THREE.BufferGeometry();
+    trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+    trail = new THREE.Points(trailGeo, new THREE.PointsMaterial({ color: 0xa8c47e, size: 2.2, transparent: true, opacity: 0.28, depthWrite: false }));
+    scene.add(trail);
+  }
 
   /* ---- deterministic patrol path: real project-card centers, in fishbone (document) order ---- */
   let waypoints = [];
@@ -2586,7 +2628,11 @@
     hoverTarget = null;
   });
 
-  /* ---- click: astronaut flies to the selected project and arrives ---- */
+  /* ---- click: astronaut flies to the selected project and arrives ----
+     Arrival sequence: approach (existing lerp) → slow (eased lerpSpeed in
+     animate()) → hover/bob (existing sin bob) → glow pulse (arrivalPulseT)
+     → card highlight (below) → the existing modal opens normally. */
+  let highlightedCard = null;
   spine.addEventListener('click', (e) => {
     const card = e.target.closest('.project-card');
     if (!card || e.target.closest('.fb-save') || e.target.closest('.fb-compare-toggle') || e.target.closest('.project-links a')) return;
@@ -2594,11 +2640,17 @@
     target.x = pos.x; target.y = pos.y - 26; target.z = pos.z + 4;
     arrivalHold = true;
     arrivalPulseT = 0;
+    if (highlightedCard) highlightedCard.classList.remove('fb-astro-arrived');
+    highlightedCard = card;
+    card.classList.add('fb-astro-arrived');
   });
   /* ---- modal close (observed, not modified): astronaut resumes its patrol ---- */
   if (modal) {
     new MutationObserver(() => {
-      if (modal.hidden) arrivalHold = false;
+      if (modal.hidden) {
+        arrivalHold = false;
+        if (highlightedCard) { highlightedCard.classList.remove('fb-astro-arrived'); highlightedCard = null; }
+      }
     }).observe(modal, { attributes: true, attributeFilter: ['hidden'] });
   }
 
@@ -2634,7 +2686,7 @@
     W = window.innerWidth; H = window.innerHeight;
     camera.right = W; camera.bottom = -H; camera.updateProjectionMatrix();
     renderer.setSize(W, H);
-    astro.scale.setScalar(isMobile() ? 0.85 : 1);
+    astro.scale.setScalar(baseScale());
     recomputeWaypoints();
   });
   document.addEventListener('visibilitychange', () => { running = !document.hidden; });
@@ -2670,23 +2722,56 @@
       }
     }
 
-    const lerpSpeed = reduced ? 0.5 : (arrivalHold ? 0.09 : 0.045);
-    current.x += (target.x - current.x) * lerpSpeed;
-    current.y += (target.y - current.y) * lerpSpeed;
-    current.z += (target.z - current.z) * lerpSpeed;
+    /* natural easing with a slow-approach: speed tapers off as the astronaut
+       nears its target instead of a constant robotic lerp rate */
+    const dxTotal = target.x - current.x, dyTotal = target.y - current.y;
+    const distToTarget = Math.sqrt(dxTotal * dxTotal + dyTotal * dyTotal);
+    const approachEase = Math.min(1, distToTarget / 140);
+    const baseLerp = reduced ? 0.5 : (arrivalHold ? 0.1 : 0.03 + 0.045 * approachEase);
+    const prevX = current.x, prevY = current.y;
+    current.x += (target.x - current.x) * baseLerp;
+    current.y += (target.y - current.y) * baseLerp;
+    current.z += (target.z - current.z) * baseLerp;
 
     astro.position.set(current.x, current.y + Math.sin(t * 1.4) * 4, current.z);
-    astro.rotation.z = Math.sin(t * 0.6) * 0.08 + (target.x - current.x) * -0.002;
-    astro.rotation.x = Math.cos(t * 0.5) * 0.05;
+    /* tilt in the direction of travel: bank on velocity instead of a fixed wobble */
+    const vx = current.x - prevX, vy = current.y - prevY;
+    const speed = Math.sqrt(vx * vx + vy * vy);
+    const travelTilt = Math.max(-0.35, Math.min(0.35, -vx * 0.05));
+    const travelPitch = Math.max(-0.22, Math.min(0.22, vy * 0.04));
+    astro.rotation.z = Math.sin(t * 0.6) * 0.06 + travelTilt;
+    astro.rotation.x = Math.cos(t * 0.5) * 0.04 + travelPitch;
+    astro.rotation.y = Math.max(-0.4, Math.min(0.4, -vx * 0.06));
     dust.rotation.y += 0.003;
+
+    /* thin flight trail: push the current world position into a ring buffer,
+       skip while basically stationary so it doesn't clutter the arrival hover */
+    if (trail && speed > 0.6) {
+      trailHistory.unshift({ x: current.x, y: current.y + Math.sin(t * 1.4) * 4, z: current.z - 2 });
+      if (trailHistory.length > TRAIL_LEN) trailHistory.length = TRAIL_LEN;
+      for (let i = 0; i < TRAIL_LEN; i++) {
+        const p = trailHistory[i];
+        if (p) { trailPositions[i * 3] = p.x; trailPositions[i * 3 + 1] = p.y; trailPositions[i * 3 + 2] = p.z; }
+        else { trailPositions[i * 3] = current.x; trailPositions[i * 3 + 1] = -99999; trailPositions[i * 3 + 2] = current.z; }
+      }
+      trail.geometry.attributes.position.needsUpdate = true;
+      trail.material.opacity = 0.28 * Math.min(1, trailHistory.length / TRAIL_LEN);
+    } else if (trail) {
+      trail.material.opacity *= 0.9;
+    }
+
+    /* subtle depth/parallax: slightly larger when its target z reads "nearer" */
+    const depthScale = 1 + Math.max(-0.08, Math.min(0.08, current.z * 0.006));
 
     if (arrivalHold) {
       arrivalPulseT += 0.016;
       const pulse = arrivalPulseT < 0.6 ? 1 + Math.sin(arrivalPulseT * 10) * 0.12 * Math.max(0, 1 - arrivalPulseT / 0.6) : 1;
-      astro.scale.setScalar((mobile ? 0.85 : 1) * pulse);
+      astro.scale.setScalar(baseScale() * depthScale * pulse);
       chestLight.material.opacity = 1;
+      auraGlow.material.opacity = 0.18;
     } else {
-      astro.scale.setScalar(mobile ? 0.85 : 1);
+      astro.scale.setScalar(baseScale() * depthScale);
+      auraGlow.material.opacity = 0.1;
     }
 
     renderer.render(scene, camera);
