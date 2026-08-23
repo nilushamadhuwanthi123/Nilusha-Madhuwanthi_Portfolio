@@ -975,6 +975,18 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
 
 .section-head{margin-bottom:60px;}
 
+/* ---------- work section: 3D astronaut explorer (local system, separate from the Hero Earth) ---------- */
+.work-astronaut-canvas{
+  position:fixed;
+  inset:0;
+  width:100vw; height:100vh;
+  z-index:1;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .5s ease;
+}
+.work-astronaut-canvas.show{ opacity:1; }
+
 /* ---------- project view toggle (fishbone / constellation) ---------- */
 .fb-view-toggle{
   display:flex;

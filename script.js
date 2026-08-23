@@ -2406,3 +2406,255 @@
   window.addEventListener('offline', () => show('⚠ You are offline — some things may not load', 'offline'));
   window.addEventListener('online', () => show('✓ Back online', 'online'));
 })();
+
+
+/* ---------- work section: 3D astronaut explorer ----------
+   A SEPARATE, LOCAL visual system for the Work/Projects section only.
+   Does not touch, reuse, or modify the Hero's Earth/Universe scene
+   (that scene lives entirely in the very first IIFE of this file, using
+   its own #bg-canvas, its own THREE.Scene/camera/renderer, and its own
+   `motionScale` variable — none of that is referenced here). This astronaut
+   has its own canvas, its own scene, its own renderer, its own motion
+   tracking, and is only ever mounted inside the #work section's stacking
+   context (every <section> is z-index:2 — see the global `section{}` rule —
+   while this canvas is a fixed z-index:1 layer, so project cards always
+   paint on top of it and it can never cover project content). */
+(function workAstronautExplorer() {
+  const canvas = document.getElementById('work-astronaut-canvas');
+  const workSection = document.getElementById('work');
+  const spine = document.getElementById('project-spine');
+  const modal = document.getElementById('fb-modal');
+  const viewToggle = document.querySelector('.fb-view-toggle');
+  if (!canvas || !workSection || !spine || typeof THREE === 'undefined') return;
+
+  const isMobile = () => window.innerWidth <= 760;
+  function motionAllowed() {
+    let pref = 'full';
+    try { pref = localStorage.getItem('motionPreference') || 'full'; } catch (e) {}
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+    return pref !== 'reduced' && pref !== 'off';
+  }
+
+  /* ---- renderer / scene / orthographic camera mapped 1:1 to viewport pixels ---- */
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile() ? 1.5 : 2));
+  const scene = new THREE.Scene();
+  let W = window.innerWidth, H = window.innerHeight;
+  const camera = new THREE.OrthographicCamera(0, W, 0, -H, -1000, 1000);
+  camera.position.z = 100;
+  renderer.setSize(W, H);
+
+  scene.add(new THREE.AmbientLight(0x899466, 0.9));
+  const keyLight = new THREE.PointLight(0xe0c477, 1.1, 900);
+  keyLight.position.set(200, -150, 220);
+  scene.add(keyLight);
+
+  /* ---- build a small low-poly astronaut from primitives (no external assets) ---- */
+  const astro = new THREE.Group();
+  const bodyMat = new THREE.MeshPhongMaterial({ color: 0xf4f1e8, shininess: 30, specular: 0x30352a });
+  const trimMat = new THREE.MeshPhongMaterial({ color: 0x687344, shininess: 20 });
+  const visorMat = new THREE.MeshPhongMaterial({ color: 0x10120f, shininess: 90, specular: 0xe0c477, emissive: 0x1a1f14 });
+  const goldMat = new THREE.MeshPhongMaterial({ color: 0xc9a85c, emissive: 0x4a3d1e, shininess: 60 });
+
+  const body = new THREE.Mesh(new THREE.SphereGeometry(11, 14, 12), bodyMat);
+  body.scale.set(1, 1.25, 0.9);
+  astro.add(body);
+
+  const backpack = new THREE.Mesh(new THREE.BoxGeometry(9, 13, 5), trimMat);
+  backpack.position.set(0, 0, -9);
+  astro.add(backpack);
+
+  const helmet = new THREE.Mesh(new THREE.SphereGeometry(8, 16, 14), bodyMat);
+  helmet.position.set(0, 15, 1);
+  astro.add(helmet);
+
+  const visor = new THREE.Mesh(new THREE.SphereGeometry(5.4, 14, 12, 0, Math.PI * 1.15), visorMat);
+  visor.rotation.y = Math.PI * 0.5;
+  visor.position.set(0, 15, 5.4);
+  astro.add(visor);
+
+  const collar = new THREE.Mesh(new THREE.TorusGeometry(8, 2, 8, 16), trimMat);
+  collar.rotation.x = Math.PI / 2;
+  collar.position.set(0, 8.5, 0);
+  astro.add(collar);
+
+  [-1, 1].forEach((side) => {
+    const arm = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.4, 15, 8), bodyMat);
+    arm.position.set(side * 11, -1, 0);
+    arm.rotation.z = side * 0.32;
+    astro.add(arm);
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(3, 8, 8), trimMat);
+    hand.position.set(side * 15.5, -8, 0);
+    astro.add(hand);
+    const leg = new THREE.Mesh(new THREE.CylinderGeometry(3, 2.8, 13, 8), bodyMat);
+    leg.position.set(side * 4.5, -17, 0);
+    astro.add(leg);
+    const badge = new THREE.Mesh(new THREE.CircleGeometry(1.4, 10), goldMat);
+    badge.position.set(side * 4, 3, 9.6);
+    astro.add(badge);
+  });
+
+  const chestLight = new THREE.Mesh(new THREE.CircleGeometry(1.8, 10), goldMat);
+  chestLight.position.set(0, 2, 10);
+  astro.add(chestLight);
+
+  astro.scale.setScalar(isMobile() ? 0.85 : 1);
+  scene.add(astro);
+
+  /* ---- tiny local particle haze around the astronaut (LOCAL only, not a second galaxy) ---- */
+  const dustCount = isMobile() ? 10 : 22;
+  const dustPos = new Float32Array(dustCount * 3);
+  for (let i = 0; i < dustCount; i++) {
+    dustPos[i * 3] = (Math.random() - 0.5) * 90;
+    dustPos[i * 3 + 1] = (Math.random() - 0.5) * 90;
+    dustPos[i * 3 + 2] = (Math.random() - 0.5) * 40;
+  }
+  const dustGeo = new THREE.BufferGeometry();
+  dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: 0xe0c477, size: 1.6, transparent: true, opacity: 0.35, depthWrite: false }));
+  astro.add(dust);
+
+  /* ---- deterministic patrol path: real project-card centers, in fishbone (document) order ---- */
+  let waypoints = [];
+  let wpIndex = 0;
+  const current = { x: W * 0.5, y: -H * 0.4, z: 0 };
+  const target = { x: W * 0.5, y: -H * 0.4, z: 0 };
+  let arrivalHold = false;
+  let arrivalPulseT = 0;
+  let hoverTarget = null;
+
+  function cardCenterScreen(card) {
+    const r = card.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  }
+  function toWorld(pt) { return { x: pt.x, y: -pt.y, z: 8 }; }
+
+  function recomputeWaypoints() {
+    const cards = Array.from(spine.querySelectorAll('.project-card'))
+      .filter((c) => !c.closest('.fb-rib-hidden'))
+      .filter((c) => {
+        const r = c.getBoundingClientRect();
+        return r.bottom > -200 && r.top < window.innerHeight + 200;
+      });
+    waypoints = cards.map((c) => toWorld(cardCenterScreen(c)));
+    if (wpIndex >= waypoints.length) wpIndex = 0;
+  }
+
+  /* ---- hover: astronaut turns toward + drifts near the hovered card ---- */
+  spine.addEventListener('mouseover', (e) => {
+    const card = e.target.closest('.project-card');
+    if (!card) return;
+    hoverTarget = toWorld(cardCenterScreen(card));
+  });
+  spine.addEventListener('mouseout', (e) => {
+    const card = e.target.closest('.project-card');
+    if (!card) return;
+    hoverTarget = null;
+  });
+
+  /* ---- click: astronaut flies to the selected project and arrives ---- */
+  spine.addEventListener('click', (e) => {
+    const card = e.target.closest('.project-card');
+    if (!card || e.target.closest('.fb-save') || e.target.closest('.fb-compare-toggle') || e.target.closest('.project-links a')) return;
+    const pos = toWorld(cardCenterScreen(card));
+    target.x = pos.x; target.y = pos.y - 26; target.z = pos.z + 4;
+    arrivalHold = true;
+    arrivalPulseT = 0;
+  });
+  /* ---- modal close (observed, not modified): astronaut resumes its patrol ---- */
+  if (modal) {
+    new MutationObserver(() => {
+      if (modal.hidden) arrivalHold = false;
+    }).observe(modal, { attributes: true, attributeFilter: ['hidden'] });
+  }
+
+  /* ---- only visible during the Fishbone view — this is a fishbone-local system,
+     kept separate from the Constellation view's own orbit visuals ---- */
+  let fishboneView = true;
+  if (viewToggle) {
+    viewToggle.addEventListener('click', (e) => {
+      const btn = e.target.closest('.fb-view-btn');
+      if (!btn) return;
+      fishboneView = btn.dataset.view === 'fishbone';
+    });
+  }
+
+  /* ---- pause entirely when the Work section is off-screen or the tab is hidden ---- */
+  let sectionVisible = false;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      sectionVisible = entry.isIntersecting;
+      canvas.classList.toggle('show', sectionVisible && fishboneView);
+      if (sectionVisible) recomputeWaypoints();
+    });
+  }, { threshold: 0.05 });
+  io.observe(workSection);
+
+  let scrollTimer = null;
+  window.addEventListener('scroll', () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(recomputeWaypoints, 220);
+  }, { passive: true });
+  window.addEventListener('resize', () => {
+    W = window.innerWidth; H = window.innerHeight;
+    camera.right = W; camera.bottom = -H; camera.updateProjectionMatrix();
+    renderer.setSize(W, H);
+    astro.scale.setScalar(isMobile() ? 0.85 : 1);
+    recomputeWaypoints();
+  });
+  document.addEventListener('visibilitychange', () => { running = !document.hidden; });
+
+  let running = true;
+  let t = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    if (!running || !sectionVisible || !fishboneView) return;
+    t += 0.016;
+    const reduced = !motionAllowed();
+    const mobile = isMobile();
+
+    if (arrivalHold) {
+      // held beside the selected project card — gentle bob only
+    } else if (reduced) {
+      // reduced/no-motion: static near the first known project, no continuous travel
+      if (waypoints.length) { target.x = waypoints[0].x; target.y = waypoints[0].y - 26; target.z = waypoints[0].z; }
+    } else if (mobile) {
+      // mobile: no continuous patrol flight — stay near a calm anchor point in view
+      target.x = W * 0.82; target.y = -window.scrollY - 140; target.z = 6;
+    } else if (hoverTarget) {
+      target.x = hoverTarget.x; target.y = hoverTarget.y - 30; target.z = hoverTarget.z + 4;
+    } else if (waypoints.length) {
+      const wp = waypoints[wpIndex];
+      target.x = wp.x + 34; target.y = wp.y - 20; target.z = wp.z;
+      const dx = target.x - current.x, dy = target.y - current.y;
+      if (Math.sqrt(dx * dx + dy * dy) < 12) {
+        if (!animate._holdT || t - animate._holdT > 2.1) {
+          wpIndex = (wpIndex + 1) % waypoints.length;
+          animate._holdT = t;
+        }
+      }
+    }
+
+    const lerpSpeed = reduced ? 0.5 : (arrivalHold ? 0.09 : 0.045);
+    current.x += (target.x - current.x) * lerpSpeed;
+    current.y += (target.y - current.y) * lerpSpeed;
+    current.z += (target.z - current.z) * lerpSpeed;
+
+    astro.position.set(current.x, current.y + Math.sin(t * 1.4) * 4, current.z);
+    astro.rotation.z = Math.sin(t * 0.6) * 0.08 + (target.x - current.x) * -0.002;
+    astro.rotation.x = Math.cos(t * 0.5) * 0.05;
+    dust.rotation.y += 0.003;
+
+    if (arrivalHold) {
+      arrivalPulseT += 0.016;
+      const pulse = arrivalPulseT < 0.6 ? 1 + Math.sin(arrivalPulseT * 10) * 0.12 * Math.max(0, 1 - arrivalPulseT / 0.6) : 1;
+      astro.scale.setScalar((mobile ? 0.85 : 1) * pulse);
+      chestLight.material.opacity = 1;
+    } else {
+      astro.scale.setScalar(mobile ? 0.85 : 1);
+    }
+
+    renderer.render(scene, camera);
+  }
+  requestAnimationFrame(animate);
+})();
