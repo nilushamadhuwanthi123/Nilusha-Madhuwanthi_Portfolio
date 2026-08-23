@@ -1326,9 +1326,16 @@ html[data-motion="reduced"] .auth-flow-alien-emoji, html[data-motion="off"] .aut
   display:flex; align-items:center; justify-content:center;
   padding:20px;
   opacity:0;
+  pointer-events:none;
   transition:opacity .25s ease;
 }
-.skill-graph-modal.show{ opacity:1; }
+/* BUG FIX: without this, [hidden] was silently overridden by the class rule
+   above (equal specificity, author rule wins over the UA stylesheet), so
+   this fixed, full-viewport layer stayed in the layout and could intercept
+   clicks meant for the page underneath even while "hidden" and invisible.
+   pointer-events:none above is a second, independent safety net. */
+.skill-graph-modal[hidden]{ display:none; }
+.skill-graph-modal.show{ opacity:1; pointer-events:auto; }
 .skill-graph-backdrop{ position:absolute; inset:0; background:rgba(6,7,5,.72); backdrop-filter:blur(4px); }
 .skill-graph-card{
   position:relative;
