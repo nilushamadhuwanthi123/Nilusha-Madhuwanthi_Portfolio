@@ -1915,6 +1915,62 @@
     `).join('');
   }
 
+  /* ---------- skill → project graph: click a skill card, see real projects using it ---------- */
+  (function skillProjectGraph() {
+    const cards = document.querySelectorAll('.skill-card');
+    const modal = document.getElementById('skill-graph-modal');
+    const body = document.getElementById('skill-graph-body');
+    const closeBtn = document.getElementById('skill-graph-close');
+    const backdrop = document.getElementById('skill-graph-backdrop');
+    if (!cards.length || !modal || !body) return;
+
+    const ALIAS = { CSS: 'CSS3', HTML: 'HTML5', Spring: 'Spring Boot' };
+
+    function projectsForSkill(skillName) {
+      const target = (ALIAS[skillName] || skillName).toLowerCase();
+      return PROJECTS.filter((p) => p.tech.some((t) => {
+        const tl = t.toLowerCase();
+        return tl === target || tl.includes(target) || target.includes(tl.replace('/ktor', ''));
+      }));
+    }
+
+    function openFor(skillName) {
+      const matches = projectsForSkill(skillName);
+      let html = `<h3 class="skill-graph-title">${skillName}</h3>`;
+      if (!matches.length) {
+        html += `<p class="skill-graph-sub">Where this shows up</p><p class="skill-graph-empty">Part of my general workflow rather than tied to one shipped project's tech stack — no project below lists it directly.</p>`;
+      } else {
+        html += `<p class="skill-graph-sub">Used in ${matches.length} real shipped project${matches.length > 1 ? 's' : ''}</p>`;
+        html += '<div class="skill-graph-list">' + matches.map((p) => `
+          <div class="skill-graph-item">
+            <span><span class="skill-graph-item-title">${p.title}</span><br/><span class="skill-graph-item-tag">${p.tag}</span></span>
+            <a href="${p.repoUrl}" target="_blank" rel="noopener">Repo ↗</a>
+          </div>
+        `).join('') + '</div>';
+      }
+      body.innerHTML = html;
+      modal.hidden = false;
+      requestAnimationFrame(() => modal.classList.add('show'));
+    }
+
+    function close() {
+      modal.classList.remove('show');
+      setTimeout(() => { modal.hidden = true; }, 200);
+    }
+
+    cards.forEach((card) => {
+      card.addEventListener('click', () => {
+        const label = card.querySelector('span')?.textContent.trim();
+        if (label) openFor(label);
+      });
+    });
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (backdrop) backdrop.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.hidden) close();
+    });
+  })();
+
   /* ---------- builds in motion: data-driven from PROJECTS[].videoUrl ---------- */
   const motionGrid = document.getElementById('motion-grid');
   if (motionGrid) {

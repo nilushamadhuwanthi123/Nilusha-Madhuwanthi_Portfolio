@@ -946,6 +946,55 @@ html[data-motion="reduced"] .nav-links a, html[data-motion="off"] .nav-links a{ 
 
 .section-head{margin-bottom:60px;}
 
+/* ---------- skill → project graph ---------- */
+.skill-card{ cursor:pointer; }
+.skill-graph-modal{
+  position:fixed; inset:0; z-index:190;
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+  opacity:0;
+  transition:opacity .25s ease;
+}
+.skill-graph-modal.show{ opacity:1; }
+.skill-graph-backdrop{ position:absolute; inset:0; background:rgba(6,7,5,.72); backdrop-filter:blur(4px); }
+.skill-graph-card{
+  position:relative;
+  width:100%; max-width:420px;
+  max-height:70vh;
+  overflow-y:auto;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:26px 22px;
+  transform:translateY(14px) scale(.98);
+  transition:transform .25s ease;
+}
+.skill-graph-modal.show .skill-graph-card{ transform:translateY(0) scale(1); }
+.skill-graph-close{
+  position:absolute; top:14px; right:14px;
+  width:30px; height:30px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  background:var(--tint-2);
+  color:var(--silver);
+  cursor:pointer;
+}
+.skill-graph-close:hover{ color:var(--gold-bright); }
+.skill-graph-title{ font-family:var(--font-head); font-size:1.05rem; color:var(--ivory); margin-bottom:6px; padding-right:30px; }
+.skill-graph-sub{ font-size:.8rem; color:var(--silver-muted); margin-bottom:18px; }
+.skill-graph-list{ display:flex; flex-direction:column; gap:10px; }
+.skill-graph-item{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--tint-2);
+}
+.skill-graph-item-title{ font-size:.86rem; color:var(--ivory); }
+.skill-graph-item-tag{ font-size:.72rem; color:var(--silver-muted); }
+.skill-graph-item a{ font-size:.76rem; color:var(--gold-bright); white-space:nowrap; }
+.skill-graph-empty{ font-size:.85rem; color:var(--silver-muted); line-height:1.6; }
+
 /* ---------- developer DNA ---------- */
 .dna-wrap{ margin-top:56px; }
 .dna-title{
