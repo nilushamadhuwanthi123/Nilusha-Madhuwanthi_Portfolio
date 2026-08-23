@@ -1574,6 +1574,7 @@ html[data-motion="reduced"] .motion-card, html[data-motion="off"] .motion-card{ 
   box-shadow:0 0 0 5px rgba(201,168,92,.14);
 }
 .const-node-label{ font-family:var(--font-head); font-size:.82rem; text-align:center; }
+.const-node-role{ font-size:.68rem; color:var(--gold-bright); text-align:center; letter-spacing:.02em; }
 .const-node-when{ font-size:.72rem; color:var(--silver-muted); }
 .const-node-1{ top:12%; left:50%; }
 .const-node-2{ top:84%; left:50%; }
@@ -1613,14 +1614,17 @@ html[data-motion="reduced"] .motion-card, html[data-motion="off"] .motion-card{ 
     position:static;
     transform:none;
     width:100%;
-    flex-direction:row;
-    justify-content:flex-start;
-    gap:12px;
+    display:grid;
+    grid-template-columns:auto 1fr;
+    align-items:center;
+    row-gap:2px;
+    column-gap:12px;
     border-left:2px solid var(--olive-soft);
     border-radius:10px;
   }
   .const-node:hover, .const-node[aria-expanded="true"]{ transform:none; }
-  .const-node-label{ text-align:left; }
+  .const-node-dot{ grid-row:1 / span 3; }
+  .const-node-label, .const-node-role, .const-node-when{ grid-column:2; text-align:left; }
 }
 
 /* ---------- ai assistant: astronaut mascot (no longer trapped in a circle) ---------- */
