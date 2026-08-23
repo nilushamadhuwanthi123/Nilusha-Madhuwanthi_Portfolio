@@ -1213,15 +1213,15 @@
     setTimeout(() => { panel.hidden = true; }, 200);
   }
 
-  // ---- one-time "Ask Nilu AI" nudge label, shown once per browser (localStorage), never re-shown after interaction ----
+  // ---- one-time AI assistant greeting bubble, shown once per browser (localStorage: aiGreetingSeen), never re-shown after interaction ----
   const nudge = document.getElementById('ai-nudge');
   function hideNudge() {
     if (nudge) nudge.classList.remove('show');
-    try { localStorage.setItem('niluAiIntroSeen', '1'); } catch (e) {}
+    try { localStorage.setItem('aiGreetingSeen', '1'); } catch (e) {}
   }
   if (nudge && !reducedMotion) {
     let seen = false;
-    try { seen = localStorage.getItem('niluAiIntroSeen') === '1'; } catch (e) {}
+    try { seen = localStorage.getItem('aiGreetingSeen') === '1'; } catch (e) {}
     if (!seen) {
       setTimeout(() => { if (!opened) nudge.classList.add('show'); }, 2600);
       setTimeout(() => { if (!opened) hideNudge(); }, 8000);
@@ -1249,6 +1249,34 @@
     input.value = '';
     respond(q);
   });
+
+  /* ---- optional contextual tooltip near the AI bot on project hover.
+     Kept strictly separate from the Work-section astronaut's own hover
+     reaction (a different IIFE, different element, different behaviour) —
+     both can fire independently and never merge or interfere. ---- */
+  const spineForTip = document.getElementById('project-spine');
+  if (spineForTip && !reducedMotion) {
+    let tip = document.getElementById('ai-project-tip');
+    if (!tip) {
+      tip = document.createElement('div');
+      tip.id = 'ai-project-tip';
+      tip.className = 'ai-project-tip';
+      tip.textContent = 'Want to know more about this project?';
+      document.body.appendChild(tip);
+    }
+    let tipTimer = null;
+    spineForTip.addEventListener('mouseover', (e) => {
+      const card = e.target.closest('.project-card');
+      if (!card || panel.classList.contains('show')) return;
+      clearTimeout(tipTimer);
+      tipTimer = setTimeout(() => tip.classList.add('show'), 550);
+    });
+    spineForTip.addEventListener('mouseout', (e) => {
+      if (!e.target.closest('.project-card')) return;
+      clearTimeout(tipTimer);
+      tip.classList.remove('show');
+    });
+  }
 })();
 
 /* ---------- cinematic intro (temporary layer only — the default Hero

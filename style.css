@@ -1772,6 +1772,48 @@ html[data-motion="reduced"] .ai-orb-icon, html[data-motion="off"] .ai-orb-icon{ 
 html[data-motion="reduced"] .ai-orb-status::after, html[data-motion="off"] .ai-orb-status::after{ animation:none; }
 @keyframes ai-status-pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.4; } }
 
+/* ---- AI Assistant Bot: independent idle animation (blink / core light-pulse /
+   antenna glow) — a visually distinct glass/holographic robot, kept entirely
+   separate from the Work-section astronaut's own material and motion. ---- */
+.ai-bot-icon .ai-bot-eye{
+  animation:ai-bot-blink 4.2s ease-in-out infinite;
+  transform-origin:center;
+}
+.ai-bot-icon .ai-bot-eye:nth-child(4){ animation-delay:.08s; }
+@keyframes ai-bot-blink{
+  0%, 92%, 100%{ transform:scaleY(1); }
+  95%{ transform:scaleY(.15); }
+}
+.ai-bot-icon .ai-bot-core{ animation:ai-bot-core-pulse 2.4s ease-in-out infinite; }
+.ai-bot-icon .ai-bot-core-ring{ animation:ai-bot-ring-pulse 2.4s ease-in-out infinite; }
+@keyframes ai-bot-core-pulse{ 0%,100%{ opacity:.85; } 50%{ opacity:1; filter:drop-shadow(0 0 4px rgba(143,174,90,.7)); } }
+@keyframes ai-bot-ring-pulse{ 0%,100%{ transform:scale(1); opacity:.45; } 50%{ transform:scale(1.35); opacity:0; } }
+.ai-bot-icon .ai-bot-antenna-tip{ animation:ai-bot-antenna-glow 2.4s ease-in-out infinite; }
+@keyframes ai-bot-antenna-glow{ 0%,100%{ opacity:.7; } 50%{ opacity:1; filter:drop-shadow(0 0 3px rgba(143,174,90,.8)); } }
+html[data-motion="reduced"] .ai-bot-icon .ai-bot-eye, html[data-motion="off"] .ai-bot-icon .ai-bot-eye,
+html[data-motion="reduced"] .ai-bot-icon .ai-bot-core, html[data-motion="off"] .ai-bot-icon .ai-bot-core,
+html[data-motion="reduced"] .ai-bot-icon .ai-bot-core-ring, html[data-motion="off"] .ai-bot-icon .ai-bot-core-ring,
+html[data-motion="reduced"] .ai-bot-icon .ai-bot-antenna-tip, html[data-motion="off"] .ai-bot-icon .ai-bot-antenna-tip{ animation:none; }
+
+/* ---- optional contextual tooltip near the AI bot on project hover ---- */
+.ai-project-tip{
+  position:fixed;
+  right:24px; bottom:132px;
+  z-index:68;
+  max-width:190px;
+  background:var(--glass-94);
+  border:1px solid var(--border);
+  border-radius:10px 10px 4px 10px;
+  padding:8px 12px;
+  font-size:.72rem;
+  color:var(--silver);
+  box-shadow:0 14px 30px -14px rgba(0,0,0,.6);
+  opacity:0; transform:translateY(6px);
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+}
+.ai-project-tip.show{ opacity:1; transform:translateY(0); }
+
 .ai-nudge{
   position:fixed;
   right:20px; bottom:150px;
@@ -2069,6 +2111,54 @@ html[data-motion="reduced"], html[data-motion="off"]{ --dm-motion:1 !important; 
   background:var(--gold-bright);
   box-shadow:0 0 0 4px rgba(224,196,119,.18);
   cursor:pointer;
+}
+.dm-preview{
+  margin:4px 0 14px;
+  padding-top:10px;
+  border-top:1px dashed var(--border);
+}
+.dm-preview-label{
+  display:block;
+  font-size:.66rem;
+  letter-spacing:.03em;
+  text-transform:uppercase;
+  color:var(--silver-muted);
+  margin-bottom:10px;
+}
+.dm-preview-card{
+  display:flex; align-items:center; gap:10px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:calc(12px * var(--dm-radius));
+  backdrop-filter:blur(calc(10px * var(--dm-blur)));
+  padding:12px 14px;
+  font-size:.78rem;
+  color:var(--ivory);
+  box-shadow:0 8px calc(24px * var(--dm-glow)) -10px rgba(201,168,92, calc(.5 * var(--dm-glow)));
+  transition:all calc(.3s / var(--dm-motion)) ease;
+}
+.dm-preview-dot{
+  width:9px; height:9px; border-radius:50%;
+  background:var(--gold-bright);
+  box-shadow:0 0 0 calc(4px * var(--dm-glow)) rgba(201,168,92, calc(.25 * var(--dm-glow)));
+  flex-shrink:0;
+  transition:all calc(.3s / var(--dm-motion)) ease;
+}
+.dm-preview-btn{
+  margin-left:auto;
+  font-family:var(--font-head);
+  font-size:.68rem;
+  padding:6px 12px;
+  border-radius:calc(10px * var(--dm-radius));
+  border:1px solid transparent;
+  background:linear-gradient(120deg, var(--gold), var(--gold-bright));
+  color:var(--bg);
+  cursor:default;
+  transition:all calc(.3s / var(--dm-motion)) ease;
+}
+.dm-preview-card:hover{
+  transform:translateY(calc(-2px * var(--dm-motion)));
+  box-shadow:0 12px calc(34px * var(--dm-glow)) -10px rgba(201,168,92, calc(.6 * var(--dm-glow)));
 }
 .dm-reset{
   width:100%;
