@@ -1836,7 +1836,7 @@
       company: 'EgoTechWorld',
       when: 'Ongoing — through Jan / Feb 2027',
       desc: 'Full-stack development work alongside a full-time degree — six months in and still running.',
-      projects: ['MyNotes — Note-Taking App', 'Bakery Management System (in progress)'],
+      projects: ['MyNotes — Note-Taking App', 'Bakery Management System', 'Bakery Management System — Laravel Edition (in progress)'],
     },
     codveda: {
       role: 'Web Developer Intern',
@@ -1994,11 +1994,22 @@
       tech:['React','Spring Boot','MongoDB'], demoUrl:'https://note-app-egotechworld.vercel.app', repoUrl:'https://github.com/LEULEX-404/Note-App---Egotechworld',
       howItWorks:'The Note_Nilusha module renders every saved note as a card, wires up the category filter buttons and a dedicated search tab to narrow that list, and handles the edit/delete actions that call the Spring Boot REST API to update or remove a note in MongoDB.',
       problem:'Gives users a fast way to browse, filter, search and manage their notes from one dashboard instead of scrolling a flat, unsorted list.' },
+    { key:'bakerysystem', emoji:'🧁', title:'Bakery Management System', tag:'Internship · EgoTechWorld', categories:['Full Stack','Internship'], status:'source',
+      desc:'EgoTechWorld\'s second team project — a full-stack bakery management platform built on Spring Boot, React and MongoDB. My part was the order & customer management module: customer profiles, loyalty tiers, order status workflow, stock reservation and payments.',
+      tech:['React','Spring Boot','MongoDB'], repoUrl:'https://github.com/LEULEX-404/Bakery_System',
+      howItWorks:'The order & customer management module tracks customers (profiles, loyalty tiers, notes, tags), and orders through a status workflow (draft \u2192 pending \u2192 confirmed \u2192 preparing \u2192 ready \u2192 completed), reserving stock only once an order is confirmed and awarding loyalty points once it\'s completed.',
+      problem:'Gives the bakery a single system to manage customer relationships and the full order lifecycle, from placing an order to fulfillment and payment.' },
+    { key:'bakerylaravel', emoji:'🥐', title:'Bakery Management System — Laravel Edition', tag:'Internship · EgoTechWorld', categories:['Full Stack','Internship'], status:'inprogress',
+      desc:'A 3rd team project re-building the bakery system on a new required stack: Laravel (PHP) backend + React frontend. My part is the same order & customer management module, ported from the original Spring Boot version with the same business rules \u2014 loyalty tiers, order status workflow, stock handling and payments.',
+      tech:['React','Laravel','MySQL'], repoUrl:'https://github.com/Imogirl/Laravel-Bakery-System',
+      howItWorks:'A faithful port of the order & customer management module to Laravel: Eloquent models and migrations replace the MongoDB documents, and the same loyalty-tier and order-status business rules are re-implemented in PHP behind a REST API that the React frontend calls.',
+      problem:'Delivers the same order & customer management capability on the team\'s new required stack, so the module works the same way regardless of backend framework.' },
   ];
 
   function statusBadge(p) {
     if (p.status === 'live') return '<span class="live-dot"><i></i>Live</span>';
     if (p.status === 'source') return '<span class="repo-badge">Source available</span>';
+    if (p.status === 'inprogress') return '<span class="repo-badge">In Progress</span>';
     return '<span class="repo-badge">Demo coming soon</span>';
   }
 
@@ -2335,6 +2346,7 @@
   function compareStatusLabel(p) {
     if (p.status === 'live') return 'Live';
     if (p.status === 'source') return 'Source available';
+    if (p.status === 'inprogress') return 'In Progress';
     return 'Demo coming soon';
   }
 
