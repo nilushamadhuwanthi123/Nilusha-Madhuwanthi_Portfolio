@@ -1994,9 +1994,9 @@
       tech:['React','Spring Boot','MongoDB'], demoUrl:'https://note-app-egotechworld.vercel.app', repoUrl:'https://github.com/LEULEX-404/Note-App---Egotechworld',
       howItWorks:'The Note_Nilusha module renders every saved note as a card, wires up the category filter buttons and a dedicated search tab to narrow that list, and handles the edit/delete actions that call the Spring Boot REST API to update or remove a note in MongoDB.',
       problem:'Gives users a fast way to browse, filter, search and manage their notes from one dashboard instead of scrolling a flat, unsorted list.' },
-    { key:'bakerysystem', emoji:'🧁', title:'Bakery Management System', tag:'Internship · EgoTechWorld', categories:['Full Stack','Internship'], status:'source',
+    { key:'bakerysystem', emoji:'🧁', title:'Bakery Management System', tag:'Internship · EgoTechWorld', categories:['Full Stack','Internship'], status:'live',
       desc:'EgoTechWorld\'s second team project — a full-stack bakery management platform built on Spring Boot, React and MongoDB. My part was the order & customer management module: customer profiles, loyalty tiers, order status workflow, stock reservation and payments.',
-      tech:['React','Spring Boot','MongoDB'], repoUrl:'https://github.com/LEULEX-404/Bakery_System',
+      tech:['React','Spring Boot','MongoDB'], demoUrl:'https://bakery-system-hazel.vercel.app/login', tutorialUrl:'https://totorial-bakery-system.vercel.app/', repoUrl:'https://github.com/LEULEX-404/Bakery_System',
       howItWorks:'The order & customer management module tracks customers (profiles, loyalty tiers, notes, tags), and orders through a status workflow (draft \u2192 pending \u2192 confirmed \u2192 preparing \u2192 ready \u2192 completed), reserving stock only once an order is confirmed and awarding loyalty points once it\'s completed.',
       problem:'Gives the bakery a single system to manage customer relationships and the full order lifecycle, from placing an order to fulfillment and payment.' },
     { key:'bakerylaravel', emoji:'🥐', title:'Bakery Management System — Laravel Edition', tag:'Internship · EgoTechWorld', categories:['Full Stack','Internship'], status:'inprogress',
@@ -2048,6 +2048,7 @@
   function cardHTML(p, i) {
     const links = [];
     if (p.demoUrl) links.push(`<a href="${p.demoUrl}" target="_blank" rel="noopener">Live demo ↗</a>`);
+    if (p.tutorialUrl) links.push(`<a href="${p.tutorialUrl}" target="_blank" rel="noopener">Tutorial build ↗</a>`);
     if (p.repoUrl) links.push(`<a href="${p.repoUrl}" target="_blank" rel="noopener">Repo ↗</a>`);
     if (p.videoUrl) links.push(`<a href="${p.videoUrl}" target="_blank" rel="noopener" class="video-link">▶ Watch demo</a>`);
     const side = i % 2 === 0 ? 'spine-left' : 'spine-right';
@@ -2228,6 +2229,7 @@
     openKey = key;
     const links = [];
     if (p.demoUrl) links.push(`<a href="${p.demoUrl}" target="_blank" rel="noopener" class="btn btn-primary">Live Demo ↗</a>`);
+    if (p.tutorialUrl) links.push(`<a href="${p.tutorialUrl}" target="_blank" rel="noopener" class="btn btn-ghost">Tutorial Build ↗</a>`);
     if (p.repoUrl) links.push(`<a href="${p.repoUrl}" target="_blank" rel="noopener" class="btn btn-ghost">View Code ↗</a>`);
     if (!links.length) links.push('<span class="fb-soon-note">Demo coming soon</span>');
     const contribution = p.contribution ? `<div class="fb-modal-section"><b>My Contribution</b><p>${p.contribution}</p></div>` : '';
@@ -2340,6 +2342,7 @@
   function compareLinks(p) {
     const links = [];
     if (p.demoUrl) links.push(`<a href="${p.demoUrl}" target="_blank" rel="noopener">Live Demo ↗</a>`);
+    if (p.tutorialUrl) links.push(`<a href="${p.tutorialUrl}" target="_blank" rel="noopener">Tutorial Build ↗</a>`);
     if (p.repoUrl) links.push(`<a href="${p.repoUrl}" target="_blank" rel="noopener">Code ↗</a>`);
     return links.length ? links.join(' &middot; ') : 'Demo coming soon';
   }
