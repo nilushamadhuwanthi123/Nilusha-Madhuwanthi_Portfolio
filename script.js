@@ -2004,6 +2004,11 @@
       tech:['React','Laravel','MySQL'], repoUrl:'https://github.com/Imogirl/Laravel-Bakery-System',
       howItWorks:'A faithful port of the order & customer management module to Laravel: Eloquent models and migrations replace the MongoDB documents, and the same loyalty-tier and order-status business rules are re-implemented in PHP behind a REST API that the React frontend calls.',
       problem:'Delivers the same order & customer management capability on the team\'s new required stack, so the module works the same way regardless of backend framework.' },
+    { key:'hcidoctor', emoji:'🩸', title:'HCI Blood Bank App — Doctor Module', tag:'Academic · SLIIT HCI Group Project', categories:['Mobile','University'], status:'inprogress',
+      desc:'A university group project — a Flutter blood-donation/blood-bank mobile app built on Firebase. My part is the Doctor & Blood Bank module: donor coordination and comparison, blood demand and request tracking, critical-request escalation with two-person verification, a filterable request history with CSV/PDF export, and accessibility support.',
+      tech:['Flutter','Dart','Firebase'], repoUrl:'https://github.com/kavindu-maduhansa/HCI/tree/feat_Member3_DoctorM',
+      howItWorks:'The Doctor module gives doctors a command-center view of blood operations: a dashboard grouped into Operations, Analytics and Activity sections; donor search with side-by-side comparison; a coordination screen tracking remaining vs. covered units; critical requests flagged with two-person verification; and a history tab with quick-preset filters, CSV export and a shift-handover PDF report.',
+      problem:'Gives doctors and blood-bank staff a mobile-first way to track blood demand, coordinate donors and verify critical requests, instead of doing it manually over calls and spreadsheets.' },
   ];
 
   function statusBadge(p) {
