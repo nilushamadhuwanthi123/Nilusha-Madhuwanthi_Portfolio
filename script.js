@@ -1253,6 +1253,11 @@
       links: [{ label: 'See Games', href: '#work' }],
     },
     {
+      test: /devops|ci\/cd|ci-cd|pipeline|docker|containe|render|deployment|github actions/i,
+      answer: 'TaskFlow API — a JWT-authenticated task management REST API built as a DevOps/CI-CD showcase. It runs a real GitHub Actions pipeline (lint, Jest/Supertest integration tests, Docker build) on every push, and deploys via a Docker-based Render Blueprint. Filter the Work section by "DevOps" to see it.',
+      links: [{ label: 'See DevOps Project', href: '#work' }],
+    },
+    {
       test: /intern|experience|egotechworld|codveda|codealpha|work(ed)?\s*at/i,
       answer: 'Two internships running at once right now: Full Stack Engineer Intern at EgoTechWorld, and Web Developer Intern at Codveda Technologies — progressing through leveled projects from static UI builds up to a full-stack, JWT-authenticated system. Also completed an earlier Frontend Developer Intern stint at CodeAlpha Technologies, shipping NEXORA, WAVEORA and MIREVA.',
       links: [{ label: 'See Experience', href: '#experience' }],
@@ -1277,7 +1282,7 @@
     },
     {
       test: /github/i,
-      answer: 'All source code is public on GitHub — 22+ repositories, feature-branch workflow, real commit history.',
+      answer: 'All source code is public on GitHub — 24+ repositories, feature-branch workflow, real commit history.',
       links: [{ label: 'Open GitHub', href: LINKS.github, external: true }],
     },
     {
@@ -2040,6 +2045,11 @@
       tech:['Vanilla JS','Canvas'], demoUrl:'https://nilushamadhuwanthi123.github.io/precision-drift_game/', repoUrl:'https://github.com/nilushamadhuwanthi123/precision-drift_game',
       howItWorks:'World speed follows an asymptotic difficulty curve (fast early ramp, leveling off) layered with distance-based traffic-density tiers; traffic spawns in waves that always guarantee an open lane, and a small class-based entity model (TrafficCar, Pickup, Particle) keeps the simulation organized as it grows.',
       problem:'The most advanced of the four practice games — real difficulty-curve design, entity organization and a pickup/power-up system on top of the same Canvas game-loop foundation.' },
+    { key:'taskflowapi', emoji:'⚙️', title:'TaskFlow API — DevOps & CI/CD Showcase', tag:'Personal · DevOps', categories:['Backend','DevOps'], status:'inprogress',
+      desc:'A JWT-authenticated task-management REST API built specifically to demonstrate a real production pipeline, not just app code — Docker, automated tests and a GitHub Actions CI/CD workflow. Every push runs lint, a full Jest/Supertest integration suite, and a Docker build-sanity check before Render auto-deploys the same Dockerfile straight from GitHub.',
+      tech:['Node.js','Express','MongoDB','Docker','GitHub Actions','Jest'], repoUrl:'https://github.com/nilushamadhuwanthi123/taskflow-api',
+      howItWorks:'JWT auth guards every task route with per-user ownership checks; a multi-stage, non-root Dockerfile builds the API image; GitHub Actions runs ESLint + a real Jest/Supertest suite (auth flow, full task CRUD, ownership enforcement) against an in-memory MongoDB on every push/PR, then builds the Docker image as a merge gate — Render picks up the same Dockerfile via a render.yaml Blueprint and redeploys automatically on every merge to main.',
+      problem:'Most personal projects stop at working app code. This one is built to show the other half of real-world software delivery — automated testing, containerization and a CI/CD pipeline that actually gates what reaches production.' },
   ];
 
   function statusBadge(p) {
