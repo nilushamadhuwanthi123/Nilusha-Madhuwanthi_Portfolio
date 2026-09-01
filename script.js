@@ -1244,8 +1244,13 @@
     },
     {
       test: /project|built|portfolio.*work|nexora|waveora|mireva|nexabank|fintrack|medicare|orvexa|flowboard|fixfinder/i,
-      answer: 'Nine live, deployed projects — NEXORA (math workspace), WAVEORA (music player), MIREVA (image gallery), NexaBank (banking platform), FinTrack, MediCare, Orvexa, FlowBoard and FixFinder. Every card links to a real working demo.',
+      answer: 'Nine live, deployed full-stack/frontend projects — NEXORA (math workspace), WAVEORA (music player), MIREVA (image gallery), NexaBank (banking platform), FinTrack, MediCare, Orvexa, FlowBoard and FixFinder — plus 5 browser games built for fun. Every card links to a real working demo.',
       links: [{ label: 'Explore Projects', href: '#work' }],
+    },
+    {
+      test: /game|flappy|snake|2048|breakout|brick vector|drift|racing|arcade|for fun|fun project/i,
+      answer: 'Yes — 5 browser games built for fun in vanilla JavaScript and the Canvas API, each with its own repo and deployed on GitHub Pages: Precision Snake, Flappy Flight, Brick Vector (Breakout clone), 2048, and Precision Drift (an advanced car-racing game). Filter the Work section by "Game" to see them all.',
+      links: [{ label: 'See Games', href: '#work' }],
     },
     {
       test: /intern|experience|egotechworld|codveda|codealpha|work(ed)?\s*at/i,
@@ -1272,7 +1277,7 @@
     },
     {
       test: /github/i,
-      answer: 'All source code is public on GitHub — 17+ repositories, feature-branch workflow, real commit history.',
+      answer: 'All source code is public on GitHub — 22+ repositories, feature-branch workflow, real commit history.',
       links: [{ label: 'Open GitHub', href: LINKS.github, external: true }],
     },
     {
@@ -1299,6 +1304,7 @@
   const QUICK_ACTIONS = [
     'What frontend technologies does Nilusha use?',
     'Which projects use React?',
+    'What games has she built?',
     'What did Nilusha build at EgoTechWorld?',
     'What are her strongest full-stack projects?',
     'Where does she study?',
