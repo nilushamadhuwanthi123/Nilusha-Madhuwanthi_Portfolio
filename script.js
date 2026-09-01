@@ -2011,7 +2011,7 @@
       problem:'Gives doctors and blood-bank staff a mobile-first way to track blood demand, coordinate donors and verify critical requests, instead of doing it manually over calls and spreadsheets.' },
     { key:'precisionsnake', emoji:'🐍', title:'Precision Snake', tag:'Personal · Frontend', categories:['Frontend'], status:'live',
       desc:'A for-fun side project built in my free time — a polished, from-scratch Snake game in vanilla JavaScript and the HTML5 Canvas API, no frameworks or dependencies. Smooth fixed-timestep game loop, keyboard and touch controls, a persisted high score and reduced-motion support.',
-      tech:['Vanilla JS','Canvas'], demoUrl:'https://claude.ai/code/artifact/5282889e-0bda-4014-8c3a-3a943f1bd9d6', repoUrl:'https://github.com/nilushamadhuwanthi123/precision-snake_Game',
+      tech:['Vanilla JS','Canvas'], demoUrl:'https://nilushamadhuwanthi123.github.io/precision-snake_Game/', repoUrl:'https://github.com/nilushamadhuwanthi123/precision-snake_Game',
       howItWorks:'A fixed-timestep game loop (requestAnimationFrame plus an accumulator) drives device-pixel-ratio-aware canvas rendering, with keyboard (arrow keys / WASD) and touch (swipe) input, increasing difficulty as the snake grows, and a high score persisted to localStorage.',
       problem:'A frontend-fundamentals piece — game-loop architecture, canvas rendering and accessibility (reduced-motion, focus states) — built without leaning on a framework.' },
   ];
