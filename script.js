@@ -2050,6 +2050,11 @@
       tech:['Node.js','Express','MongoDB','Docker','GitHub Actions','Jest'], repoUrl:'https://github.com/nilushamadhuwanthi123/taskflow-api', demoUrl:'https://taskflow-api-zvwb.onrender.com/health',
       howItWorks:'JWT auth guards every task route with per-user ownership checks; a multi-stage, non-root Dockerfile builds the API image; GitHub Actions runs ESLint + a real Jest/Supertest suite (auth flow, full task CRUD, ownership enforcement) against an in-memory MongoDB on every push/PR, then builds the Docker image as a merge gate — Render picks up the same Dockerfile via a render.yaml Blueprint and redeploys automatically on every merge to main.',
       problem:'Most personal projects stop at working app code. This one is built to show the other half of real-world software delivery — automated testing, containerization and a CI/CD pipeline that actually gates what reaches production.' },
+    { key:'uninexcampushub', emoji:'🏫', title:'Uninex Campus Hub', tag:'Personal · Full Stack', categories:['Full Stack','Backend'], status:'inprogress',
+      desc:'A solo campus resource management and booking system, built from scratch — resource/seat setup, time-slot and full-hall booking, admin approval workflow with QR ticketing, incident tracking, reviews and an analytics dashboard. In active development, feature by feature, each behind its own branch and PR.',
+      tech:['Spring Boot','MongoDB','React','TypeScript'], repoUrl:'https://github.com/nilushamadhuwanthi123/uninex-campus-hub',
+      howItWorks:'Spring Boot 4 (Java 21) REST API over MongoDB, with a React 19 + TypeScript + Tailwind frontend. Each feature (resource management, booking, approvals/QR, incidents, reviews, analytics) is planned as a GitHub Issue and built on its own branch, verified before merging to main.',
+      problem:'The same problem space as a university resource-booking system, built independently end-to-end to practice real system design: entity modeling, REST API design, and a genuine incremental branch-by-branch build process.' },
   ];
 
   function statusBadge(p) {
