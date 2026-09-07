@@ -23,3 +23,5 @@ script.js    # 3D background, typing effect, scroll reveals
 ## Run locally
 
 Just open `index.html` in a browser — no dependencies, no build step.
+
+<!-- auto-deploy-check-20260907141159 -->
