@@ -3850,3 +3850,70 @@ html[data-motion="reduced"] .talk-fab:hover .talk-fab-arrow, html[data-motion="o
 @media (max-width:860px){
   .approach-grid{grid-template-columns:repeat(2,1fr);}
 }
+
+
+/* ================= brand icons inside buttons ================= */
+.btn .btn-ico{
+  width:17px; height:17px;
+  fill:currentColor;
+  flex:none;
+  opacity:.92;
+  transition:transform calc(.25s / var(--dm-motion)) ease, opacity calc(.25s / var(--dm-motion)) ease;
+}
+.btn:hover .btn-ico{ opacity:1; transform:translateY(-1px); }
+
+/* ================= skills: make it obvious the cards are clickable =================
+   The skill cards already opened a "which projects use this" modal, but nothing on
+   screen said so, so a first-time visitor never discovered it. */
+.skills-hint{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  margin-top:14px;
+  padding:9px 16px 9px 13px;
+  border:1px dashed rgba(201,168,92,.45);
+  border-radius:999px;
+  background:rgba(201,168,92,.07);
+  color:var(--gold-bright, #e0c477);
+  font-size:.82rem;
+  letter-spacing:.015em;
+}
+.skills-hint svg{ width:16px; height:16px; fill:currentColor; flex:none; }
+.skills-hint span{ color:var(--silver); }
+
+/* a quiet corner mark on every skill card, so the affordance is on the card itself */
+.skill-card{ position:relative; }
+.skill-card::after{
+  content:"↗";
+  position:absolute;
+  top:8px; right:10px;
+  font-size:.72rem;
+  line-height:1;
+  color:var(--silver);
+  opacity:.28;
+  transition:opacity calc(.25s / var(--dm-motion)) ease, color calc(.25s / var(--dm-motion)) ease;
+}
+.skill-card:hover::after,
+.skill-card:focus-visible::after{ opacity:1; color:var(--gold-bright, #e0c477); }
+
+/* keyboard users get the same affordance as mouse users */
+.skill-card:focus-visible{
+  outline:none;
+  border-color:var(--gold);
+  background:rgba(201,168,92,.06);
+  box-shadow:0 0 0 3px rgba(224,196,119,.22);
+}
+
+/* one gentle nudge the first time the section scrolls into view, then never again */
+.skill-card.skill-card-teach{ animation:skill-teach 1.5s ease-in-out 1; }
+.skill-card.skill-card-teach::after{ opacity:1; color:var(--gold-bright, #e0c477); }
+@keyframes skill-teach{
+  0%, 100%{ transform:translateY(0); box-shadow:none; }
+  45%     { transform:translateY(-5px); box-shadow:0 14px 30px -18px rgba(201,168,92,.65); }
+}
+html[data-motion="reduced"] .skill-card.skill-card-teach,
+html[data-motion="off"] .skill-card.skill-card-teach{ animation:none; }
+
+@media (max-width:600px){
+  .skills-hint{ font-size:.76rem; padding:8px 13px; }
+}
