@@ -2510,11 +2510,45 @@
     }
 
     cards.forEach((card) => {
-      card.addEventListener('click', () => {
-        const label = card.querySelector('span')?.textContent.trim();
-        if (label) openFor(label);
+      const label = card.querySelector('span')?.textContent.trim();
+
+      // the cards were already clickable but announced themselves to nobody:
+      // give them a real button role, keyboard access and a screen-reader label
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-haspopup', 'dialog');
+      if (label) card.setAttribute('aria-label', `${label} — see the projects that use it`);
+
+      card.addEventListener('click', () => { if (label) openFor(label); });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          if (label) openFor(label);
+        }
       });
     });
+
+    /* teach the affordance once: the first time the skills section scrolls into
+       view, nudge the first two cards so a visitor sees they respond. */
+    (function teachOnce() {
+      const section = document.getElementById('skills');
+      if (!section || !('IntersectionObserver' in window)) return;
+      let taught = false;
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting || taught) return;
+          taught = true;
+          io.disconnect();
+          Array.from(cards).slice(0, 2).forEach((c, i) => {
+            setTimeout(() => {
+              c.classList.add('skill-card-teach');
+              setTimeout(() => c.classList.remove('skill-card-teach'), 1600);
+            }, i * 220);
+          });
+        });
+      }, { threshold: 0.25 });
+      io.observe(section);
+    })();
     if (closeBtn) closeBtn.addEventListener('click', close);
     if (backdrop) backdrop.addEventListener('click', close);
     document.addEventListener('keydown', (e) => {
