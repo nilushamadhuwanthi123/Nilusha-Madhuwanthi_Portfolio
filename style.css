@@ -1969,6 +1969,35 @@ html[data-motion="reduced"] .skill-card.skill-card-highlight, html[data-motion="
   padding:5px 12px;
 }
 
+/* Credentials: the certificate and the letter, opened straight from the page.
+   A claimed internship and a downloadable certificate are not the same thing
+   to whoever is reading this, so the documents sit with the role. */
+.const-creds{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:16px; }
+.const-creds-label{
+  font-family:var(--font-head);
+  font-size:.68rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--silver);
+  margin-right:2px;
+}
+.const-cred{
+  font-family:var(--font-head);
+  font-size:.76rem;
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:6px 13px;
+  color:var(--gold-bright);
+  text-decoration:none;
+  transition:border-color .2s ease, background .2s ease, transform .2s ease;
+}
+.const-cred:hover, .const-cred:focus-visible{
+  border-color:var(--gold);
+  background:rgba(201,168,92,.1);
+  transform:translateY(-1px);
+}
+.const-cred-note{ font-size:.72rem; color:var(--silver); margin:10px 0 0; }
+
 @media (max-width:760px){
   .constellation{
     height:auto;

@@ -721,7 +721,7 @@
   const roles = [
     'Full-Stack Engineer',
     'Full Stack Engineer Intern @ EgoTechWorld',
-    'Web Developer Intern @ Codveda Technologies',
+    'Formerly Web Developer Intern @ Codveda Technologies',
     'Formerly Frontend Developer Intern @ CodeAlpha',
     'Building things without eval()',
   ];
@@ -1259,7 +1259,7 @@
     },
     {
       test: /intern|experience|egotechworld|codveda|codealpha|work(ed)?\s*at/i,
-      answer: 'Two internships running at once right now: Full Stack Engineer Intern at EgoTechWorld, and Web Developer Intern at Codveda Technologies — progressing through leveled projects from static UI builds up to a full-stack, JWT-authenticated system. Also completed an earlier Frontend Developer Intern stint at CodeAlpha Technologies, shipping NEXORA, WAVEORA and MIREVA.',
+      answer: 'One internship running now: Full Stack Engineer Intern at EgoTechWorld, through Jan/Feb 2027. Two are finished — Web Developer Intern at Codveda Technologies, where she worked up through leveled projects from static UI builds to a full-stack, JWT-authenticated system, and Frontend Developer Intern at CodeAlpha Technologies (20 Aug – 20 Sep 2026), shipping NEXORA, WAVEORA and MIREVA. The CodeAlpha certificate and recommendation letter are linked in the Experience section.',
       links: [{ label: 'See Experience', href: '#experience' }],
     },
     {
@@ -1852,16 +1852,23 @@
     codveda: {
       role: 'Web Developer Intern',
       company: 'Codveda Technologies',
-      when: 'August 2026 – Present',
-      desc: 'Progressing through leveled development tasks — from static UI builds to a full-stack, JWT-authenticated system.',
+      when: 'Started August 2026 · Completed',
+      desc: 'Worked through leveled development tasks — from static UI builds to a full-stack, JWT-authenticated system.',
       projects: ['FlowBoard', 'FixFinder', 'FinTrack', 'WorkPuise'],
     },
     codealpha: {
       role: 'Frontend Developer Intern',
       company: 'CodeAlpha Technologies',
-      when: 'Completed',
+      when: '20 Aug 2026 – 20 Sep 2026 · Completed',
       desc: 'A frontend-focused internship — three vanilla JS builds shipped end to end, from a scientific calculator to a full offline-capable music player and image gallery.',
       projects: ['NEXORA', 'WAVEORA', 'MIREVA'],
+      // Both documents are the originals issued by CodeAlpha, served from
+      // this repo so a recruiter can open them without having to ask.
+      credentials: [
+        { label: 'Certificate of Completion', href: 'assets/credentials/codealpha-certificate.pdf' },
+        { label: 'Letter of Recommendation', href: 'assets/credentials/codealpha-recommendation-letter.pdf' },
+      ],
+      credentialNote: 'Student ID CA/DF1/246588 · both issued 20 September 2026',
     },
   };
 
@@ -1883,7 +1890,33 @@
       s.textContent = proj;
       chips.appendChild(s);
     });
-    body.append(h3, when, p, chips);
+    const extras = [];
+    if (Array.isArray(d.credentials) && d.credentials.length) {
+      const creds = document.createElement('div');
+      creds.className = 'const-creds';
+      const label = document.createElement('span');
+      label.className = 'const-creds-label';
+      label.textContent = 'Credentials';
+      creds.appendChild(label);
+      d.credentials.forEach((cred) => {
+        const a = document.createElement('a');
+        a.className = 'const-cred';
+        a.href = cred.href;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = `${cred.label} ↗`;
+        creds.appendChild(a);
+      });
+      extras.push(creds);
+      if (d.credentialNote) {
+        const note = document.createElement('p');
+        note.className = 'const-cred-note';
+        note.textContent = d.credentialNote;
+        extras.push(note);
+      }
+    }
+
+    body.append(h3, when, p, chips, ...extras);
     detail.hidden = false;
   }
 
