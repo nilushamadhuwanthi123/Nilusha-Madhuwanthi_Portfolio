@@ -2104,6 +2104,13 @@
       howItWorks:'A Spring Boot 3.5 (Java 21) REST API over MongoDB Atlas, containerised with a multi-stage Docker build and running on Render, serving a React 19 + TypeScript + Tailwind frontend that GitHub Actions deploys to GitHub Pages. Google OAuth 2.0 handles sign-in, and Spring Security enforces the STUDENT/STAFF/ADMIN rules on the API itself rather than in the UI.',
       problem:'Replaces ad-hoc campus facility booking with a self-service system — request a room or a seat, have it approved, carry a QR ticket — alongside incident reporting and usage analytics for the staff who run the place.',
       whyThisWay:'Hosting the frontend and the API on separate services broke sign-in in a way local development never shows: the API\'s session cookie is a third-party cookie to a GitHub Pages page, and browsers block those — so login kept succeeding while every request after it arrived anonymous. Rather than keep patching the cookie (SameSite=None does not help, because the block is not about SameSite), the API now issues an opaque bearer token on login, handed over in the URL fragment so it never lands in a server log, and stored only as a hash so a database dump can\'t be replayed as a set of live logins.' },
+    { key:'rescue3d', emoji:'🚨', title:'RESCUE3D — Disaster Response Simulator', tag:'Team · Full Stack', categories:['Full Stack'], status:'inprogress', featured:true,
+      desc:'A disaster-response coordination platform, built with a teammate (3D simulation & DevOps) through real pull-request review. Incident reporting through dispatch, response-unit assignment, a simulated risk-aware routing engine, an event-sourced incident timeline and live analytics, all synced across clients over Socket.IO. Frontend deployed to GitHub Pages now; backend deploy in progress.',
+      tech:['React','TypeScript','Node.js','Express','MongoDB','Socket.IO','GitHub Actions'],
+      demoUrl:'https://nilushamadhuwanthi123.github.io/rescue3d-disaster-response-simulator/', repoUrl:'https://github.com/nilushamadhuwanthi123/rescue3d-disaster-response-simulator',
+      howItWorks:'Incidents move through a forward-only status machine (reported → dispatched → in_progress → contained → resolved) enforced server-side, not just hidden in the UI. A haversine-based routing engine computes a severity-weighted risk score and a risk-aware ETA for each response unit — explicitly labelled a simulation everywhere it appears, never a real routing service. Every status change and unit assignment is recorded as a timestamped event and replayed as an incident timeline, and Socket.IO broadcasts incident/assignment updates to every connected client in real time.',
+      problem:'Gives an emergency-response team one coordinated view of incidents, units and risk instead of status scattered across radio calls and spreadsheets, with role-based access enforced on the API itself, not just hidden in the UI.',
+      whyThisWay:'Business logic — status transitions, risk scoring, analytics aggregation — is written as pure, database-free functions so it is unit-tested in isolation rather than only exercised through the UI. A production-blocking module-format bug (ESM vs. CommonJS) was caught by actually booting the compiled server before deploy, not by trusting a type-check alone.' },
   ];
 
   function statusBadge(p) {
@@ -3141,7 +3148,16 @@
     });
   }
 
-  /* ---- pause entirely when the Work section is off-screen or the tab is hidden ---- */
+  /* ---- pause entirely when the Work section is off-screen or the tab is hidden.
+     threshold must stay at/near 0: the Work section is far taller than the
+     viewport (one scroll segment per project card), so the maximum possible
+     intersection ratio while scrolled through the middle of it is roughly
+     viewportHeight / sectionHeight — with enough project cards that easily
+     drops below a 0.05 threshold, and then IntersectionObserver's callback
+     never fires again (it only fires on a threshold crossing, not on any
+     overlap), silently hiding the astronaut for good as more projects are
+     added. threshold:0 fires on any overlap at all, so it keeps working
+     regardless of how tall this section grows. ---- */
   let sectionVisible = false;
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -3149,7 +3165,7 @@
       canvas.classList.toggle('show', sectionVisible && fishboneView);
       if (sectionVisible) recomputeWaypoints();
     });
-  }, { threshold: 0.05 });
+  }, { threshold: 0 });
   io.observe(workSection);
 
   let scrollTimer = null;
