@@ -307,6 +307,12 @@
     const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false });
     const sprite = new THREE.Sprite(mat);
     sprite.scale.set(2.1, 0.55, 1);
+    /* Every sprite is the same 2.1 world units wide, but the text inside it is
+       centred and only as wide as the word itself — "Git" inks a fraction of
+       what "TypeScript" does. The de-collision pass below needs the width of
+       the ink, not of the quad, or short labels would shove their neighbours
+       aside across empty transparent pixels. */
+    sprite.userData.inkFrac = Math.min(1, ctx.measureText(text).width / 256);
     return sprite;
   }
 
@@ -366,7 +372,10 @@
     scene.add(group);
 
     const nodes = ring.skills.map((name, i) => {
-      const angle = (i / ring.skills.length) * Math.PI * 2;
+      /* Each ring gets its own starting phase. Without one, every ring's first
+         node sits on the same bearing, so all four orbits launch stacked in a
+         single column and keep re-converging there as they spin. */
+      const angle = (i / ring.skills.length) * Math.PI * 2 + ringIndex * 0.62;
       const nodeGroup = new THREE.Group();
 
       const node = new THREE.Mesh(
@@ -410,6 +419,82 @@
         n.children[2].material.opacity = 0;
       });
     });
+  }
+
+  /* ---- skill-label de-collision ------------------------------------------
+     The four rings spin at different speeds on different tilts, so nodes from
+     separate orbits keep drifting across one another and their text labels end
+     up stacked into an unreadable pile. Hand-tuning the angles only moves the
+     collision somewhere else, so instead every frame projects each label into
+     screen space, walks them nearest-camera-first, and fades out any label
+     whose box would overlap one already placed — plus any label that has
+     passed behind the Earth. Nearest wins, so the label in front stays
+     readable and the one behind it yields rather than both turning to mush.
+     Fades are eased, never snapped, so a label that loses a contest slides
+     out instead of blinking. ---- */
+  const _lblPos = new THREE.Vector3();
+  const _lblScale = new THREE.Vector3();
+  const _lblEdge = new THREE.Vector3();
+  const _camRight = new THREE.Vector3();
+  const _scratch = new THREE.Vector3();
+  const _labelEntries = [];
+  const _labelPlaced = [];
+  const LABEL_PAD = 7; // px of breathing room required between two labels
+
+  function updateSkillLabels() {
+    const w = renderer.domElement.clientWidth || window.innerWidth;
+    const h = renderer.domElement.clientHeight || window.innerHeight;
+    _camRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
+
+    // the Earth's own screen footprint, so labels crossing behind it drop out
+    _scratch.set(0, 0, 0).project(camera);
+    const earthX = (_scratch.x * 0.5 + 0.5) * w;
+    const earthY = (-_scratch.y * 0.5 + 0.5) * h;
+    _scratch.copy(_camRight).multiplyScalar(EARTH_RADIUS * 1.14).project(camera);
+    const earthR = Math.abs((_scratch.x * 0.5 + 0.5) * w - earthX);
+    const earthDist = camera.position.length(); // the Earth sits at the origin
+
+    _labelEntries.length = 0;
+    orbitGroups.forEach(({ nodes }) => {
+      nodes.forEach((n) => {
+        if (!n.userData.revealed) return; // still waiting on the intro flight
+        const label = n.children[2];
+        label.getWorldPosition(_lblPos);
+        label.getWorldScale(_lblScale);
+        const dist = _lblPos.distanceTo(camera.position);
+
+        _lblEdge.copy(_lblPos).addScaledVector(_camRight, _lblScale.x * 0.5);
+        _scratch.copy(_lblPos).project(camera);
+        const sx = (_scratch.x * 0.5 + 0.5) * w;
+        const sy = (-_scratch.y * 0.5 + 0.5) * h;
+        const offScreen = _scratch.z > 1;
+        _scratch.copy(_lblEdge).project(camera);
+        const quadHalfW = Math.abs((_scratch.x * 0.5 + 0.5) * w - sx);
+        const halfW = quadHalfW * (label.userData.inkFrac ?? 1);
+        const halfH = quadHalfW * (_lblScale.y / Math.max(_lblScale.x, 1e-4));
+
+        _labelEntries.push({ n, label, sx, sy, halfW, halfH, dist, offScreen });
+      });
+    });
+
+    _labelEntries.sort((a, b) => a.dist - b.dist); // nearest label wins the space
+    _labelPlaced.length = 0;
+
+    for (const e of _labelEntries) {
+      let vis = e.offScreen ? 0 : 1;
+      if (vis && e.dist > earthDist &&
+          Math.hypot(e.sx - earthX, e.sy - earthY) < earthR) vis = 0; // behind the planet
+      if (vis) {
+        for (const p of _labelPlaced) {
+          if (Math.abs(e.sx - p.sx) < e.halfW + p.halfW + LABEL_PAD &&
+              Math.abs(e.sy - p.sy) < e.halfH + p.halfH + LABEL_PAD) { vis = 0; break; }
+        }
+      }
+      if (vis) _labelPlaced.push(e);
+      const cur = e.n.userData.labelVis === undefined ? vis : e.n.userData.labelVis;
+      e.n.userData.labelVis = cur + (vis - cur) * 0.16;
+      e.label.material.opacity = (e.n.userData.labelBase ?? 1) * e.n.userData.labelVis;
+    }
   }
 
   // ---- hover raycast: pause + highlight a skill node, surface an info card ----
@@ -657,14 +742,19 @@
         n.scale.y += (targetScale - n.scale.y) * 0.2;
         n.scale.z += (targetScale - n.scale.z) * 0.2;
         if (introFlight && !canReveal) return; // still hidden, waiting for this ring's turn
+        n.userData.revealed = true;
         const targetOpacity = isHovered ? 1 : n.userData.baseOpacity;
         n.children[0].material.opacity = THREE.MathUtils
           ? THREE.MathUtils.lerp(n.children[0].material.opacity ?? 1, targetOpacity, 0.15)
           : targetOpacity;
         n.children[0].material.transparent = true;
         n.children[1].material.opacity = 0.18 * targetOpacity;
-        n.children[2].material.opacity = THREE.MathUtils
-          ? THREE.MathUtils.lerp(n.children[2].material.opacity ?? 1, targetOpacity, 0.15)
+        /* The label's own fade is tracked apart from what actually reaches the
+           screen: updateSkillLabels() multiplies this by a de-collision factor,
+           so writing that result straight back here would feed the factor into
+           next frame's lerp and a hidden label could never climb back. */
+        n.userData.labelBase = THREE.MathUtils
+          ? THREE.MathUtils.lerp(n.userData.labelBase ?? 1, targetOpacity, 0.15)
           : targetOpacity;
       });
     });
@@ -673,7 +763,6 @@
         n.children[2].position.y = 0.42 + Math.sin(t * 2 + n.userData.angle) * 0.04 * motionScale;
       });
     });
-
     stars.rotation.y += 0.00012 * motionScale;
     nearStars.rotation.y -= 0.00022 * motionScale;
 
@@ -701,6 +790,12 @@
     camera.position.z += (targetZ - camera.position.z) * 0.05;
     canvas.style.opacity = String(canvasOpacity);
     camera.lookAt(lookTargetX, 0, 0);
+
+    /* Runs last, once the camera has settled for this frame: the de-collision
+       test is done in screen space, so it has to read the same camera the
+       renderer is about to use or it would be judging overlaps one frame late. */
+    camera.updateMatrixWorld();
+    updateSkillLabels();
 
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
@@ -1847,7 +1942,7 @@
       company: 'EgoTechWorld',
       when: 'Ongoing — through Jan / Feb 2027',
       desc: 'Full-stack development work alongside a full-time degree — six months in and still running.',
-      projects: ['MyNotes — Note-Taking App', 'Bakery Management System', 'Bakery Management System — Laravel Edition'],
+      projects: ['MyNotes — Note-Taking App', 'Bakery Management System', 'Bakery Management System — Laravel Edition', 'Stock Management ERP — Supplier & Purchase Management'],
     },
     codveda: {
       role: 'Web Developer Intern',
@@ -1961,9 +2056,14 @@
       howItWorks:'Images render in masonry or grid layout on Canvas, with the lightbox and colour explorer built to be fully operable by keyboard and screen reader, not just mouse.',
       problem:'Gives a fast, accessible way to browse and organise a photo collection without relying on a heavier, less accessible gallery app.',
       whyThisWay:'Accessibility was designed in from the layout layer instead of patched on with ARIA afterward — that\'s only possible if keyboard and screen-reader paths are considered at the same time as the masonry/grid logic itself, not after.' },
-    { key:'nexabank', emoji:'🏦', title:'NexaBank — Online Banking Platform', tag:'Personal · Full Stack', categories:['Full Stack'], status:'live', featured:true,
+    { key:'nexabank', emoji:'🏦', title:'NexaBank — Online Banking Platform', tag:'Personal · Full Stack', categories:['Full Stack'], status:'source', featured:true,
       desc:'Real account balances, instant transfers and ACID-safe money movement — every transaction runs inside a row-locked DB transaction. Bcrypt auth, CSRF everywhere, full admin console.',
-      tech:['PHP','MySQL','Docker','Chart.js'], demoUrl:'https://nexabank-web-production.up.railway.app', repoUrl:'https://github.com/nilushamadhuwanthi123/NexaBank---Online-Banking-System',
+      /* The hosted demo is down, not the project: it ran on a Railway trial
+         that has since expired, so the URL now 404s. A badge that promises
+         "Live" and delivers a 404 costs more credibility than no badge, so the
+         demo link is pulled until this is redeployed. The Docker setup still
+         brings the whole stack up locally in one command. */
+      tech:['PHP','MySQL','Docker','Chart.js'], repoUrl:'https://github.com/nilushamadhuwanthi123/NexaBank---Online-Banking-System',
       howItWorks:'Every transfer runs inside a row-locked MySQL transaction so two simultaneous requests can\'t corrupt a balance, with bcrypt-hashed passwords and CSRF protection on every form.',
       problem:'Handles secure fund transfers and real-time balance tracking with dynamic, auto-generated financial reports.',
       whyThisWay:'Row-locked transactions weren\'t optional here — updating two account balances with separate, unlocked queries is exactly how a banking app corrupts state when two transfers land at once.' },
@@ -1979,9 +2079,11 @@
       howItWorks:'A Node.js/Express API backed by MongoDB enforces role-based access, so Admin, Doctor, Patient and Receptionist each only see what they\'re meant to.',
       problem:'Solves fragmented hospital recordkeeping by unifying appointments, billing, and inventory into one role-secured system.',
       whyThisWay:'Access control is enforced in the Express API, not just hidden in the React UI — a receptionist\'s client could still be tricked into requesting an admin route, but the server refuses it regardless of what the frontend shows.' },
-    { key:'orvexa', emoji:'🧭', title:'Orvexa — Operations & Productivity Platform', tag:'Personal · Full Stack', categories:['Full Stack'], status:'live', featured:true,
+    { key:'orvexa', emoji:'🧭', title:'Orvexa — Operations & Productivity Platform', tag:'Personal · Full Stack', categories:['Full Stack'], status:'source', featured:true,
       desc:'Projects, a drag-and-drop task board, real-time collaboration over Socket.IO and analytics computed from real data.',
-      tech:['React','Node.js','Express','MongoDB','Socket.IO'], demoUrl:'https://orvexa-production-1b61.up.railway.app', repoUrl:'https://github.com/nilushamadhuwanthi123/orvexa-productivity-platform', videoUrl:'https://lnkd.in/p/grBdF8Ai',
+      // Same expired Railway trial as NexaBank — the demo URL 404s, so it is
+      // pulled rather than left as a "Live" badge that goes nowhere.
+      tech:['React','Node.js','Express','MongoDB','Socket.IO'], repoUrl:'https://github.com/nilushamadhuwanthi123/orvexa-productivity-platform', videoUrl:'https://lnkd.in/p/grBdF8Ai',
       howItWorks:'Task-board state syncs across users in real time over Socket.IO, with a Node/Express + MongoDB backend computing the analytics from actual project data, not mock numbers.',
       problem:'Replaces scattered task lists and spreadsheets with one collaborative board a team can update live together.',
       whyThisWay:'Socket.IO over polling, because polling for updates means everyone sees slightly stale state — sockets let two people see the same board change the moment it happens, which is the whole point of "real-time" collaboration.' },
@@ -2043,9 +2145,11 @@
       tech:['React','Spring Boot','MongoDB'], demoUrl:'https://bakery-system-hazel.vercel.app/login', tutorialUrl:'https://totorial-bakery-system.vercel.app/', repoUrl:'https://github.com/LEULEX-404/Bakery_System',
       howItWorks:'The order & customer management module tracks customers (profiles, loyalty tiers, notes, tags), and orders through a status workflow (draft \u2192 pending \u2192 confirmed \u2192 preparing \u2192 ready \u2192 completed), reserving stock only once an order is confirmed and awarding loyalty points once it\'s completed.',
       problem:'Gives the bakery a single system to manage customer relationships and the full order lifecycle, from placing an order to fulfillment and payment.' },
-    { key:'bakerylaravel', emoji:'🥐', title:'Bakery Management System — Laravel Edition', tag:'Internship · EgoTechWorld', categories:['Full Stack','Internship'], status:'live',
+    { key:'bakerylaravel', emoji:'🥐', title:'Bakery Management System — Laravel Edition', tag:'Internship · EgoTechWorld', categories:['Full Stack','Internship'], status:'source',
       desc:'A 3rd team project re-building the bakery system on a new required stack: Laravel (PHP) backend + React frontend. Repo owned by teammate @Imogirl, I contribute as a collaborator. My part is the order & customer management module, ported from the original Spring Boot version with the same business rules \u2014 loyalty tiers, order status workflow, stock handling and payments, and verified by actually running the app end-to-end.',
-      tech:['React','Laravel','MySQL'], demoUrl:'https://purebake.onrender.com/', repoUrl:'https://github.com/Imogirl/Laravel-Bakery-System',
+      // The hosted demo currently answers 500, so the link is pulled rather
+      // than shown as "Live" — the repo and the local run are unaffected.
+      tech:['React','Laravel','MySQL'], repoUrl:'https://github.com/Imogirl/Laravel-Bakery-System',
       howItWorks:'A faithful port of the order & customer management module to Laravel: Eloquent models and migrations replace the MongoDB documents, a transaction-locked sequence counter reproduces MongoDB\'s atomic ID generation for human-readable customer/order IDs, and the same loyalty-tier and order-status business rules (including stock reserved only when an order is confirmed, not when it is placed) are re-implemented in PHP behind a REST API the React frontend calls.',
       problem:'Delivers the same order & customer management capability on the team\'s new required stack, so the module works the same way regardless of backend framework.' },
     { key:'stockerp', emoji:'📦', title:'Stock Management ERP — Supplier & Purchase Management', tag:'Internship · EgoTechWorld', categories:['Full Stack','Internship'], status:'source',
@@ -2104,8 +2208,8 @@
       howItWorks:'A Spring Boot 3.5 (Java 21) REST API over MongoDB Atlas, containerised with a multi-stage Docker build and running on Render, serving a React 19 + TypeScript + Tailwind frontend that GitHub Actions deploys to GitHub Pages. Google OAuth 2.0 handles sign-in, and Spring Security enforces the STUDENT/STAFF/ADMIN rules on the API itself rather than in the UI.',
       problem:'Replaces ad-hoc campus facility booking with a self-service system — request a room or a seat, have it approved, carry a QR ticket — alongside incident reporting and usage analytics for the staff who run the place.',
       whyThisWay:'Hosting the frontend and the API on separate services broke sign-in in a way local development never shows: the API\'s session cookie is a third-party cookie to a GitHub Pages page, and browsers block those — so login kept succeeding while every request after it arrived anonymous. Rather than keep patching the cookie (SameSite=None does not help, because the block is not about SameSite), the API now issues an opaque bearer token on login, handed over in the URL fragment so it never lands in a server log, and stored only as a hash so a database dump can\'t be replayed as a set of live logins.' },
-    { key:'rescue3d', emoji:'🚨', title:'RESCUE3D — Disaster Response Simulator', tag:'Team · Full Stack', categories:['Full Stack'], status:'inprogress', featured:true,
-      desc:'A disaster-response coordination platform, built with a teammate (3D simulation & DevOps) through real pull-request review. Incident reporting through dispatch, response-unit assignment, a simulated risk-aware routing engine, an event-sourced incident timeline and live analytics, all synced across clients over Socket.IO. Frontend deployed to GitHub Pages now; backend deploy in progress.',
+    { key:'rescue3d', emoji:'🚨', title:'RESCUE3D — Disaster Response Simulator', tag:'Team · Full Stack', categories:['Full Stack'], status:'live', featured:true,
+      desc:'A disaster-response coordination platform, built with a teammate (3D simulation & DevOps) through real pull-request review. Incident reporting through dispatch, response-unit assignment, a simulated risk-aware routing engine, an event-sourced incident timeline and live analytics, all synced across clients over Socket.IO. Live end to end — React frontend on GitHub Pages against a Node/Express API and MongoDB Atlas on Render.',
       tech:['React','TypeScript','Node.js','Express','MongoDB','Socket.IO','GitHub Actions'],
       demoUrl:'https://nilushamadhuwanthi123.github.io/rescue3d-disaster-response-simulator/', repoUrl:'https://github.com/nilushamadhuwanthi123/rescue3d-disaster-response-simulator',
       howItWorks:'Incidents move through a forward-only status machine (reported → dispatched → in_progress → contained → resolved) enforced server-side, not just hidden in the UI. A haversine-based routing engine computes a severity-weighted risk score and a risk-aware ETA for each response unit — explicitly labelled a simulation everywhere it appears, never a real routing service. Every status change and unit assignment is recorded as a timestamped event and replayed as an incident timeline, and Socket.IO broadcasts incident/assignment updates to every connected client in real time.',
