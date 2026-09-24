@@ -33,8 +33,12 @@
   // (lookTargetX) below in animate() — lookAt alone re-centers the object
   // regardless of position, and position alone gets erased every frame by the
   // mouse-parallax ease. Mobile keeps it centered (text stacks above it there).
-  const camBaseX = isMobile ? 0 : -3.6;
-  const lookTargetX = isMobile ? 0 : -3.4;
+  // -5.2 rather than -3.6: at -3.6 the widest orbit still swung its outer
+  // nodes back over the hero headline, so tech labels crossed the text. The
+  // extra shift moves the whole system clear of the text column instead of
+  // hiding whatever happened to land on top of it.
+  const camBaseX = isMobile ? 0 : -5.2;
+  const lookTargetX = isMobile ? 0 : -5.0;
   /* ---- cinematic entrance: start this SAME camera further out in deep
      space and let the existing per-frame easing further down in animate()
      glide it into its normal resting position. No second camera, no second
@@ -425,13 +429,16 @@
      The four rings spin at different speeds on different tilts, so nodes from
      separate orbits keep drifting across one another and their text labels end
      up stacked into an unreadable pile. Hand-tuning the angles only moves the
-     collision somewhere else, so instead every frame projects each label into
-     screen space, walks them nearest-camera-first, and fades out any label
-     whose box would overlap one already placed — plus any label that has
-     passed behind the Earth. Nearest wins, so the label in front stays
-     readable and the one behind it yields rather than both turning to mush.
-     Fades are eased, never snapped, so a label that loses a contest slides
-     out instead of blinking. ---- */
+     collision somewhere else.
+
+     Every label stays on screen. Nothing is hidden and nothing is dimmed —
+     these are the skills the section exists to show, and a skill that vanishes
+     because another one drifted past it is worse than the overlap was. Instead
+     each frame projects every label into screen space, walks them
+     nearest-camera-first, and nudges any label that would land on top of one
+     already placed a few pixels clear of it, alternating above and below until
+     it fits. The nudge is eased, so a label slides aside rather than jumping,
+     and slides back once the orbit carries its neighbour away. ---- */
   const _lblPos = new THREE.Vector3();
   const _lblScale = new THREE.Vector3();
   const _lblEdge = new THREE.Vector3();
@@ -445,14 +452,6 @@
     const w = renderer.domElement.clientWidth || window.innerWidth;
     const h = renderer.domElement.clientHeight || window.innerHeight;
     _camRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
-
-    // the Earth's own screen footprint, so labels crossing behind it drop out
-    _scratch.set(0, 0, 0).project(camera);
-    const earthX = (_scratch.x * 0.5 + 0.5) * w;
-    const earthY = (-_scratch.y * 0.5 + 0.5) * h;
-    _scratch.copy(_camRight).multiplyScalar(EARTH_RADIUS * 1.14).project(camera);
-    const earthR = Math.abs((_scratch.x * 0.5 + 0.5) * w - earthX);
-    const earthDist = camera.position.length(); // the Earth sits at the origin
 
     _labelEntries.length = 0;
     orbitGroups.forEach(({ nodes }) => {
@@ -472,28 +471,49 @@
         const quadHalfW = Math.abs((_scratch.x * 0.5 + 0.5) * w - sx);
         const halfW = quadHalfW * (label.userData.inkFrac ?? 1);
         const halfH = quadHalfW * (_lblScale.y / Math.max(_lblScale.x, 1e-4));
+        /* How many world units one screen pixel is worth at this label's
+           depth, so a nudge decided in pixels can be applied in the scene. */
+        const worldPerPx = quadHalfW > 0.001 ? (_lblScale.x * 0.5) / quadHalfW : 0;
 
-        _labelEntries.push({ n, label, sx, sy, halfW, halfH, dist, offScreen });
+        _labelEntries.push({ n, label, sx, sy, halfW, halfH, dist, offScreen, worldPerPx });
       });
     });
 
-    _labelEntries.sort((a, b) => a.dist - b.dist); // nearest label wins the space
+    _labelEntries.sort((a, b) => a.dist - b.dist); // nearest label keeps its place
     _labelPlaced.length = 0;
 
     for (const e of _labelEntries) {
-      let vis = e.offScreen ? 0 : 1;
-      if (vis && e.dist > earthDist &&
-          Math.hypot(e.sx - earthX, e.sy - earthY) < earthR) vis = 0; // behind the planet
-      if (vis) {
-        for (const p of _labelPlaced) {
-          if (Math.abs(e.sx - p.sx) < e.halfW + p.halfW + LABEL_PAD &&
-              Math.abs(e.sy - p.sy) < e.halfH + p.halfH + LABEL_PAD) { vis = 0; break; }
+      let offset = 0;
+      if (!e.offScreen) {
+        /* Try the label where it belongs first, then a step above, a step
+           below, two steps above, and so on. Alternating keeps a crowded
+           cluster spreading evenly around its centre instead of drifting the
+           whole group in one direction. */
+        const step = e.halfH * 2 + LABEL_PAD;
+        for (let attempt = 0; attempt < 9; attempt++) {
+          const candidate = attempt === 0
+            ? 0
+            : (attempt % 2 === 1 ? -1 : 1) * Math.ceil(attempt / 2) * step;
+          const y = e.sy + candidate;
+          let clear = true;
+          for (const p of _labelPlaced) {
+            if (Math.abs(e.sx - p.sx) < e.halfW + p.halfW + LABEL_PAD &&
+                Math.abs(y - p.y) < e.halfH + p.halfH + LABEL_PAD) { clear = false; break; }
+          }
+          if (clear) { offset = candidate; break; }
+          // Nothing fit in nine tries: keep the last candidate rather than
+          // stacking it back on the original, and stay visible either way.
+          offset = candidate;
         }
       }
-      if (vis) _labelPlaced.push(e);
-      const cur = e.n.userData.labelVis === undefined ? vis : e.n.userData.labelVis;
-      e.n.userData.labelVis = cur + (vis - cur) * 0.16;
-      e.label.material.opacity = (e.n.userData.labelBase ?? 1) * e.n.userData.labelVis;
+      _labelPlaced.push({ sx: e.sx, y: e.sy + offset, halfW: e.halfW, halfH: e.halfH });
+
+      /* Screen-space pixels up is world-space down, hence the negation. Eased
+         so the label slides rather than snaps. */
+      const targetWorld = -offset * e.worldPerPx;
+      const cur = e.n.userData.labelNudge ?? 0;
+      e.n.userData.labelNudge = cur + (targetWorld - cur) * 0.12;
+      e.label.material.opacity = e.n.userData.labelBase ?? 1;
     }
   }
 
@@ -749,10 +769,10 @@
           : targetOpacity;
         n.children[0].material.transparent = true;
         n.children[1].material.opacity = 0.18 * targetOpacity;
-        /* The label's own fade is tracked apart from what actually reaches the
-           screen: updateSkillLabels() multiplies this by a de-collision factor,
-           so writing that result straight back here would feed the factor into
-           next frame's lerp and a hidden label could never climb back. */
+        /* The label's fade is tracked here and written to the material by
+           updateSkillLabels(), which also decides where the label sits. Keeping
+           the two apart means the de-collision pass never has to read back a
+           value it wrote itself. */
         n.userData.labelBase = THREE.MathUtils
           ? THREE.MathUtils.lerp(n.userData.labelBase ?? 1, targetOpacity, 0.15)
           : targetOpacity;
@@ -760,7 +780,11 @@
     });
     orbitGroups.forEach(({ nodes }) => {
       nodes.forEach((n) => {
-        n.children[2].position.y = 0.42 + Math.sin(t * 2 + n.userData.angle) * 0.04 * motionScale;
+        // resting height + idle bob + whatever nudge it needs to clear a neighbour
+        n.children[2].position.y =
+          0.42
+          + Math.sin(t * 2 + n.userData.angle) * 0.04 * motionScale
+          + (n.userData.labelNudge ?? 0);
       });
     });
     stars.rotation.y += 0.00012 * motionScale;
