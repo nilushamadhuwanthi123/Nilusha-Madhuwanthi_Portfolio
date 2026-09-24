@@ -1883,12 +1883,23 @@ html[data-motion="reduced"] .skill-card.skill-card-highlight, html[data-motion="
   stroke-width:.6;
   vector-effect:non-scaling-stroke;
 }
+/* The line to whichever role is running now is drawn as a live connection
+   rather than another faint spoke — same weight of information as the
+   "currently here" wording on the node itself. */
+.const-lines line.const-line-now{
+  stroke:var(--gold-bright);
+  stroke-width:1.5;
+  opacity:.75;
+}
 .const-hub{
-  position:absolute; top:50%; left:50%;
+  /* 36%, not 50%: the hub is pulled toward the role that is actually running.
+     See the comment on the constellation markup in index.html. */
+  position:absolute; top:36%; left:50%;
   transform:translate(-50%,-50%);
   width:104px; height:104px;
   border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+  text-align:center;
   background:radial-gradient(circle at 35% 30%, rgba(201,168,92,.22), var(--card) 70%);
   border:1px solid var(--gold);
   box-shadow:0 0 0 8px rgba(201,168,92,.06), 0 20px 50px -20px rgba(201,168,92,.4);
@@ -1943,6 +1954,33 @@ html[data-motion="reduced"] .skill-card.skill-card-highlight, html[data-motion="
   opacity:1;
   border-color:var(--gold-bright);
 }
+.const-hub-now{
+  font-family:var(--font-body);
+  font-size:.56rem;
+  letter-spacing:.02em;
+  line-height:1.2;
+  color:var(--gold-bright);
+  opacity:.9;
+  max-width:86px;
+}
+/* The role that is running now is the only one marked. Marking all three
+   would say nothing; marking none makes the map a list of places she has
+   been, with no indication of where she is. */
+.const-node[data-current="true"]{
+  border-color:rgba(201,168,92,.55);
+  box-shadow:0 0 0 1px rgba(201,168,92,.12), 0 14px 36px -22px rgba(201,168,92,.5);
+}
+.const-node[data-current="true"] .const-node-dot{
+  animation:constNowPulse 2.4s ease-in-out infinite;
+}
+@keyframes constNowPulse{
+  0%, 100%{ box-shadow:0 0 0 5px rgba(201,168,92,.14); }
+  50%{ box-shadow:0 0 0 9px rgba(201,168,92,.05); }
+}
+@media (prefers-reduced-motion: reduce){
+  .const-node[data-current="true"] .const-node-dot{ animation:none; }
+}
+
 .const-node-1{ top:12%; left:50%; }
 .const-node-2{ top:84%; left:16%; }
 .const-node-3{ top:84%; left:84%; }

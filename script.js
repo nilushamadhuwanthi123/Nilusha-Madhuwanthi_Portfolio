@@ -1377,7 +1377,7 @@
     },
     {
       test: /github/i,
-      answer: 'All source code is public on GitHub — 24+ repositories, feature-branch workflow, real commit history.',
+      answer: 'All source code is public on GitHub — 28 repositories, feature-branch workflow, real commit history.',
       links: [{ label: 'Open GitHub', href: LINKS.github, external: true }],
     },
     {
